@@ -67,10 +67,10 @@
                     } %></mm:field></td></tr>
         <%
         if(fullDescription) { 
-           %><mm:related path="readmore,afdelingen"
-                   fields="afdelingen.naam,afdelingen.omschrijving,readmore.readmore">
+           %><mm:related path="readmore,afdelingen" 
+                   fields="afdelingen.naam,readmore.readmore">
                <tr><td style="padding-bottom:3px;">Regio, eenheid of afdeling:&nbsp;</td>
-                   <td style="padding-bottom:3px;vertical-align:bottom;"><mm:field name="afdelingen.omschrijving" /> <mm:field name="afdelingen.naam" /></td></tr>
+                   <td style="padding-bottom:3px;vertical-align:bottom;"><mm:field name="afdelingen.naam" /></td></tr>
                <mm:field name="readmore.readmore"><mm:isnotempty><tr><td style="padding-bottom:3px;">Functie:&nbsp;</td>
                    <td style="padding-bottom:3px;vertical-align:bottom;"><mm:write /></td></tr></mm:isnotempty></mm:field>
            </mm:related
@@ -90,9 +90,6 @@
            <tr><td style="padding-bottom:3px;"><%= specialDays %>:&nbsp;</td>
               <td style="padding-bottom:3px;vertical-align:bottom;"><mm:field name="omschrijving_fra" /></td>
            </tr>
-           <tr><td style="padding-bottom:3px;">Werkzaamheden:&nbsp;</td>
-              <td style="padding-bottom:3px;vertical-align:bottom;"><mm:field name="omschrijving_de" jspvar="omschrijving_de" vartype="String" write="false"><%= HtmlCleaner.cleanHtml(omschrijving_de) %></mm:field></td>
-           </tr>
            <%
            if(!sRubriekLayout.equals("" + NMIntraConfig.SUBSITE1_LAYOUT)) { 
               %>
@@ -104,7 +101,6 @@
     </mm:node>
     </td>
 </tr>
-
 <tr>
     <td valign="top"><% boolean imageExists = false; 
         %><mm:list nodes="<%= employeeId %>" path="medewerkers,images" max="1"
@@ -122,14 +118,12 @@
             </mm:list><%
         }%><br><%
         if(!postingStr.equals("|action=print")) {
-            %><a href="smoelenboek.jsp<%= templateQueryString %>&employee=<%= employeeId %>&pst=|action=change">wijzig</a>&nbsp;/&nbsp;<a target="_blank" href="smoelenboek.jsp<%= 
+            %><a href="smoelenboek.jsp<%= templateQueryString %>&employee=<%= employeeId %>&pst=|action=change">wijzig</a>&nbsp;/&nbsp;<a target="_blank" href="ipage.jsp<%= 
                 templateQueryString %>&department=<%= departmentId %>&program=<%= programId
                 %>&firstname=<%= firstnameId %>&lastname=<%= lastnameId %>&employee=<%= employeeId %>&pst=|action=print">print</a><%
         } 
     %></td>
     <td class="black"><img src="media/spacer.gif" width="1" height="465"></td>
 </tr>
-
-
 </table>
 </mm:cloud>

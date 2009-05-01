@@ -50,7 +50,7 @@
 <tr>
    <td style="width:48%"></td>
    <td style="text-align:left; vertical-align:top; width:744;height:157px;padding-bottom:1px;"> 
-         <img src="<%=contextPath%>/404/pano_error_pagina.jpg" border="0"></td>
+         <img src="<%=contextPath%>/404/hooglander.jpg" border="0"></td>
 
    <td style="width:48%" rowspan="2" valign="top">
    <img src="<%=contextPath%>/natmm/media/natmm_logo_rgb1.gif" width="159" height="216" style="padding:0;">
@@ -66,18 +66,20 @@
 
 <p style="font-size:14px;color:#1D1E94;margin:0px 0px 5px 0px; font-weight: bold;">Error 404: Sorry, er is iets mis gegaan</p>
 &nbsp;<br />
-<p>We kunnen de pagina die u zoekt niet meer vinden. De pagina kan zijn verwijderd, van naam veranderd of tijdelijk niet beschikbaar zijn. Onze excuses voor het ongemak.</p>
+<p>We kunnen de pagina die je zoekt niet meer vinden.<br />
+De pagina kan zijn verwijderd, van naam veranderd of tijdelijk niet beschikbaar zijn.</p>
+<p>Onze excuses voor het ongemak.</p>
 &nbsp;<br />
 Hier zijn een paar tips om de pagina alsnog te vinden:<br />
-&bull; Als je handmatig een domeinadres hebt ingevuld, kijk of deze wel helemaal klopt <br />
-&bull; Gebruik de terug knop van uw browser om terug te gaan naar de vorige pagina en probeer de link nog eens <br />
-&bull; Gebruik onze zoekfunctie onderaan de pagina door een paar kernwoorden in te vullen <br />
-&bull; Gebruik onze navigatiebalk om de pagina alsnog te vinden <br />
-&bull; Probeer het later nog eens, de pagina kan tijdelijk niet beschikbaar zijn <br />
-&nbsp;<br />
-Als bovenstaande tips niet helpen zouden wij het erg op prijs stellen als u de link die u probeerde te bereiken mailt naar <a href="mailto:webredactie@natuurmonumenten.nl?Subject=Error 404: Sorry, er is iets mis gegaan">webredactie@natuurmonumenten.nl</a>.<br />
-Alvast bedankt. <br />
+&bull; als je handmatig een domeinadres hebt ingevuld, kijk of deze wel helemaal klopt<br />
+&bull; Gebruik de terug knop van uw browser om terug te gaan naar de vorige pagina en probeer de link nog eens<br />
 
+&bull; Gebruik onze zoekfunctie onderaan de pagina door een paar kernwoorden in te vullen <br />
+&bull; Gebruik onze navigatiebalk om de pagina alsnog te vinden<br />
+&bull; Probeer het later nog eens, de pagina kan tijdelijk niet beschikbaar zijn<br />
+&nbsp;<br />
+Als bovenstaande tips niet helpen zouden wij het erg op prijs stellen als je de link die je probeerde te bereiken mailt naar <a href="mailto:webredactie@natuurmonumenten.nl?Subject=Error 404: Sorry, er is iets mis gegaan">webredactie@natuurmonumenten.nl</a>.<br />
+Alvast bedankt.<br />
 &nbsp;<br />
 
 </div>      
@@ -120,7 +122,7 @@ Alvast bedankt. <br />
 </body>
 
 <!-- Begin Sitestat4 code -->
-<script type="text/javascript">
+<script language="JavaScript1.1">
 <!--
 function sitestat(ns_l){
    ns_l+="&ns__t="+new Date().getTime();ns_pixelUrl=ns_l;

@@ -34,7 +34,7 @@ import org.mmbase.bridge.RelationList;
  * Evenement
  *
  * @author Henk Hangyi
- * @version $Revision: 1.15 $, $Date: 2008-10-23 13:14:26 $
+ * @version $Revision: 1.13 $, $Date: 2008-04-29 13:22:46 $
  *
  */
 
@@ -460,7 +460,7 @@ public class Evenement extends DoubleDateNode {
 
    public NodeList getSortedList(Cloud cloud, String sParentEvent) {
       // insert the parent into the list of childs
-      NodeList nl = cloud.getList(sParentEvent, "evenement1,partrel,evenement", "evenement.number", null, "evenement.begindatum", "UP", "destination", true);
+      NodeList nl = cloud.getList(sParentEvent, "evenement1,partrel,evenement", "evenement.number", null, "evenement.begindatum", "UP", null, true);
       if (nl.size() != 0) {
          DoubleDateNode ddnParent = new DoubleDateNode(cloud.getNode(sParentEvent));
          NodeList parentList = cloud.getList(sParentEvent, "evenement", "evenement.number", null, null, null, null, false);
@@ -559,7 +559,7 @@ public class Evenement extends DoubleDateNode {
             parentNumber = parentEvent.getStringValue("number");
          }
          else {
-            log.debug("Could not find parent for child " + thisEvent.getStringValue("number") + ", setting parent to child");
+            log.info("Could not find parent for child " + thisEvent.getStringValue("number") + ", setting parent to child");
          }
       }
       return parentNumber;
