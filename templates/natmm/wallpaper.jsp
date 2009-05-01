@@ -9,10 +9,7 @@ if(imgID.equals("-1")){
 	<%@include file="includes/top3_nav.jsp" %>
 	<%@include file="includes/top4_head.jsp" %>
 	<%@include file="includes/top5_breadcrumbs_and_pano.jsp" %>
-	<% if (isNaardermeer.equals("true")) { %>      
-      <div style="position:absolute; left:681px; width:70px; height:216px; background-image: url(media/natmm_logo_rgb2.gif); background-repeat:no-repeat;"></div>
-  <% } %>
-   <br>
+	<br>
    <table width="744" border="0" cellspacing="0" cellpadding="0" align="center" valign="top">
    <tr>
    	<td style="vertical-align:top;padding-left:10px;padding-right:10px;width:185px;">
@@ -28,7 +25,6 @@ if(imgID.equals("-1")){
    	  <jsp:include page="includes/fun/fun_index.jsp">
    	      <jsp:param name="p" value="<%= paginaID %>" />
    	      <jsp:param name="r" value="<%= rubriekID %>" />
-   	      <jsp:param name="isNaardermeer" value="<%= isNaardermeer %>" />
    	   </jsp:include>
    	</td>
    </tr>

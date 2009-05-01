@@ -22,6 +22,7 @@ package nl.leocms.util;
 
 import org.mmbase.bridge.*;
 import java.util.*;
+import nl.leocms.util.*;
 import nl.leocms.authorization.AuthorizationHelper;
 import nl.leocms.authorization.UserRole;
 import nl.leocms.authorization.Roles;
@@ -129,7 +130,7 @@ public class ContentHelper {
 
       Node node = cloud.getNode(sNodeNumber);
       String otype = node.getStringValue("otype");
-      String thisType = getNameWithOtype(otype);
+      String thisType = (String) getNameWithOtype(otype);
             
       ApplicationHelper ap = new ApplicationHelper(cloud);
       
