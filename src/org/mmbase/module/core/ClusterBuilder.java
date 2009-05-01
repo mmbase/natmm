@@ -41,7 +41,7 @@ import org.mmbase.util.logging.*;
  * @author Rico Jansen
  * @author Pierre van Rooden
  * @author Rob van Maris
- * @version $Id: ClusterBuilder.java,v 1.2 2009-01-15 10:57:13 jkoster Exp $
+ * @version $Id: ClusterBuilder.java,v 1.1.8.1 2009-02-02 10:10:25 jkoster Exp $
  * @see ClusterNode
  */
 public class ClusterBuilder extends VirtualBuilder {
