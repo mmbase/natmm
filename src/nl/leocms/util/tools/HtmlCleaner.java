@@ -1,7 +1,10 @@
 package nl.leocms.util.tools;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.*;
+import java.io.*;
+import java.text.*;
+import org.mmbase.util.logging.*;
+import java.net.URLEncoder; 
 
 /**
  * Created by Henk Hangyi (MMatch)
@@ -9,7 +12,7 @@ import java.net.URLEncoder;
 
 public class HtmlCleaner {
 
-//   private static final Logger log = Logging.getLoggerInstance(HtmlCleaner.class);
+   private static final Logger log = Logging.getLoggerInstance(HtmlCleaner.class);
 
    public static String filterUTFChars(String textStr) {
        int uPos = textStr.indexOf("%u");
@@ -536,9 +539,6 @@ public class HtmlCleaner {
    }
 
    public static String cleanHtml(String text) {
-      if (text == null) return null;
-      if (text.equalsIgnoreCase("")) return text;
-      
        // *** everything in capitals ***
        text = replace(text,"<div","<DIV"); text = replace(text,"</div","</DIV");
        text = replace(text,"<h1","<H1"); text = replace(text,"</h1","</H1");
@@ -575,7 +575,7 @@ public class HtmlCleaner {
        text = cleanParam(text,"vAlign=");
        text = cleanParam(text,"width=");
        
-       // this looks strange but is intended to remove the crap that can come from the html-area
+       // this looks strange but is intended to remove the crapp that can come from the html-area
        text = replace(text,"<P >","<P>");
        text = cleanEmptyTag(text,"<P>","<P>","<P><P>");
        text = replace(text,"<P><P>","<P>");

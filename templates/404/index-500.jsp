@@ -16,7 +16,7 @@
 	</script>
 	<script type="text/javascript" src="<%=contextPath%>/404/menu-bovenkant.js"></script>
 	
-	<title>Natuurmonumenten - Sorry, dit verzoek kan niet uitgevoerd worden</title>
+	<title>Natuurmonumenten - Sorry, er is iets mis gegaan</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/natmm/hoofdsite/themas/main.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/natmm/hoofdsite/themas/default.css" />
@@ -50,7 +50,7 @@
 <tr>
    <td style="width:48%"></td>
    <td style="text-align:left; vertical-align:top; width:744;height:157px;padding-bottom:1px;"> 
-         <img src="<%=contextPath%>/404/pano_error_pagina.jpg" border="0"></td>
+         <img src="<%=contextPath%>/404/hooglander.jpg" border="0"></td>
 
    <td style="width:48%" rowspan="2" valign="top">
    <img src="<%=contextPath%>/natmm/media/natmm_logo_rgb1.gif" width="159" height="216" style="padding:0;">
@@ -63,18 +63,25 @@
 <table width="744" border="0" cellspacing="0" cellpadding="0" align="center" valign="top">
 <tr>
    <td style="vertical-align:top;width:374px;padding:10px;padding-top:0px"><br/>
-<p style="font-size:14px;color:#1D1E94;margin:0px 0px 5px 0px; font-weight: bold;">Error 400: Sorry, dit verzoek kan niet uitgevoerd worden</p>
+
+<p style="font-size:14px;color:#1D1E94;margin:0px 0px 5px 0px; font-weight: bold;">Error 500: Sorry, er is iets mis gegaan</p>
 &nbsp;<br />
+<p>Er is een serverfoutopgetreden bij het opvragen van uw pagina.</p>
+<br />
 <p>Onze excuses voor het ongemak.</p>
 &nbsp;<br />
-Als je denkt dat het een fout betreft zouden we het erg op prijs stellen als je de link die je probeerde te bereiken mailt naar
-<a href="mailto:webredactie@natuurmonumenten.nl?Subject=Error 400: Sorry, dit verzoek kan niet uitgevoerd worden">webredactie@natuurmonumenten.nl</a>.<br />
+Hier zijn een paar tips om de pagina alsnog te vinden:<br />
+&bull; als je handmatig een domeinadres hebt ingevuld, kijk of deze wel helemaal klopt<br />
+&bull; Gebruik de terug knop van uw browser om terug te gaan naar de vorige pagina en probeer de link nog eens<br />
+
+&bull; Gebruik onze zoekfunctie onderaan de pagina door een paar kernwoorden in te vullen <br />
+&bull; Gebruik onze navigatiebalk om de pagina alsnog te vinden<br />
+&bull; Probeer het later nog eens, de pagina kan tijdelijk niet beschikbaar zijn<br />
+&nbsp;<br />
+Als bovenstaande tips niet helpen zouden wij het erg op prijs stellen als je de link die je probeerde te bereiken mailt naar <a href="mailto:webredactie@natuurmonumenten.nl?Subject=Error 500: Sorry, er is iets mis gegaan">webredactie@natuurmonumenten.nl</a>.<br />
 Alvast bedankt.<br />
 &nbsp;<br />
-&nbsp;<br />
-&nbsp;<br />
-&nbsp;<br />
-&nbsp;<br />
+
 </div>      
 </table>
 </div>
@@ -115,7 +122,7 @@ Alvast bedankt.<br />
 </body>
 
 <!-- Begin Sitestat4 code -->
-<script type="text/javascript">
+<script language="JavaScript1.1">
 <!--
 function sitestat(ns_l){
    ns_l+="&ns__t="+new Date().getTime();ns_pixelUrl=ns_l;
