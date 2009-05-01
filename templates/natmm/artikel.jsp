@@ -1,6 +1,5 @@
 <% // *** one article, with shorties and teasers  *** %>
 <%@include file="includes/top0.jsp" %>
-<mm:content type="text/html" escaper="none">
 <mm:cloud jspvar="cloud">
 <%@include file="includes/top1_params.jsp" %>
 <%@include file="includes/top2_cacheparams.jsp" %>
@@ -34,7 +33,7 @@
          <jsp:param name="sr" value="0" />
       </jsp:include>
 	</td>
-	<td style="vertical-align:top;width:100%;padding-left:10px;">
+	<td style="vertical-align:top;width:100%;padding-left:10px;padding-right:10px;text-align:right;">
 	<br/>
 	   <jsp:include page="includes/artikel_12_column.jsp">
          <jsp:param name="r" value="<%= rubriekID %>" />
@@ -52,4 +51,6 @@
 <%@include file="includes/footer.jsp" %>
 </cache:cache>
 </mm:cloud>
-</mm:content>
+
+
+

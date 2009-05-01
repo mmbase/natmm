@@ -301,52 +301,42 @@ public class EventNotifier implements Runnable {
    }
 
    public String groupEventConfirmationPeriodExpired(Cloud cloud) { 
+      
       String logMessage = "";
-      
-      // groupevent confirmationperiod expired notifications are only sent on monday
-      Calendar rightNow = Calendar.getInstance();
-      int day = rightNow.get(Calendar.DAY_OF_WEEK);
-      
-      if (day == Calendar.MONDAY) {
-         int nEmailSend = 0;
+      int nEmailSend = 0;
+      try {   
+         // list all the group subscription:
+         // - not confirmed
+         // - confirmation period expired
+         long now = (new Date().getTime())/1000;
+         long one_day = 24*60*60;
+         long two_weeks = 14*one_day;
          
-         try {   
-            // list all the group subscription:
-            // - not confirmed
-            // - confirmation period expired
-            long now = (new Date().getTime())/1000;
-            long one_day = 24*60*60;
-            long two_weeks = 14*one_day;
-            
-            NodeIterator iNodes= cloud.getList(null
-               , "evenement,posrel,inschrijvingen,related,inschrijvings_status"
-               , "inschrijvingen.number, evenement.number"
-               , "inschrijvingen.datum_inschrijving < '" + (now - two_weeks) + "'"
-                 + " AND evenement.begindatum > '" + now + "'"       
-                 + " AND (inschrijvings_status.naam = 'aangemeld' OR"
-                 + " (inschrijvings_status.naam = 'website-aanmelding')"
-                 + " AND evenement.iscanceled='false'"
-               , null, null, null, false).nodeIterator();
-            
-            while(iNodes.hasNext()) {
-                Node nextNode = iNodes.nextNode();
-                String thisSubscription = nextNode.getStringValue("inschrijvingen.number");
-                String thisEvent= nextNode.getStringValue("evenement.number");
-                
-                // send notification if this event or its parent event is a group excursion
-                if (Evenement.isGroupExcursion(cloud, Evenement.findParentNumber(thisEvent))) {
-                   SubscribeAction.sendConfirmationPeriodExpired(cloud, thisSubscription);
-                   nEmailSend++;
-                } 
-            }   
-         } catch(Exception e) {
-            log.info(e);
-         }
-         logMessage += "\n<br>Number of groupevent confirmationperiod expired send " + nEmailSend;         
+         NodeIterator iNodes= cloud.getList(null
+            , "evenement,posrel,inschrijvingen,related,inschrijvings_status"
+            , "inschrijvingen.number, evenement.number"
+            , "inschrijvingen.datum_inschrijving < '" + (now - two_weeks) + "'"
+              + " AND evenement.begindatum > '" + now + "'"       
+              + " AND (inschrijvings_status.naam = 'aangemeld' OR"
+              + " (inschrijvings_status.naam = 'website-aanmelding')"
+              + " AND evenement.iscanceled='false'"
+            , null, null, null, false).nodeIterator();
+         
+         while(iNodes.hasNext()) {
+             Node nextNode = iNodes.nextNode();
+             String thisSubscription = nextNode.getStringValue("inschrijvingen.number");
+             String thisEvent= nextNode.getStringValue("evenement.number");
+             
+             // send notification if this event or its parent event is a group excursion
+             if (Evenement.isGroupExcursion(cloud, Evenement.findParentNumber(thisEvent))) {
+                SubscribeAction.sendConfirmationPeriodExpired(cloud, thisSubscription);
+                nEmailSend++;
+             } 
+         }   
+      } catch(Exception e) {
+         log.info(e);
       }
-      else {
-         logMessage += "\n<br>Groupevent confirmationperiod expired notifications are only send on monday";        
-      }      
+      logMessage += "\n<br>Number of groupevent confirmationperiod expired send " + nEmailSend;
       return logMessage;
    }   
    
