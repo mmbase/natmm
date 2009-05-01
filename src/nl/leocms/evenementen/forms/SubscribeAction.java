@@ -496,9 +496,6 @@ public class SubscribeAction extends Action {
          emailMsg.append("\nBetreft: \n");
          emailMsg.append("Aanmelding " + thisEvent.getStringValue("titel") + ", " + (new DoubleDateNode(thisEvent)).getReadableValue() + "\n");
          
-         emailMsg.append("\nActiviteitnummer: " + thisEvent.getStringValue("number") + "\n");
-         emailMsg.append("Aanmeldingsnummer: " + thisSubscription.getStringValue("number") + "\n");
-         
          emailMsg.append("\nAanmelder: \n");
          emailMsg.append(thisParticipantName + "\n");
          emailMsg.append(thisParticipant.getStringValue("email") + "\n");         
@@ -749,7 +746,6 @@ public class SubscribeAction extends Action {
             thisSubscription.setStringValue("source",subscribeForm.getSource());
             thisSubscription.setStringValue("description",subscribeForm.getDescription());
             thisSubscription.setStringValue("ticket_office",subscribeForm.getTicketOffice());
-            thisSubscription.setStringValue("ticket_office_source",subscribeForm.getTicketOfficeSource());
             thisSubscription.setStringValue("betaalwijze", subscribeForm.getPaymentType());
             thisSubscription.setStringValue("bank_of_gironummer", subscribeForm.getBankaccount());
             thisSubscription.commit();

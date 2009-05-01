@@ -439,22 +439,16 @@ public class MembershipForm extends ActionForm {
          } else if(this.getHousenumber().length()>6){
             errors.add("warning",new ActionError("membershipform.toolong.housenumber"));
          } else {
-            
-            int iHouseNumber = 0;
             try {
-               iHouseNumber = Integer.parseInt(this.getHousenumber());
-            } catch(Exception e) {
-               errors.add("warning",new ActionError("membershipform.housenumber.nan"));
-            }
-            try {
+               int iHouseNumber = Integer.parseInt(this.getHousenumber());
                if(!this.getAction().equals(skipValidationAction)
                   && assertZipCodeMap()
                   && !CSVReader.isInRange(zipCodeMap, zipcode, iHouseNumber)) {
                   errors.add("warning",new ActionError("membershipform.housenumber.notinrange"));
                }
             } catch(Exception e) {
-               errors.add("warning",new ActionError("membershipform.housenumber.notinrange"));
-            }            
+               errors.add("warning",new ActionError("membershipform.housenumber.nan"));
+            }
          }
 
          if(this.getHousenumber_extension().length()>6){

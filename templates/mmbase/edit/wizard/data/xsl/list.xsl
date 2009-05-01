@@ -7,7 +7,7 @@
     @author Kars Veling
     @author Michiel Meeuwissen
     @author Nico Klasens
-    @version $Id: list.xsl,v 1.5 2008-04-21 11:53:52 jkoster Exp $
+    @version $Id: list.xsl,v 1.3 2006-09-06 09:37:08 henk Exp $
     @version added newfromlist functionality
   -->
 
@@ -22,9 +22,6 @@
   </xsl:param>
   <xsl:param name="deletedescription">
     <xsl:value-of select="$tooltip_delete" />
-  </xsl:param>
-  <xsl:param name="removedescription">
-    <xsl:value-of select="$tooltip_remove" />
   </xsl:param>
 
   <xsl:param name="age" />
@@ -321,7 +318,7 @@
             <xsl:if test="$newfromlist!=&apos;-1&apos;">
               <a
                 href="{$deletepage}&amp;wizard={$wizard}&amp;objectnumber={@number}"
-                title="{$removedescription}">
+                title="Remove this item from the list. Removed items are still present in MMBase.">
                 <xsl:call-template name="prompt_remove" />
               </a>
             </xsl:if>
