@@ -3,7 +3,7 @@
 <mm:cloud jspvar="cloud">
 <%@include file="../includes/getstyle.jsp" %>
 <%
-String pageTitle = " " + NatMMConfig.getCompanyName() + ": ";
+String pageTitle = " " + NatMMConfig.companyName + ": ";
 String pageText = "";
 boolean bFirst = true; 
 %>

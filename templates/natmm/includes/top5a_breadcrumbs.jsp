@@ -6,16 +6,15 @@
 <% 
 if(iRubriekLayout==NatMMConfig.DEFAULT_LAYOUT) { 
 %><tr>
-	<td style="width:48%;background-color:#0076b9"></td>
-	<td style="width:744px;height:68px"><div style="background-color: #c6d5ec;">		
-	<table width="744" border="0" cellspacing="0" cellpadding="0" background="media/bgtab_ho_light.gif">
+	<td style="width:48%;background-color:#000039"></td>
+	<td style="width:744px;height:68px"><div style="background-color: #000098;">		
+	<table width="744" border="0" cellspacing="0" cellpadding="0" background="media/bgtab_ho.gif">
 		<tr>
-			<td style="width:523;height:68;vertical-align:bottom;padding-bottom:6px;">
+			<td style="width:523;height:68;vertical-align:bottom;padding-bottom:2px;">
 			<% 
       if(breadcrumbs.size()==2){
         %>
-				<span style="font-size:22px;color:#FFFFFF;margin:0px 0px 5px 0px; font-weight: bold;">Natuurmonumenten.</span>
-				<span style="font-size:16px;color:#FFFFFF;margin:0px 0px 5px 0px;">Als je van Nederland houdt.</span>
+				<div style="font-size:19px;color:#FFFFFF;margin:0px 0px 5px 0px;">Als je van Nederland houdt.</div>
         <% 
       } else { 
         for(int r=breadcrumbs.size()-2; r>=0; r--) {
@@ -74,7 +73,8 @@ if(iRubriekLayout==NatMMConfig.DEFAULT_LAYOUT) {
 	</td>
 	<td style="width:48%;background-color:#000098;vertical-align:bottom;">
 	<%--
-      <script type="text/javascript" src="scripts/styleswitcher.js"></script>
+      <script language="JavaScript1.1" src="scripts/styleswitcher.js">
+      </script>
       <input type="button" value="0" onclick="setActiveStyleSheet('default')">
       <input type="button" value="+" onclick="setActiveStyleSheet('groot')">
       <input type="button" value="++" onclick="setActiveStyleSheet('groter')">
