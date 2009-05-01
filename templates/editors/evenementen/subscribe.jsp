@@ -684,6 +684,7 @@ DoubleDateNode ddn = new DoubleDateNode();
          </td>
          <td colspan="5">
             <nobr>
+               <html:submit property="action" value="<%= SubscribeForm.ADDRESS_ACTION %>" style="<%= extButtonStyle %>" onclick="deleteCookie('ew')"/>
                <html:submit property="action" value="<%= SubscribeForm.SUBSCRIBE_ACTION %>" style="<%= buttonStyle %>" onclick="<%= ((!isGroupExcursion ? "checkMaxPerGroup()": "") + ";deleteCookie('ew')") %>" />
                <html:submit property="action" value="<%= SubscribeForm.CHANGE_ACTION %>" style="<%= buttonStyle %>" onclick="<%= ((!isGroupExcursion ? "checkMaxPerGroup()": "") + ";deleteCookie('ew')")%>" />
                
