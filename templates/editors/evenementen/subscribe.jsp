@@ -183,9 +183,6 @@ String sHighLight = "style=\"background-color:#729DC2;\"";
    } %>">
 <html:form action="/editors/evenementen/SubscribeAction" scope="session">
 <html:hidden property="ticketOffice" value="backoffice" />
-
-<html:hidden property="ticketOfficeSource" value="CAD" />
-
 <html:hidden property="userId" value="<%= cloud.getUser().getIdentifier() %>" />
 <html:hidden property="selectedParticipant" />
 <html:hidden property="subscriptionNumber" />
@@ -684,6 +681,7 @@ DoubleDateNode ddn = new DoubleDateNode();
          </td>
          <td colspan="5">
             <nobr>
+               <html:submit property="action" value="<%= SubscribeForm.ADDRESS_ACTION %>" style="<%= extButtonStyle %>" onclick="deleteCookie('ew')"/>
                <html:submit property="action" value="<%= SubscribeForm.SUBSCRIBE_ACTION %>" style="<%= buttonStyle %>" onclick="<%= ((!isGroupExcursion ? "checkMaxPerGroup()": "") + ";deleteCookie('ew')") %>" />
                <html:submit property="action" value="<%= SubscribeForm.CHANGE_ACTION %>" style="<%= buttonStyle %>" onclick="<%= ((!isGroupExcursion ? "checkMaxPerGroup()": "") + ";deleteCookie('ew')")%>" />
                

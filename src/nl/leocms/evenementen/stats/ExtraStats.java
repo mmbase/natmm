@@ -100,7 +100,7 @@ public class ExtraStats {
       int iResult = 0;
 
       if (statstype.equals("inschrijvingen")){
-         nl = cloud.getList(sEvenementenNumbers,sRealNodepath,"inschrijvingen.number",sRealConstraints,null,null,null,true);
+         nl = cloud.getList(sEvenementenNumbers,sRealNodepath,"inschrijvingen.number",sRealConstraints,null,null,null,false);
          iResult += nl.size();
       }
 
@@ -120,15 +120,11 @@ public class ExtraStats {
       }
 
       else if (statstype.equals("leden")){
-         if (boekingenTypeName.equals(BOEKINGEN_TYPE_INDIVIDUELE_BOEKINGEN)) {
-            if(!sRealConstraints.equals("")) { sRealConstraints += " AND "; }
-            sRealConstraints += " ( UPPER(deelnemers_categorie.naam) NOT like '%NIET%' )";
-            nl = cloud.getList(sEvenementenNumbers,sRealNodepath,"inschrijvingen.number,deelnemers.bron",sRealConstraints,null,null,null,false);
-            for(int i = 0; i < nl.size(); i++) {
-               iResult += nl.getNode(i).getIntValue("deelnemers.bron");             
-            }
-         } else {
-            iResult = 0;
+         if(!sRealConstraints.equals("")) { sRealConstraints += " AND "; }
+         sRealConstraints += " ( UPPER(deelnemers_categorie.naam) NOT like '%NIET%' )";
+         nl = cloud.getList(sEvenementenNumbers,sRealNodepath,"inschrijvingen.number,deelnemers.bron",sRealConstraints,null,null,null,false);
+         for(int i = 0; i < nl.size(); i++) {
+            iResult += nl.getNode(i).getIntValue("deelnemers.bron");
          }
       }
 
@@ -424,7 +420,7 @@ public class ExtraStats {
       /*NodeList nl = cloud.getList("","events_attachments","events_attachments.number","events_attachments.filename = '" + fileName + "'",null,null,null,false);
       if(nl.isEmpty()) {*/
 
-         WritableWorkbook workbook = Workbook.createWorkbook(new File(NatMMConfig.getTempDir() + fileName));
+         WritableWorkbook workbook = Workbook.createWorkbook(new File(NatMMConfig.tempDir + fileName));
         
          TreeMap regioMap = getRegios(cloud,"Regio");
          TreeMap extraOrdinaryRegioMap = getRegios(cloud,"Comm., Fondsenw., Ledens.");
@@ -602,13 +598,7 @@ public class ExtraStats {
 	                 //	If we have "zonder aanmeldingscategorie" we have to subtract the column totals from the values of this row.
 	                 // NB: it is assumed this is the last row of "Groepsboekingen". ( The sListTypeName starts with a "z". )
 	                 if(sListTypeName.equals(INSCHRIJVINGS_CATEGORIE_NIET_INGEDEELD)){
-
-                      if(sStatsType.equals("opbrengst")) {
-                         value = value - (thisBoekingenTypeTotal[columnNo-1] * 100);
-                      } 
-                      else {
-                         value = value - thisBoekingenTypeTotal[columnNo-1];
-                      }                     
+	                	 value = value - thisBoekingenTypeTotal[columnNo-1];
 	                 }
 	
 	                 if(sStatsType.equals("opbrengst")) {
@@ -629,7 +619,7 @@ public class ExtraStats {
 		                    value = 0;
                        }
 	                 }
-
+	
 	                 thisBoekingenTypeTotal[columnNo-1] += value;
 	                 nValue = new jxl.write.Number(columnNo, rowNo, value);
 	                 sheet.addCell(nValue);
@@ -824,7 +814,7 @@ public class ExtraStats {
 		 workbook.write();
 		 workbook.close();
 
-         String sFile = NatMMConfig.getTempDir() + fileName;
+         String sFile = NatMMConfig.tempDir + fileName;
          File f = new File(sFile);
          int fsize = (int)f.length();
          byte[] thedata = new byte[fsize];

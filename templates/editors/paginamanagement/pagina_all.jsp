@@ -1,15 +1,10 @@
-<%@page import="com.finalist.tree.*,nl.leocms.pagina.*,nl.leocms.authorization.*,nl.leocms.util.*,java.util.*" %>
+<%@page import="com.finalist.tree.*,nl.leocms.pagina.*,nl.leocms.authorization.*,nl.leocms.util.PaginaHelper" %>
 <%@include file="/taglibs.jsp" %>
 <mm:cloud jspvar="cloud" rank="basic user" method='http'>
 <%
 String account = cloud.getUser().getIdentifier();
-
-/* in the style of the rest of this site, a nice # HACK */
-String cookieVarName = "selectedsubsite_internet";
-if ((request.getRequestURL()).indexOf("internet") < 0) cookieVarName = "selectedsubsite_intranet";
-
 %>
-
+<cache:cache groups="<%= account %>" key="<%= account + "_pagina_all" %>" time="<%= 3600*24*7 %>" scope="application">
 <!-- <%= new java.util.Date() %> -->
 <html>
 <head>
@@ -37,35 +32,6 @@ if ((request.getRequestURL()).indexOf("internet") < 0) cookieVarName = "selected
       document.getElementById(hide1).style.display = 'none';
     }
    </script>
-   <script>
-      function setSubSite() {
-         var cookieSubsiteid = readCookie('<%=cookieVarName%>');
-         var subsiteid = 0;
-         
-         if (cookieSubsiteid) {
-            subsiteid = cookieSubsiteid;
-         }
-         
-         //alert("subsiteid: " + subsiteid);
-         for (i=0; i<document.getElementById('dropDownSubSite').length; i++) {
-           //alert("optionid: " + document.getElementById('dropDownSubSite').options[i].value);
-            
-            if (subsiteid == document.getElementById('dropDownSubSite').options[i].value) {
-               document.getElementById('dropDownSubSite').options[i].selected = true;
-               return;
-            }
-         }
-      }      
-      
-      function saveSubsiteCookie() {
-         var subsiteindex = document.getElementById('dropDownSubSite').selectedIndex;
-         var indexvalue = document.getElementById('dropDownSubSite').options[subsiteindex].value;
-         //alert("subsiteid: " + subsiteindex + " + " + indexvalue);
-         saveCookie('<%=cookieVarName%>',indexvalue,1);
-      }
-       
-   </script>
-
    <style>
       input {
    	    width:110px;
@@ -83,7 +49,7 @@ if ((request.getRequestURL()).indexOf("internet") < 0) cookieVarName = "selected
       }
    </style>
 </head>
-<body style="padding-left:2px;" onLoad="javascript:showEditorsButton();setSubSite();">
+<body style="padding-left:2px;" onLoad="javascript:showEditorsButton();">
 <div id="paginas">
 	<table cellpadding="3" cellspacing="0" style="width:100%;">
       <tr>
@@ -102,7 +68,7 @@ if ((request.getRequestURL()).indexOf("internet") < 0) cookieVarName = "selected
    	<tr><td><img src='../img/refresh.gif' border='0' align='middle'/></td><td style="font-size:10px;">= bekijk deze pagina in de preview</td></tr>
 	   <tr><td><img src='../img/remove.gif' border='0' align='middle'/></td><td style="font-size:10px;">= verwijder deze pagina</td></tr>
 	</table>
-	</p><br>
+	</p>
 	<%
 	String contentModusNodeNumber = (String) session.getAttribute("contentmodus.contentnodenumber");
   if ((contentModusNodeNumber != null)  && (!contentModusNodeNumber.equals(""))) {
@@ -115,59 +81,16 @@ if ((request.getRequestURL()).indexOf("internet") < 0) cookieVarName = "selected
     <%
   }
 	%>
-   
-   <p>
-      <form action="" method="POST">
-      <b>Kies subsite:</b> <select id="dropDownSubSite" name="pSubSite" onChange="javascript:saveSubsiteCookie();submit();" style="font-size: 12px;">
-      <%
-         RubriekHelper h = new RubriekHelper(cloud);
-         TreeMap subSites = (TreeMap) h.getSubObjects(cloud.getNode("root").getStringValue("number"),true);
-         Iterator i = subSites.entrySet().iterator();
-         while (i.hasNext()) {
-            Map.Entry e = (Map.Entry)i.next();
-            
-            if (e != null) {
-               String key = ((Integer) e.getKey()).toString();
-                              
-               if (key != null && key.length() > 0) {
-                  String value = (String)e.getValue();
-                  
-                  out.println("<option value=\"" + key + "\">" + cloud.getNode(value).getStringValue("naam") + "</option>");
-               }
-            }
-         }
-      %>
-      </select>
-      </form>      
-   </p>
-   
 	<span style="width:600px">
 	<%
-      PaginaTreeModel model = new PaginaTreeModel(cloud);
-	   HTMLSiteNavigatorTree t = new HTMLSiteNavigatorTree(model,"pagina");
-
-      // set subsiteid
-      String pSubSiteId = null;
-      
-      Cookie[] cookies = request.getCookies();
-      for(int j=0; j<cookies.length; j++) {
-         Cookie thisCookie = cookies[j];
-         if (thisCookie.getName().equals(cookieVarName)) {
-            pSubSiteId = thisCookie.getValue();
-         }
-      }
-
-      int subSiteId = (pSubSiteId != null) ? Integer.parseInt(pSubSiteId) : 0 ;
-      t.setSubSiteId(subSiteId);
-      
-      //System.out.println("subSiteId " + subSiteId);
-
-      AuthorizationHelper helper = new AuthorizationHelper(cloud);
-      java.util.Map roles = helper.getRolesForUser(helper.getUserNode(account));
-      t.setCellRenderer(new PaginaAllRenderer( model, roles, account, cloud, "workpane", request.getContextPath()) );
-      t.setExpandAll(false);
-      t.setImgBaseUrl("../img/");
-      t.render( out ); 
+  PaginaTreeModel model = new PaginaTreeModel(cloud);
+	HTMLTree t=new HTMLTree(model,"pagina");
+	AuthorizationHelper helper = new AuthorizationHelper(cloud);
+  java.util.Map roles=helper.getRolesForUser(helper.getUserNode(account));
+	t.setCellRenderer(new PaginaAllRenderer( model, roles, account, cloud, "workpane", request.getContextPath()) );
+  t.setExpandAll(false);
+	t.setImgBaseUrl("../img/");
+  t.render( out ); 
 	%>
 	</span>
 	<script language="Javascript1.2">restoreTree();</script>
@@ -189,5 +112,5 @@ if ((request.getRequestURL()).indexOf("internet") < 0) cookieVarName = "selected
 </div>
 </body>
 </html>
-
+</cache:cache>
 </mm:cloud>

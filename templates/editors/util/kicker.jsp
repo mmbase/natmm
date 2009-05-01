@@ -39,7 +39,7 @@
          </mm:compare>
          <mm:compare referid="a" value="dirreader">
             <% (new nl.leocms.util.tools.documents.DirReader()).run(); %>
-            De documenten zijn ingelezen van <%= NMIntraConfig.getSDocumentsRoot() %><br/>
+            De documenten zijn ingelezen van <%= NMIntraConfig.sDocumentsRoot %><br/>
          </mm:compare>
          <mm:compare referid="a" value="defaultrel">
             <% (new nl.leocms.util.MMBaseHelper(cloud)).addDefaultRelations(); %>
