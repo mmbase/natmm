@@ -22,6 +22,7 @@ public class SimpleStats
 			MMBaseContext mc = new MMBaseContext();
 			ServletContext application = mc.getServletContext();
 			saveLast(application);
+			resetVariables(application);
 		}
       log.info("done");
    }
@@ -38,24 +39,18 @@ public class SimpleStats
          while (pages.hasMoreElements()) {
             String thisPage = (String) pages.nextElement();
             int thisPageCount = ( (Integer) pageCounter.get(thisPage)).intValue();
-            // NMCMS-242 if node doesn't exist it will throw NodeNotFound exception
-            try {
-                Node this_page = transaction.getNode(thisPage);
-                if(this_page!=null) {
-                    RelationManager posrel = transaction.getRelationManager("posrel");
-                    Relation posrelRelation = posrel.createRelation(this_event, this_page);
-                    posrelRelation.setIntValue("pos", thisPageCount);
-                    posrelRelation.commit();
-                } else {
-                    log.info("page " + this_page + " does not exist, probably it was deleted today");
-                }
-            } catch(Exception e) {
-                log.info("page " + thisPage + " does not exist.");
+            Node this_page = transaction.getNode(thisPage);
+            if(this_page!=null) {
+               RelationManager posrel = transaction.getRelationManager("posrel");
+               Relation posrelRelation = posrel.createRelation(this_event, this_page);
+               posrelRelation.setIntValue("pos", thisPageCount);
+               posrelRelation.commit();
+            } else {
+               log.info("page " + this_page + " does not exist, probably it was deleted today");
             }
          }
          transaction.commit();
       }
-  	   resetVariables(application);
    }
 
    public void pageCounter(Cloud cloud, ServletContext application,

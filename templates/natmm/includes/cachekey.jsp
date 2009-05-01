@@ -1,17 +1,16 @@
 <%
 String cacheKey = rubriekID + "~"
    + paginaID + "~"
-   + adID + "~"
-   + artikelID + "~"
    + dossierID + "~"
-   + imgID + "~"
-   + shop_itemID + "~"
+   + artikelID + "~"
+   + evenementID + "~"
    + natuurgebiedID + "~" 
    + provID + "~"
    + vacatureID + "~"
-   + offsetID + "~"
-   + evenementID + "~"
-   + personID;
+   + imgID + "~"
+   + personID + "~"
+   + adID + "~"
+   + offsetID;
 String cacheKey_IE = cacheKey + "~IE";
 String cacheKey_NS = cacheKey + "~NS";
 cacheKey += "~" + (isIE ? "IE" : "NS" );

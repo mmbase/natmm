@@ -1,5 +1,4 @@
 <mm:remove referid="attachmentfound" />
-<mm:remove referid="this_article" />
 <mm:node element="artikel" id="this_article" jspvar="thisArticle">
   <mm:notpresent referid="ishome">
     <mm:related path="posrel1,paragraaf,posrel2,attachments"
@@ -9,10 +8,10 @@
          <a href="<mm:attachment />" target="_blank"><% 
              if(attachments_filename.indexOf(".pdf")>-1){ 
                 %><img src="media/icpdf.gif" alt="<mm:field name="title" />" border="0"><%
-             } else if(attachments_filename.indexOf(".doc")>-1 || attachments_filename.indexOf(".dot")>-1 || attachments_filename.indexOf(".rtf")>-1 ){ 
+             } else if(attachments_filename.indexOf(".doc")>-1){ 
                 %><img src="media/icword.gif" alt="<mm:field name="title" />" border="0"><%
              } else if(attachments_filename.indexOf(".xls")>-1){
-                %><img src="media/icexcel.gif" alt="<mm:field name="title" />" border="0"><%
+                %><img src="media/icxls.gif" alt="<mm:field name="title" />" border="0"><%
              } else if(attachments_filename.indexOf(".ppt")>-1){ 
                 %><img src="media/icppt.gif" alt="<mm:field name="title" />" border="0"><%
              } else { 

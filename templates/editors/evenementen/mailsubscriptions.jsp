@@ -3,15 +3,13 @@
 <mm:cloud jspvar="cloud" method="http" rank="basic user">
 <mm:import externid="event" jspvar="nodenr">-1</mm:import>
 <mm:import externid="emailto" jspvar="toAddress">-1</mm:import>
-<mm:import externid="extratekst" jspvar="extraText">-1</mm:import>
 <mm:node number="<%= nodenr %>" jspvar="thisEvent" notfound="skipbody"><%
 DoubleDateNode ddn = new DoubleDateNode(); 
 ddn.setBegin(new Date(thisEvent.getLongValue("begindatum")*1000));
 ddn.setEnd(new Date(thisEvent.getLongValue("einddatum")*1000));  
 
 if(!toAddress.equals("-1")) { 
-   String sPageURI = "/SubscribeInitAction.eb?number=" + nodenr + "&action=printsubscriptions&orderby=lastname&direction=up&showpastdates=true";
-   String sPageURI2 = "/editors/evenementen/SubscribeInitAction.eb?number=" + nodenr + "&action=printsubscriptions&orderby=lastname&direction=up&showpastdates=true";
+   String sPageURI = "/editors/evenementen/SubscribeInitAction.eb?number=" + nodenr + "&action=printsubscriptions&orderby=lastname&direction=up&showpastdates=true";
    String sPageURL = HttpUtils.getRequestURL(request).toString(); 
    sPageURL = sPageURL.substring(0,sPageURL.substring(7).indexOf("/")+7); 
    String subject = "Aanmeldingen " + thisEvent.getStringValue("titel") + " " + ddn.getReadableDate() + ", " + ddn.getReadableTime();
@@ -21,30 +19,17 @@ if(!toAddress.equals("-1")) {
          <% if(users_email.indexOf("@")>-1) { fromAddress = users_email; } %>
       </mm:field>
    </mm:listnodes>
-   <mm:createnode type="email" id="mail">
+   <mm:createnode id="thismail" type="email" id="mail">
 		<mm:setfield name="from"><%= fromAddress %></mm:setfield>
 		<mm:setfield name="subject"><%= subject %></mm:setfield>
 		<mm:setfield name="body">
 			<multipart id="plaintext" type="text/plain" encoding="UTF-8">
-				Bekijk de aanmeldingen op: <%= sPageURL%><mm:url page="/editors/evenementen"/><%=sPageURI %>
-                        
-            <% if ((extraText != null) && (!"".equals(extraText))) { %>
-            \n\nExtra opmerkingen:\n
-            <%=extraText%>
-            <% } %>
-            
+				Bekijk de aanmeldingen op: <%= sPageURL + sPageURI %>
 			</multipart>
 			<multipart id="htmltext" alt="plaintext" type="text/html" encoding="UTF-8">
-            Slecht leesbaar? Print aanmeldingen vanaf de website: <a href="<%= sPageURL%><mm:url page="/editors/evenementen"/><%=sPageURI %>">klik hier</a>
+            Slecht leesbaar? Print aanmeldingen vanaf de website: <a href="<%= sPageURL + sPageURI %>">klik hier</a>
             <br/><br/>
-            
-            <% if ((extraText != null) && (!"".equals(extraText))) { %>
-            Extra opmerkingen:<br/>
-            <%=extraText%>
-            <br/><br/>
-            <% } %>
-
-				<mm:include page="<%= sPageURI2 %>" />
+				<mm:include page="<%= sPageURI %>" />
 			</multipart>
 		</mm:setfield>
 	</mm:createnode>
@@ -90,10 +75,6 @@ if(!toAddress.equals("-1")) {
       <tr>
          <td class="fieldname">Email adres:</td>
          <td><input type="text" name="emailto" value="" style="width:200px;" /><br/><br/></td>
-      </tr>
-      <tr>
-         <td class="fieldname">Extra tekst:</td>
-         <td><textarea cols="60" rows="10" name="extratekst" value=""></textarea><br/><br/></td>
       </tr>
       <tr>
          <td colspan="2"><input type="submit" value="verzend" style="width:100px;text-align:center;" /></td>

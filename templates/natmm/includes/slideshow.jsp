@@ -15,7 +15,7 @@
    int thisImageNumber = 1;
    String imageId = request.getParameter("i");
    String offsetID= request.getParameter("o");
-   String pageTitle = " " + NatMMConfig.getCompanyName() + ": ";
+   String pageTitle = " " + NatMMConfig.companyName + ": ";
    String pageText = "<table cellspacing=\"0\" cellpadding=\"0\"><tr><td width=\"430\">"; %>
 <%@include file="../includes/splitimagelist.jsp"%>
 <% String pageUrl = "slideshow.jsp?o=" + offsetID+ "&r=" + rubriekID; %>
@@ -81,8 +81,14 @@
           }
       };
     
+      if ((navigator.appName == "Microsoft Internet Explorer") && (parseInt(navigator.appVersion) < 4 )) {
+         document.write("<link rel=stylesheet href=\"../hoofdsite/themas/ie3_main.css\" type=\"text/css\">"); 
+      } else {
+         document.write("<link rel=stylesheet href=\"../hoofdsite/themas/main.css\" type=\"text/css\">");
+      }
+      // -->
+      
    </script>
-   <link rel="stylesheet" type="text/css" href="../hoofdsite/themas/main.css"  title="default" />
    <% if(styleSheet!=null) { %><link rel="stylesheet" type="text/css" href="../<%= styleSheet %>" /><% } %>
    </head>
    <body style="padding:0px;margin:0px;overflow:no;text-align:center;" class="maincolor" onLoad="javascript:resizeDiv()">

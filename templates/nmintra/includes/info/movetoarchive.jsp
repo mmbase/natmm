@@ -13,8 +13,7 @@ boolean isArchive = false;
 %></mm:node><%
 if(!isArchive) {
    /* 
-   move expired artikelen to archive or artikel node and related paragraphs
-   note: related images, attachments and links are not deleted
+   move expired artikelen to archive or delete node
    pages can have their individual archives by using a pagina,readmore,pagina relationship
    if this relation is not present the general archive with oalias "archief" is used
    */
@@ -37,9 +36,9 @@ if(!isArchive) {
                   ><mm:field name="archive"
                      ><mm:compare value="no"
                         ><mm:relatednodes type="paragraaf"
-                           ><mm:deletenode deleterelations="true"
+                           ><mm:deletenode 
                         /></mm:relatednodes
-                        ><mm:deletenode deleterelations="true"
+                        ><mm:deletenode
                         /></mm:compare
                      ><mm:compare value="no" inverse="true"
                         ><mm:createrelation source="archive" destination="thisarticle" role="contentrel" 
@@ -59,9 +58,9 @@ if(!isArchive) {
    	><mm:deletenode element="contentrel" 
       /><mm:node element="artikel"
          ><mm:relatednodes type="paragraaf"
-            ><mm:deletenode deleterelations="true"
+            ><mm:deletenode 
          /></mm:relatednodes
-         ><mm:deletenode deleterelations="true"
+         ><mm:deletenode
       /></mm:node
    ></mm:list><%
 }

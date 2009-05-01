@@ -97,7 +97,6 @@ public class MembershipForm extends ActionForm {
    private String dayofbirthDate;
    private int dayofbirthMonth;
    private String dayofbirthYear;
-   private ArrayList streets;		// used to extract multiple streets for one zip code
 
    TreeMap zipCodeMap;
 
@@ -108,7 +107,6 @@ public class MembershipForm extends ActionForm {
          zipCodeMap = (TreeMap) application.getAttribute("zipCodeMap");
          if(zipCodeMap==null) {
             (new CSVReader(CSVReader.ONLY_ZIPCODELOAD)).run();
-            zipCodeMap = (TreeMap) application.getAttribute("zipCodeMap");
          }
       }
       return country_code!=null && country_code.equals(DEFAULT_COUNTRY) && (zipCodeMap!=null);
@@ -172,32 +170,13 @@ public class MembershipForm extends ActionForm {
    public String getLastname() { return lastname; }
    public void setLastname(String lastname) { this.lastname = SubscribeForm.cleanName(lastname); }
 
-   /*
    public String getStreet() {
       if(assertZipCodeMap()) {
          street = CSVReader.getStreet(zipCodeMap, zipcode, street);
       }
       return street;
    }
-   */
-   public String getStreet() {
-	      return street;
-	   }
    public void setStreet(String street) { this.street = street.toUpperCase(); }
-
-   /**
-    * Returns all streets for the zip code specified in this object.
-    * 
-    * @return All streets for a passed zip code or an empty arraylist if none can be found
-    */
-   public ArrayList getStreets() {
-	   if(assertZipCodeMap()) {
-		   return CSVReader.getStreets(zipCodeMap, zipcode, street);
-	   }
-	   return new ArrayList();
-   }
-   public void setStreets(Object streets) { }
-   
 
    public String getHousenumber() { return housenumber; }
    public void setHousenumber(String housenumber) { this.housenumber = housenumber; }
@@ -439,22 +418,16 @@ public class MembershipForm extends ActionForm {
          } else if(this.getHousenumber().length()>6){
             errors.add("warning",new ActionError("membershipform.toolong.housenumber"));
          } else {
-            
-            int iHouseNumber = 0;
             try {
-               iHouseNumber = Integer.parseInt(this.getHousenumber());
-            } catch(Exception e) {
-               errors.add("warning",new ActionError("membershipform.housenumber.nan"));
-            }
-            try {
+               int iHouseNumber = Integer.parseInt(this.getHousenumber());
                if(!this.getAction().equals(skipValidationAction)
                   && assertZipCodeMap()
                   && !CSVReader.isInRange(zipCodeMap, zipcode, iHouseNumber)) {
                   errors.add("warning",new ActionError("membershipform.housenumber.notinrange"));
                }
             } catch(Exception e) {
-               errors.add("warning",new ActionError("membershipform.housenumber.notinrange"));
-            }            
+               errors.add("warning",new ActionError("membershipform.housenumber.nan"));
+            }
          }
 
          if(this.getHousenumber_extension().length()>6){
@@ -638,13 +611,13 @@ public class MembershipForm extends ActionForm {
 
   public void sendSubscription(Cloud cloud, Node thisMember) {
 
-      String fromEmailAddress = NatMMConfig.getFromEmailAddress();
+      String fromEmailAddress = NatMMConfig.fromEmailAddress;
 
       Node emailNode = cloud.getNodeManager("email").createNode();
       emailNode.setValue("from", fromEmailAddress);
       emailNode.setValue("subject", "Lid worden");
       emailNode.setValue("replyto", fromEmailAddress);
-      emailNode.setValue("to",  NatMMConfig.getToSubscribeAddress());
+      emailNode.setValue("to",  NatMMConfig.toSubscribeAddress);
       emailNode.setValue("body",
                       "<multipart id=\"plaintext\" type=\"text/plain\" encoding=\"UTF-8\">"
                          + getSubscribeMessage(thisMember, "plain")
@@ -691,9 +664,9 @@ public class MembershipForm extends ActionForm {
      String toEmailAddress = thisMember.getStringValue("email");
      Node emailNode = cloud.getNodeManager("email").createNode();
      emailNode.setValue("to", toEmailAddress);
-     emailNode.setValue("from", NatMMConfig.getToSubscribeAddress());
+     emailNode.setValue("from", NatMMConfig.toSubscribeAddress);
      emailNode.setValue("subject", emailSubject);
-     emailNode.setValue("replyto", NatMMConfig.getToSubscribeAddress());
+     emailNode.setValue("replyto", NatMMConfig.toSubscribeAddress);
      emailNode.setValue("body", "<multipart id=\"plaintext\" type=\"text/plain\" encoding=\"UTF-8\">"
         + getMessage(thisMember,"plain") + "</multipart>"
         + "<multipart id=\"htmltext\" alt=\"plaintext\" type=\"text/html\" encoding=\"UTF-8\">"
@@ -716,18 +689,16 @@ public class MembershipForm extends ActionForm {
      }
      message += " " + thisMember.getStringValue("lastname") + "," + newline + newline;
      message += "Welkom als nieuw lid bij Natuurmonumenten.  " +
-        "Fijn dat u de natuur in Nederland wilt steunen want de natuur kan niet zonder uw steun. " +  newline + newline +
-        
-        "Binnen enkele weken ontvangt u het welkomstpakket met daarin \"Het Natuurboek\", een prachtig boek, " +
-        "boordevol informatie over natuur in Nederland voor jong en oud, het kwartaalmagazine Natuurbehoud en " +
-        "uw lidmaatschapspas met daarop uw persoonlijke lidmaatschapsnummer."  +  newline + newline +
-        
+        "Fijn dat u de natuur in Nederland wilt steunen want de natuur kan niet zonder uw steun. " +
         "Om u zo snel mogelijk van dienst te zijn, geven wij u nu een tijdelijk lidmaatschapsnummer, " +
-        "waarmee u direct gebruik kunt maken van alle voordelen en aanbiedingen voor leden zoals korting " + 
-        "op artikelen uit onze webwinkel. Kijk voor meer voordelen op <a href='http://www.natuurmonumenten.nl/steun_ons/acties_en_voordeel_voor_leden.htm'>onze website</a>" + newline + newline; 
-
+        "waarmee u direct gratis bijzondere fiets- en wandelroutes van onze <a href='http://www.natuurmonumenten.nl/routes'>website</a> kunt dowloaden." + newline + newline;
      message += "Uw voorlopig lidnummer: 9002162" + newline + newline;
-
+     message += "Binnen enkele weken ontvangt u het welkomstpakket met daarin \"Het Natuurboek\", een prachtig boek, " +
+         "boordevol informatie over natuur in Nederland voor jong en oud, " +
+    //  message += "Binnen enkele weken ontvangt u het welkomstpakket met daarin de Natuurwijzer, " +
+    //  "het prachtige boek, boordevol informatie over natuur in Nederland, " +
+        "het kwartaalmagazine Natuurbehoud en uw lidmaatschapspas met daarop uw persoonlijke lidmaatschapsnummer." + newline +
+        "Vanaf dat moment kunt u inloggen op de site met uw eigen lidmaatschapsnummer." + newline + newline;
      if (thisMember.getStringValue("payment_type").equals("A")) {
         message += "U heeft aangegeven per acceptgiro te willen betalen, " +
             " deze sturen wij u binnen enkele weken toe. ";
@@ -745,9 +716,9 @@ public class MembershipForm extends ActionForm {
      }
      message += "Heeft u vragen, mail ons dan via het vragen formulier op onze website: ";
      if(type.equals("html")) {
-         message += "<a href='" + NatMMConfig.getInfoUrl() + "'>" + NatMMConfig.getInfoUrl() + "</a>";
+         message += "<a href='" + NatMMConfig.infoUrl + "'>" + NatMMConfig.infoUrl + "</a>";
      } else {
-         message +=  NatMMConfig.getInfoUrl();
+         message +=  NatMMConfig.infoUrl;
      }
      message += " of bel 035-6559911. " + newline + newline;
      message +=
@@ -756,9 +727,9 @@ public class MembershipForm extends ActionForm {
         "algemeen directeur" + newline + newline;
      message += "P.S. Heeft u zich bedacht? Stuur dan binnen 3 dagen een mailtje met uw naam, postcode en huisnummer naar ";
      if(type.equals("html")) {
-         message += "<a href='mailto:" + NatMMConfig.getToSubscribeAddress() + "'>" + NatMMConfig.getToSubscribeAddress() + "</a>";
+         message += "<a href='mailto:" + NatMMConfig.toSubscribeAddress + "'>" + NatMMConfig.toSubscribeAddress + "</a>";
      } else {
-         message += NatMMConfig.getToSubscribeAddress();
+         message += NatMMConfig.toSubscribeAddress;
      }
      message += ". Wij maken uw aanmelding dan ongedaan. Deze email moet de volgende regels bevatten:" + newline + newline;
      message += "naam: " + thisMember.getStringValue("lastname") + newline;

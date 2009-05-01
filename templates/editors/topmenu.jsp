@@ -1,5 +1,4 @@
 <%@include file="/taglibs.jsp" %>
-<mm:content type="text/html" escaper="none">
 <%@page import="nl.leocms.util.PropertiesUtil,nl.leocms.util.ApplicationHelper,org.mmbase.bridge.*,java.net.*" %>
 <% 
 // make sure website_user is not used as editor account
@@ -111,16 +110,8 @@ String sNatuurinNumber = "";
       <% hasEditwizards = true; %>
    </mm:related>
 </mm:listnodes>
-<% String subDir = ""; %>
-<mm:list nodes="root" path="rubriek1,parent,rubriek2" orderby="parent.pos" directions="UP" max="1">
-   <mm:field name="rubriek2.url_live" jspvar="url_live" vartype="String" write="false">
-      <mm:isnotempty>
-        <% subDir= "/" + url_live; %>
-      </mm:isnotempty>
-   </mm:field>
-</mm:list>
 <div style="position:absolute;left:5px;top:5px;z-index:100;overflow:auto;"><small>
-<%
+<% 
 	for (Iterator it = tsRubrieks.iterator(); it.hasNext(); ) { 
 		rubriekID = (String) it.next();
 		String paginaId = rh.getFirstPage(rubriekID);
@@ -142,7 +133,7 @@ String sNatuurinNumber = "";
 	<%
 	if (isEventUser) { 
 		%>
-		<td class="fieldname"><a href="<mm:url page="<%= subDir + "/events.jsp" %>" />" target="_blank" class="menu" title="bekijk de agenda">Agenda</a></td>
+		<td class="fieldname"><a href="/activiteiten" target="_blank" class="menu" title="bekijk de agenda">Agenda</a></td>
 		<%
 		if (isAdmin) {
 			%>
@@ -180,11 +171,13 @@ String sNatuurinNumber = "";
 </table>
 <div style="position:absolute;right:5px;top:5px;z-index:100">
   <small>
-    <li><a class="menu" target="bottompane" href="<mm:url page="<%= subDir + "/doc/index.jsp" %>" />" title="klik hier om de gebruikershandleidingen te bekijken of te downloaden">gebruikershandleiding</a><br/>
+    <li><a class="menu" target="bottompane" href="<mm:list nodes="root" path="rubriek1,parent,rubriek2" orderby="parent.pos" directions="UP" max="1"
+      ><mm:field name="rubriek2.url_live"><mm:isnotempty>/<mm:write/></mm:isnotempty></mm:field></mm:list
+      >/doc/index.jsp" title="klik hier om de gebruikershandleidingen te bekijken of te downloaden">gebruikershandleiding</a><br/>
     <% String webmasterMail = ""; %>
     <mm:listnodescontainer type="users"
        ><mm:constraint field="rank" operator="=" value="administrator" 
-       /><mm:listnodes searchdirs="destination"
+       /><mm:listnodes
           ><mm:first inverse="true"><% webmasterMail += ";"; %></mm:first
           ><mm:field name="emailadres" jspvar="dummy" vartype="String" write="false"
              ><% webmasterMail += dummy; 
@@ -201,4 +194,3 @@ String sNatuurinNumber = "";
 </html>
 </cache:cache>
 </mm:cloud>
-</mm:content>

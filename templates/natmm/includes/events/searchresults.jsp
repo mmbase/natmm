@@ -39,9 +39,7 @@ if(application.getAttribute("events_till")!=null
    }
 }
 parentEvents = new HashSet();
-%>
-<%-- added evenement_type enforcement by a path change. from "evenement" to "evenement,related,evenement_type" --%>
-<mm:list nodes="<%= thisEvents %>" path="evenement,related,evenement_type" fields="evenement.number" constraints="<%= sParentConstraint %>"
+%><mm:list nodes="<%= thisEvents %>" path="evenement" fields="evenement.number" constraints="<%= sParentConstraint %>"
    ><mm:field name="evenement.number" jspvar="parent_number" vartype="String" write="false"><% 
       boolean parentBelongsToActivityType = true;
       if(!sActivityTypes.equals("")) { // *** only use constraint for events that do have an activity type
@@ -87,40 +85,33 @@ TreeMap events = new TreeMap();
 if(!thisEvents.equals("")) {
    %><mm:list nodes="<%= thisEvents %>" path="evenement1,partrel,evenement" searchdir="destination"
       fields="evenement.number" constraints="<%= sChildConstraints %>"
-      ><mm:node element="evenement" jspvar="evenement"><%
-         if(!events.containsValue(evenement.getStringValue("number")) ) {
-            long eventBeginDate = evenement.getLongValue("begindatum");
-            while(events.containsKey(new Long(eventBeginDate))) {
-               eventBeginDate++;	
-            }
-            events.put(new Long(eventBeginDate),evenement.getStringValue("number"));
-         }
+      ><mm:node element="evenement" jspvar="evenement"><% 
+         long eventBeginDate = evenement.getLongValue("begindatum");
+	 while(events.containsKey(new Long(eventBeginDate))) {
+	    eventBeginDate++;	
+	 }
+	 events.put(new Long(eventBeginDate),evenement.getStringValue("number")); 
       %></mm:node
    ></mm:list
    ><mm:list nodes="<%= thisEvents %>" path="evenement"
       fields="evenement.number" constraints="<%= sChildConstraints %>"
       ><mm:node element="evenement" jspvar="evenement"><% 
-         if(!events.containsValue(evenement.getStringValue("number")) ) {
-            long eventBeginDate = evenement.getLongValue("begindatum");
-            while(events.containsKey(new Long(eventBeginDate))) {
-               eventBeginDate++;	
-            }
-            events.put(new Long(eventBeginDate),evenement.getStringValue("number"));
-         }
+         long eventBeginDate = evenement.getLongValue("begindatum");
+	 while(events.containsKey(new Long(eventBeginDate))) {
+	    eventBeginDate++;	
+	 }
+	 events.put(new Long(eventBeginDate),evenement.getStringValue("number")); 
       %></mm:node
    ></mm:list><%
 }
-%>
-<%--
+%><%--
 <table>
    <tr><td>Type</td><td><%= sActivityTypes %></td></tr>
    <tr><td>Provence</td><td><%= sParentConstraint %></td></tr>
    <tr><td>Natuurgebied</td><td><%= natuurgebiedID %></td></tr>
    <tr><td>Time</td><td><%= sChildConstraints %></td></tr>
-   <tr><td>Events</td><td><%= events %></td></tr>
 </table>
---%>
-<%
+--%><%
 int listSize = events.size();
 int pageSize = 50;
 int thisOffset = 0;

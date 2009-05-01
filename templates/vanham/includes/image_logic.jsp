@@ -2,25 +2,38 @@
 ><mm:field name="posrel.pos" jspvar="posrel_pos" vartype="String" write="false"
 ><mm:field name="images.number" write="false" jspvar="images_number" vartype="String"><% 
 
+// *** position and size of images related to shorties and teasers
+// imgFormat == "" is default
+// Articles: when posrel.pos should be 1 or 7, imgFormat has to be "rightcolumn" to show the image
+// Teasers and shorties: when imgFormat is "half_shorty" the image should be scalled to 50% of the columnwidth
+
 	String imgFloat ="float:none;";
-  String imgWidth = "";
-	if(posrel_pos.equals("-1")) { posrel_pos = "0"; } 
-  
-  // this include supports the settings of option_lists/images_position_onecolumn.xml
-  
-	if(posrel_pos.equals("0")){          // original size, left
+	String imgParams = "";
+	if(posrel_pos.equals("6")) { posrel_pos = "0"; } 
+
+	if(posrel_pos.equals("0")){
 		imgFloat = "float:left;margin-right:10px;margin-bottom:5px;margin-top:3px;";
-	} else if(posrel_pos.equals("5")){   // original size, no floating text
+	} else if(posrel_pos.equals("5")){
 		imgFloat = "float:none;";
-	} else if(posrel_pos.equals("2")){   // small left
-		imgWidth = "83";
+	} else if(posrel_pos.equals("2")){
+		imgParams = "s(83)";
 		imgFloat = "float:left;margin-right:10px;margin-bottom:5px;margin-top:3px;";
-	} else if(posrel_pos.equals("3")){   // small right
-		imgWidth = "83";
+	} else if(posrel_pos.equals("3")){
+		imgParams = "s(83)";
 		imgFloat = "float:right;margin-left:10px;margin-bottom:5px;margin-top:3px;";
-	} else if(posrel_pos.equals("4")){   // large
-		imgWidth = "682";
-		imgFloat = "float:center;padding-bottom:10px;";
+	} else if(posrel_pos.equals("1") ){
+		imgParams = "s(165)";
+		imgFloat = "float:none;";
+	} else if(posrel_pos.equals("7")){
+		imgParams = "";
+		imgFloat = "float:none;";
+	} else if(posrel_pos.equals("4")){
+		if(imgFormat.equals("route")) {
+			imgParams = "s(500)";
+		} else {
+			imgParams = "s(352)";
+			imgFloat = "float:center;padding-bottom:10px;";
+		}
 	}
 	
 	boolean resetLink = false;
@@ -37,21 +50,25 @@
 		<mm:field name="alt_tekst" jspvar="alt_tekst" vartype="String" write="false"><%
 			altTXT = alt_tekst; 
 		%></mm:field>
-		<div class="caption" style="width:<%= imgWidth %>px;<%= imgFloat %>">
-         <% if(validLink){	%>
-               <div style="position:relative;right:7px;top:7px;"><div style="visibility:visible;position:absolute;top:0px;right:0px;"><a href="javascript:void(0);" onClick="<%= readmoreURL %>"><img src="<%= (isSubDir? "../" : "" ) %>media/zoom.gif" border="0" alt="<bean:message bundle="<%= "VANHAM." + language %>" key="cv.click.to.enlarge" />" /></a></div></div>
-               <a href="javascript:void(0);" onClick="<%= readmoreURL %>">
-         <% }	
-         %><img src="<mm:image template="<%= (!"".equals(imgWidth) ? "s(" + imgWidth + ")" : "" ) %>"/>" alt="<%= altTXT %>"  border="0"><%
-         if(validLink) { 
-            %></a><%
-         }	%>
+		<table style="width:1%;<%= imgFloat %>" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td style="padding:0px;margin:0px;text-align:right;">
+				<% if(validLink){	%>
+						<div style="position:relative;left:-17px;top:7px;"><div style="visibility:visible;position:absolute;top:0px;left:0px;"><a href="javascript:void(0);" onClick="<%= readmoreURL %>"><img src="<%= (isSubDir? "../" : "" ) %>media/zoom.gif" border="0" alt="klik voor vergroting" /></a></div></div>
+						<a href="javascript:void(0);" onClick="<%= readmoreURL %>">
+				<% }	
+				%><img src="<mm:image template="<%=imgParams%>"/>" alt="<%= altTXT %>"  border="0"><%
+				if(validLink) { 
+					%></a><%
+				}	%>
+				</td>
+			</tr>
 			<mm:field name="bron"
 				><mm:isnotempty
-					><bean:message bundle="<%= "VANHAM." + language %>" key="slide.photography" />: <mm:write />
+					><tr><td class='imagecaption'>Bron: <mm:write /></td></tr>
 				</mm:isnotempty
 			></mm:field>
-		</div>
+		</table>
 	</mm:node><%
 	if(resetLink) { readmoreURL = ""; validLink = false; }
 %></mm:field

@@ -29,7 +29,7 @@ String sRubriekLayout = request.getParameter("rl");
          %>
       </select>
       <select name="from_year">
-         <% for(int f = 2007; f < 2013; f++) { 
+         <% for(int f = 2000; f < 2010; f++) { 
             %><option value="<%=f%>"<% if(iFromYear == f) { %> selected <% } %>><%=f%></option><%
             }
          %>
@@ -50,7 +50,7 @@ String sRubriekLayout = request.getParameter("rl");
          %>
       </select>
       <select name="till_year">
-         <% for(int f = 2007; f < 2013; f++) { 
+         <% for(int f = 2000; f < 2010; f++) { 
             %><option value="<%=f%>"<% if(iTillYear == f) { %> selected <% } %>><%=f%></option><%
             }
          %>
@@ -148,7 +148,7 @@ if(!sRubriekLayout.equals("" + NatMMConfig.DEMO_LAYOUT)) {
    <br/>
    <br/>
 </form>
-<script type="text/javascript"> 
+<script language="javascript"> 
 <!-- 
 function setOptionsN(chosen) 
 { 

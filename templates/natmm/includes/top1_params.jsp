@@ -1,6 +1,5 @@
 <%
 PaginaHelper ph = new PaginaHelper(cloud);
-RubriekHelper rubriekHelper = new RubriekHelper(cloud);
 String path = ph.getTemplate(request);
 
 HashMap ids = new HashMap();
@@ -11,15 +10,13 @@ ids.put("ads", adID);
 ids.put("artikel", artikelID);
 ids.put("dossier", dossierID);
 ids.put("images", imgID);
-ids.put("items", shop_itemID);
 ids.put("link", linkID);
 ids.put("linklijst", linklijstID);
 ids.put("natuurgebieden", natuurgebiedID);
 ids.put("persoon", personID);
 ids.put("provincies", provID);
 ids.put("vacature", vacatureID);
-ids.put("items", shop_itemID);
-ids.put("isNaardermeer", isNaardermeer);
+ids.put("items", shop_itemId);
 
 ids = ph.findIDs(ids, path, "nm_pagina");
 
@@ -30,15 +27,13 @@ adID = (String) ids.get("ads");
 artikelID = (String) ids.get("artikel");
 dossierID = (String) ids.get("dossier");
 imgID = (String) ids.get("images");
-shop_itemID = (String) ids.get("items");
 linkID = (String) ids.get("link");
 linklijstID = (String) ids.get("linklijst");
 natuurgebiedID = (String) ids.get("natuurgebieden");
 personID = (String) ids.get("persoon");
 provID = (String) ids.get("provincies");
 vacatureID = (String) ids.get("vacature");
-shop_itemID = (String) ids.get("items");
-isNaardermeer = (String) ids.get("isNaardermeer");
+shop_itemId = (String) ids.get("items");
 
 Vector breadcrumbs = new Vector();
 String lnRubriekID = "";
@@ -117,9 +112,9 @@ if(application.getAttribute("request_url")==null) {
    application.setAttribute("request_url", javax.servlet.http.HttpUtils.getRequestURL(request).toString());
 }
 
-if(!(new java.io.File( NatMMConfig.getIncomingDir() )).exists()) {
+if(!(new java.io.File( NatMMConfig.incomingDir )).exists()) {
    %><div style="position:absolute;color:red;font-weight:bold;padding:30px;">
-         WARNING: The settings in NatMMConfig are incorrect: <%= NatMMConfig.getIncomingDir() %> is not a directory on this server.
+         WARNING: The settings in NatMMConfig are incorrect: <%= NatMMConfig.incomingDir %> is not a directory on this server.
          Please change the settings and place a new natmm.jar
    </div><%
 }

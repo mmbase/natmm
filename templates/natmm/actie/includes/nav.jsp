@@ -24,15 +24,6 @@ try{
    int objectCount = 0; 
    int pagesCount = 0;
    %>
-   
-    <%
-    //Please check the navsettings.jsp for details. 2 constraints should be seperated by e.g. ' AND '.
-    if (objectConstraint!= null && objectConstraint.length()>0) { 
-      objectConstraint += " AND ";
-    }  
-    objectConstraint += (new SearchUtil()).articleConstraint(nowSec, quarterOfAnHour);
-    %>
-   
    <mm:relatednodes type="<%= objecttype %>" path="<%= "contentrel," + objecttype %>" constraints="<%= objectConstraint %>">
     <mm:first><mm:size jspvar="dummy" vartype="String" write="false">
       <% objectCount = Integer.parseInt(dummy); 
@@ -63,19 +54,14 @@ try{
        </mm:isnotempty>
        </mm:field>
        <mm:compare referid="show_links" value="true">
-
           <mm:relatednodes type="<%= objecttype %>" path="<%= "contentrel," + objecttype %>"
              offset="<%= "" + (thisOffset-1)*objectPerPage %>" max="<%= ""+ objectPerPage %>" 
-             constraints="<%= objectConstraint %>" orderby="<%= objecttype + "." + objectdate %>" directions="DOWN">
-            <tr style="padding-bottom:0px;">
+             constraints="<%= objectConstraint %>" orderby="<%= objectOrderby %>" directions="<%= objectDirections %>">
+            <tr style="padding-bottom:10px;">
               <td valign="top" style="width:5px; padding-left:7px; padding-right:3px"><span style="font:bold 110%;color:red">></span></td>
               <td>
                 <mm:field name="number" jspvar="oNumber" vartype="String" write="false">
-                  <a href="<%= ph.createItemUrl(oNumber, paginaID,"offset="+thisOffset,request.getContextPath())+"&cp="+ callingPageID %>" class="maincolor_link"><b><mm:field name="<%= objecttitle %>"/></b></a>
-                   <% if (menuType==TITLE) { %>
-                  <mm:field name="<%= objectdate %>" jspvar="object_begindatum" vartype="String" write="false"
-                  ><span class="colortxt"> <br/> <mm:time time="<%=object_begindatum%>" format="d MMM yyyy"/></span></mm:field>
-                  <% } %>
+                  <a href="<%= ph.createItemUrl(oNumber, paginaID,"offset="+thisOffset,request.getContextPath()) %>" class="maincolor_link"><b><mm:field name="<%= objecttitle %>"/></b></a>
                 </mm:field>
                 <% 
                 if(menuType!=TITLE) {
@@ -117,10 +103,10 @@ try{
               In archief: <%= objectCount %> [<%= pagesCount %> pgn]
              <div style="padding-top:10px;">
                <% if (thisOffset == 1) { %>
-                    <img src="<%=request.getContextPath()%>/natmm/media/arrowleft_links.gif" border="0">
+                    <img src="../media/arrowleft_<%= NatMMConfig.style1[iRubriekStyle] %>.gif" border="0">
                <% } else { %>
                     <a href="<%= ph.createItemUrl(artikelID, paginaID,"offset="+(thisOffset-1),request.getContextPath()) %>"
-                      ><img src="<%=request.getContextPath()%>/natmm/media/arrowleft_links.gif" border="0"></a>
+                      ><img src="../media/arrowleft_<%= NatMMConfig.style1[iRubriekStyle] %>.gif" border="0"></a>
                     <a href="<%= ph.createItemUrl(artikelID, paginaID,"offset=1",request.getContextPath()) %>">1</a>
                <% } 
                   if (thisOffset > 3) { %>
@@ -137,11 +123,11 @@ try{
                     &hellip;                     
                <% } 
                   if (thisOffset == pagesCount) { %>
-                    <img src="<%=request.getContextPath()%>/natmm/media/arrowright_links.gif" border="0">
+                    <img src="../media/arrowright_<%= NatMMConfig.style1[iRubriekStyle] %>.gif" border="0">
                <% } else { %>
                     <a href="<%= ph.createItemUrl(artikelID, paginaID,"offset="+pagesCount,request.getContextPath()) %>"><%= pagesCount %></a>
                     <a href="<%= ph.createItemUrl(artikelID, paginaID,"offset="+(thisOffset+1),request.getContextPath()) %>"
-                      ><img src="<%=request.getContextPath()%>/natmm/media/arrowright_links.gif" border="0"></a>
+                      ><img src="../media/arrowright_<%= NatMMConfig.style1[iRubriekStyle] %>.gif" border="0"></a>
                <% } %>
              </div>
              <% if (pagesCount > 5) { %>

@@ -1,24 +1,26 @@
-<script type="text/javascript">
-   function startSearch() {
-       var href = document.searchform.action;
-       var search = escape(document.searchform.elements["search"].value);
-       href += "?search=" + search;
-       var adv = document.searchform.elements["adv"].value;
-   	  if(adv != '') {
-           href += "&t=" + adv;
-       }
-   	  document.location =  href;
-       return false; 
-   }
-   function startPhone() {
-       var href = document.phoneform.action;
-       var name = escape(document.phoneform.elements["name"].value);
-       if(name != '') {
-           href += "?name=" + name;
-       }
-       document.location =  href;
-       return false; 
-   }
+<script language="JavaScript">
+<!--
+function startSearch() {
+    var href = document.searchform.action;
+    var search = escape(document.searchform.elements["search"].value);
+    href += "?search=" + search;
+    var adv = document.searchform.elements["adv"].value;
+	  if(adv != '') {
+        href += "&t=" + adv;
+    }
+	  document.location =  href;
+    return false; 
+}
+function startPhone() {
+    var href = document.phoneform.action;
+    var name = escape(document.phoneform.elements["name"].value);
+    if(name != '') {
+        href += "?name=" + name;
+    }
+    document.location =  href;
+    return false; 
+}
+//-->
 </script>
 <% // *************************************** logo ******************************* %>
 <mm:node number="<%= subsiteID %>">
@@ -90,9 +92,9 @@
    </td>
    <td style="padding-right:10px;width:251px;">
    <% // *************************************** phone box ******************************* %>
-   <form name="phoneform" action="<%= ph.createPaginaUrl("wieiswie",request.getContextPath()) %>" onSubmit="return startPhone();">
    <table border=0 cellspacing="0" cellpadding="0" align="right">
-    	  <tr>
+   	  <form name="phoneform" action="<%= ph.createPaginaUrl("wieiswie",request.getContextPath()) %>" onSubmit="return startPhone();">
+   	  <tr>
    	  <td><img src="media/telefoon.gif" alt="Zoeken in het smoelenboek" onclick="startPhone();"></td>
    	  <td><input type="text" name="name" value="<% if(nameId.equals("")){ %><%= nameEntry %><% } else { %><%= nameId %><% } 
    			%>" style="text-align:left;width:166px;" onClick="if(this.value=='<%= nameEntry %>') { this.value=''; }" /></td>
@@ -100,8 +102,8 @@
    	  <td><img src="media/spacer.gif" width="1" height="1"><br>
    			<input type="submit" name="phone" value="Zoek"  style="text-align:center;font-weight:bold;"></td>
    	  </tr>
+   	  </form>
    </table>
-   </form>
    </td>
 </tr>
 <tr>

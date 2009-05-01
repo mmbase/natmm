@@ -50,7 +50,7 @@ import nl.leocms.connectors.UISconnector.output.orders.process.Sender;
  * SubscribeAction
  */
 public class SubscribeAction extends Action {
-   private static final Logger log = Logging.getLoggerInstance(SubscribeAction.class);
+   private static final Logger log = Logging.getLoggerInstance(EvenementAction.class);
    public static int NO_COSTS = 0;
    public static int UNKNOWN_COSTS = -1;
    public static int GROUP_EXCURSION_COSTS = -2;
@@ -341,7 +341,7 @@ public class SubscribeAction extends Action {
    public static String [] getPhoneAndEmail(Node thisParent, String newline) {
 
       String bookPhone = "(035) 655 99 55";
-      String bookEmail = NatMMConfig.getFromCADAddress();
+      String bookEmail = NatMMConfig.fromCADAddress;
       String phoneNumbers = "";
       String emailAddresses = "";
 
@@ -387,10 +387,6 @@ public class SubscribeAction extends Action {
    }
 
    public static String getMessage(Node thisEvent, Node thisParent, Node thisSubscription, Node thisParticipant, String confirmUrl, String type) {
-      return getMessage(thisEvent, thisParent, thisSubscription, thisParticipant, confirmUrl, type, ""); 
-   }
-   
-   public static String getMessage(Node thisEvent, Node thisParent, Node thisSubscription, Node thisParticipant, String confirmUrl, String type, String confirmText) {
 
       boolean isGroupExcursion = Evenement.isGroupExcursion(thisParent);
 
@@ -405,37 +401,9 @@ public class SubscribeAction extends Action {
 
       String message = dearSir(thisParticipant, thisParticipantName, newline);
 
-      if (confirmUrl.equals("confirmation-period-expired")) {
-         message += "Met deze brief herinneren wij u aan uw boeking van een groepsexcursie";
-         
-         NodeList nl = thisParent.getRelatedNodes("natuurgebieden","related",null);
-         if(nl.size()!=0) {
-            message += " op het " + nl.getNode(0).getStringValue("naam");
-         }
-         
-         DoubleDateNode ddn = new DoubleDateNode();
-         ddn.setBegin(new Date(thisEvent.getLongValue("begindatum")*1000));
-         ddn.setEnd(new Date(thisEvent.getLongValue("einddatum")*1000));
-
-         message += ". U heeft voor uw groep " + thisEvent.getStringValue("titel") + " gereserveerd op " +  ddn.getReadableDate() + ". ";
-         message += "De bevestigingstermijn voor deze boeking is inmiddels verlopen." + newline + newline;
-         message += withKindRegards(thisParticipant, phoneAndEmail[1], newline);
- 
-      } else if(isGroupExcursion) {
+      if(isGroupExcursion) {
          message += withThisLetter(thisParent, thisEvent, confirmUrl, isGroupExcursion, newline) + newline;
          message += youSubscribedAs(thisParticipant, thisSubscription, thisParticipantName, isGroupExcursion, newline);
-
-         // add extra confirmation text to the email
-         if ((confirmUrl.equals("")) && (confirmText != null) && (!"".equals(confirmText))) {
-            
-            if(!type.equals("plain")) {
-               message += newline + newline + confirmText.replaceAll("\n", "<br/>") + newline;
-            } 
-            else {
-               message += newline + newline + confirmText + newline;
-            }
-         }         
-         
          message += yourGroupExcursion(thisParent, thisEvent, thisSubscription, newline, type) + newline + newline;
          message += withKindRegards(thisParticipant, phoneAndEmail[1], newline);
 
@@ -444,18 +412,6 @@ public class SubscribeAction extends Action {
          if(confirmUrl.equals("")||confirmUrl.equals("reminder")) { // *** after the visitor clicks the confirmation url
             message += withThisLetter(thisParent, thisEvent, confirmUrl, isGroupExcursion, newline);
             message += subscriptionStatus(thisEvent, confirmUrl, phoneAndEmail[0], newline);
-            
-            // add extra confirmation text to the email
-            if ((confirmUrl.equals("")) && (confirmText != null) && (!"".equals(confirmText))) {
-               
-               if(!type.equals("plain")) {
-                  message += newline + newline + confirmText.replaceAll("\n", "<br/>") + newline;
-               } 
-               else {
-                  message += newline + newline + confirmText + newline;
-               }
-            }
-      
             message += newline + newline;
             message += necessaryInfo(thisParent, newline);
 
@@ -481,50 +437,9 @@ public class SubscribeAction extends Action {
       return message;
    }
 
-   private static void sendDescriptionToBackOffice(Cloud cloud, Node thisEvent, Node thisParent, Node thisSubscription, Node thisParticipant) {
+   private static void sendConfirmEmail(Cloud cloud, Node thisEvent, Node thisParent, Node thisSubscription, Node thisParticipant, String confirmUrl) {
 
-      if(thisEvent!=null && thisSubscription !=null && thisParticipant!=null) {
-         
-         String thisParticipantName =  thisParticipant.getStringValue("firstname")
-         + (thisParticipant.getStringValue("initials").equals("") ? "" : " " +  thisParticipant.getStringValue("initials"))
-         + (thisParticipant.getStringValue("suffix").equals("") ? "" : " " +  thisParticipant.getStringValue("suffix"))
-         + (thisParticipant.getStringValue("lastname").equals("") ? "" : " " +  thisParticipant.getStringValue("lastname"));         
-         
-         // compose email message
-         StringBuffer emailMsg = new StringBuffer();
-
-         emailMsg.append("\nBetreft: \n");
-         emailMsg.append("Aanmelding " + thisEvent.getStringValue("titel") + ", " + (new DoubleDateNode(thisEvent)).getReadableValue() + "\n");
-         
-         emailMsg.append("\nActiviteitnummer: " + thisEvent.getStringValue("number") + "\n");
-         emailMsg.append("Aanmeldingsnummer: " + thisSubscription.getStringValue("number") + "\n");
-         
-         emailMsg.append("\nAanmelder: \n");
-         emailMsg.append(thisParticipantName + "\n");
-         emailMsg.append(thisParticipant.getStringValue("email") + "\n");         
-         emailMsg.append(thisParticipant.getStringValue("privatephone") + "\n");
-
-         emailMsg.append("\nBijzonderheden: \n");
-         emailMsg.append(thisSubscription.getStringValue("description") + "\n");
- 
-         emailMsg.append("\nA.u.b. contact opnemen met " + thisParticipantName);
-         
-         Node emailNode = cloud.getNodeManager("email").createNode();
-         emailNode.setValue("to", NatMMConfig.getFromCADAddress());
-         emailNode.setValue("from", NatMMConfig.getFromCADAddress());
-         emailNode.setValue("subject", "Internet aanmelding ontvangen met bijzonderheden");
-         emailNode.setValue("replyto", NatMMConfig.getFromCADAddress());
-         emailNode.setValue("body", emailMsg.toString());
-         emailNode.commit();
-         emailNode.getValue("mail(oneshotkeep)");         
-         
-      }
-   }
-   
-   
-   private static String sendConfirmEmail(Cloud cloud, Node thisEvent, Node thisParent, Node thisSubscription, Node thisParticipant, String confirmUrl, String extraText) {
-
-      String fromEmailAddress = NatMMConfig.getFromCADAddress();
+      String fromEmailAddress = NatMMConfig.fromCADAddress;
       String emailSubject = "";
 
       if(thisEvent!=null && thisSubscription !=null && thisParticipant!=null) {
@@ -534,36 +449,27 @@ public class SubscribeAction extends Action {
          if(!toEmailAddress.equals("")) { // ** email field might be empty
 
             if(confirmUrl.equals("")) {
-               emailSubject += "Bevestiging aanmelding";               
+               emailSubject += "Bevestiging aanmelding";
             } else if(confirmUrl.equals("reminder")) {
                emailSubject += "Herinnering aanmelding";
-            } else if(confirmUrl.equals("confirmation-period-expired")) {
-               emailSubject += "Bevestigingstermijn verstreken";
             } else {
                emailSubject += "Aanmelding";
             }
-            
+
             emailSubject += " " + thisEvent.getStringValue("titel") + ", " + (new DoubleDateNode(thisEvent)).getReadableValue();
             log.debug(confirmUrl);
             Node emailNode = cloud.getNodeManager("email").createNode();
-
-            // set mail reciever
-            if(confirmUrl.equals("confirmation-period-expired")) {
-               emailNode.setValue("to", toEmailAddress + "," + NatMMConfig.getFromCADAddress());
-            } else {
-               emailNode.setValue("to", toEmailAddress);
-            }
-            
+            emailNode.setValue("to", toEmailAddress);
             emailNode.setValue("from", fromEmailAddress);
             emailNode.setValue("subject", emailSubject);
             emailNode.setValue("replyto", fromEmailAddress);
             emailNode.setValue("body",
                             "<multipart id=\"plaintext\" type=\"text/plain\" encoding=\"UTF-8\">"
-                               + getMessage(thisEvent,thisParent,thisSubscription,thisParticipant,confirmUrl,"plain", extraText)
+                               + getMessage(thisEvent,thisParent,thisSubscription,thisParticipant,confirmUrl,"plain")
                             + "</multipart>"
                             + "<multipart id=\"htmltext\" alt=\"plaintext\" type=\"text/html\" encoding=\"UTF-8\">"
                             + "<html>"
-                              + getMessage(thisEvent,thisParent,thisSubscription,thisParticipant,confirmUrl,"html", extraText) + "</html>"
+                              + getMessage(thisEvent,thisParent,thisSubscription,thisParticipant,confirmUrl,"html") + "</html>"
                             + "</multipart>");
             emailNode.commit();
             emailNode.getValue("mail(oneshotkeep)");
@@ -574,14 +480,11 @@ public class SubscribeAction extends Action {
             // this means the inschrijving is made by the backoffice
             // for website bookings the status is set to confirmed in includes/events_doconfirm.jsp
             RelationList relations = thisSubscription.getRelations("related","inschrijvings_status");
-            
-            if(!relations.isEmpty() && !confirmUrl.equals("confirmation-period-expired")) {
+            if(!relations.isEmpty()) {
                Relation  thisRelation = relations.getRelation(0);
-               
                if(thisRelation.getDestination().getStringValue("naam").equals("aangemeld")) {
                   thisRelation.delete(true);
                   Node thisStatus = cloud.getNode("confirmed");
-                  
                   if(thisStatus!=null) {
                      thisSubscription.createRelation(thisStatus,cloud.getRelationManager("related")).commit();
                   }
@@ -589,9 +492,6 @@ public class SubscribeAction extends Action {
             }
          }
       }
-      
-      //return the html emailmessage
-      return getMessage(thisEvent,thisParent,thisSubscription,thisParticipant,confirmUrl,"html", extraText);
    }
 
    public static void sendConfirmEmail(Cloud cloud, String subscriptionNumber, String confirmUrl) {
@@ -612,7 +512,7 @@ public class SubscribeAction extends Action {
          thisParticipant = thisNodeList.getNode(0);
       }
       if(thisEvent!=null&&thisParent!=null&&thisParticipant!=null) {
-         sendConfirmEmail(cloud, thisEvent, thisParent, thisSubscription, thisParticipant, confirmUrl, "");
+         sendConfirmEmail(cloud, thisEvent, thisParent, thisSubscription, thisParticipant, confirmUrl);
       } else {
          log.info("Could not send confirmation email for subscription " + subscriptionNumber);
       }
@@ -626,10 +526,6 @@ public class SubscribeAction extends Action {
       sendConfirmEmail(cloud, subscriptionNumber, "reminder");
    }
 
-   public static void sendConfirmationPeriodExpired(Cloud cloud, String subscriptionNumber) {
-      sendConfirmEmail(cloud, subscriptionNumber, "confirmation-period-expired");
-   }   
-   
    /**
     * The actual perform function: MUST be implemented by subclasses.
     *
@@ -749,7 +645,6 @@ public class SubscribeAction extends Action {
             thisSubscription.setStringValue("source",subscribeForm.getSource());
             thisSubscription.setStringValue("description",subscribeForm.getDescription());
             thisSubscription.setStringValue("ticket_office",subscribeForm.getTicketOffice());
-            thisSubscription.setStringValue("ticket_office_source",subscribeForm.getTicketOfficeSource());
             thisSubscription.setStringValue("betaalwijze", subscribeForm.getPaymentType());
             thisSubscription.setStringValue("bank_of_gironummer", subscribeForm.getBankaccount());
             thisSubscription.commit();
@@ -846,20 +741,10 @@ public class SubscribeAction extends Action {
                      thisParticipant = subscribeForm.createParticipant(cloud,action,thisEvent,thisSubscription,"-1",subscribeForm.getParticipantsPerCat(0));
                }
 
-               String confirmUrl = NatMMConfig.getLiveUrl() + "events.jsp";
+               String confirmUrl = NatMMConfig.liveUrl[0] + "/events.jsp";
                confirmUrl += "?action=confirm&s=" + thisSubscription.getStringValue("datum_inschrijving") + "_" + thisSubscription.getStringValue("number");
                Node thisParent = cloud.getNode(subscribeForm.getParent());
-               
-               //log.info("send mail: " + thisEvent + " " + thisParent + " " + thisSubscription + " " + thisParticipant + " ");
-               sendConfirmEmail(cloud, thisEvent, thisParent, thisSubscription, thisParticipant, confirmUrl, "");
-               
-               // if a participant added extra information during the subscription,
-               // this information should be mailed to the backoffice employees
-               if ( (thisSubscription.getStringValue("description") != null)
-                    && (!"".equals(thisSubscription.getStringValue("description"))) ) {
-                   sendDescriptionToBackOffice(cloud, thisEvent, thisParent, thisSubscription, thisParticipant);
-               }
-               
+               sendConfirmEmail(cloud, thisEvent, thisParent, thisSubscription, thisParticipant, confirmUrl);
                subscribeForm.setAction(subscribeForm.PROMPT_FOR_CONFIRMATION);
             }
             
@@ -873,19 +758,15 @@ public class SubscribeAction extends Action {
 
            forwardAction = mapping.findForward("continue");
 
-       } else if( (subscribeForm.getButtons().getConfirmSubscription().pressed())
-                 || (action.indexOf(subscribeForm.CONFIRM_ACTION)>-1) ) {               // *** Confirm
+       } else if(subscribeForm.getButtons().getConfirmSubscription().pressed()) {               // *** Confirm
 
          Node thisEvent = cloud.getNode(subscribeForm.getNode());
          Node thisParent = cloud.getNode(subscribeForm.getParent());
          Node thisSubscription = cloud.getNode(subscribeForm.getSubscriptionNumber());
          Node thisParticipant = cloud.getNode(subscribeForm.getSelectedParticipant());
-         
-         // store html email message in the form
-         subscribeForm.setLastSentMessage( 
-            sendConfirmEmail(cloud, thisEvent, thisParent, thisSubscription, thisParticipant, "", subscribeForm.getExtraText()+""));
-         
-         forwardAction = mapping.findForward("confirmed");
+         sendConfirmEmail(cloud, thisEvent, thisParent, thisSubscription, thisParticipant,"");
+
+         forwardAction = mapping.findForward("continue");
 
        }
        subscribeForm.setInProcess(false);

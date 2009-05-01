@@ -1,12 +1,12 @@
-<%@page import="org.mmbase.util.logging.Logger" 
-%><%@include file="/taglibs.jsp" 
-%><mm:cloud jspvar="cloud">
-<%@include file="includes/templateheader.jsp" 
-%><%@include file="includes/cacheparams.jsp" %>
+<%@page import="org.mmbase.util.logging.Logger" %>
+<%@include file="/taglibs.jsp" %>
+<mm:cloud jspvar="cloud">
+<%@include file="includes/templateheader.jsp" %>
+<%@include file="includes/cacheparams.jsp" %>
 <cache:cache groups="<%= paginaID %>" key="<%= cacheKey %>" time="<%= expireTime %>" scope="application">
 <mm:log jspvar="log">
-<%@include file="includes/header.jsp" 
-%><%@include file="includes/calendar.jsp" %>
+<%@include file="includes/header.jsp" %>
+<%@include file="includes/calendar.jsp" %>
 <td><%@include file="includes/pagetitle.jsp" %></td>
   <td><% 
       String rightBarTitle = "Zoek een activiteit";
@@ -19,21 +19,6 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr><td style="padding:10px;padding-top:18px;">
       <%@include file="includes/back_print.jsp" %>
-      
-      <mm:node number="<%= paginaID %>">
-        <mm:field name="omschrijving" jspvar="text" vartype="String" write="false">
-      	<% 
-         	if(text!=null && !HtmlCleaner.cleanText(text,"<",">","").trim().equals("")) { 
-         	   %>
-             <div class="black" style="margin-top: 20px !important; margin-bottom: 20px !important;">
-               <mm:write />
-             </div>
-             <%
-            } 
-         %>
-      	</mm:field>
-      </mm:node>   
-      
       <%
       ListUtil lu = new ListUtil(cloud);
 
@@ -109,7 +94,7 @@
 		if (actionId.equals("feedback")){
          %><jsp:include page="includes/feedback/form.jsp">
             <jsp:param name="object" value="<%= eventId %>" />
-            <jsp:param name="field" value="titel" />
+            <jsp:param name="field" value="naam" />
             <jsp:param name="ntype" value="activiteit" />
             <jsp:param name="by" value="het organiserende Bezoekerscentrum" />
             <jsp:param name="param" value="ev" />

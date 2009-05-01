@@ -5,29 +5,21 @@
 <mm:cloud jspvar="cloud">
 <mm:locale language="nl">
 <%
-imgFormat = ""; 
-
 String objectID = request.getParameter("o");
 String formatID = request.getParameter("f"); if(formatID!=null) { imgFormat = formatID; }
 String showintroID = request.getParameter("s"); if(showintroID==null) { showintroID = "true"; }
 String showdateID = request.getParameter("q"); if(showdateID==null) { showdateID = "false"; }
 
-
+imgFormat = ""; 
 String shortyRol = ""; 
 int iParCntr = 1;
 boolean showNextDotLine = false;
 %>
 <%@include file="../includes/getstyle.jsp" %>
 <mm:node number="<%=objectID%>" notfound="skipbody">
-<%-- For vertical logo of naardermeer site to be displayed without covering article content --%>
-  <% if (isNaardermeer.equals("true")) { %>		
-   	<table width="88%" cellpadding="0" cellspacing="0" border="0">
-  <% } else { %>
-	<table width="100%" cellpadding="0" cellspacing="0" border="0">
-	<% } %>
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
 <tr>
-	<td valign="top">
-	<a name="0" id="0"></a>
+	<td valign="top"><a name="0" id="0"></a>
    	<jsp:include page="../includes/panno_extratext.jsp">
          <jsp:param name="o" value="<%= objectID %>" />
       </jsp:include>

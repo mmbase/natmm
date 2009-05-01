@@ -1,5 +1,5 @@
 <%
-if(!printPage) {
+if(!postingStr.equals("|action=print")) {
   %>
   <div align="right" style="letter-spacing:1px;">
     <nobr>

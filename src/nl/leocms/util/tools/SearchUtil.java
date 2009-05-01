@@ -1,5 +1,6 @@
 package nl.leocms.util.tools;
 
+import java.io.*;
 import java.util.*;
 
 import org.mmbase.bridge.*;
@@ -9,14 +10,12 @@ import org.mmbase.util.logging.Logging;
 
 import net.sf.mmapps.modules.lucenesearch.*;
 import net.sf.mmapps.modules.lucenesearch.util.*;
-
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.analysis.*;
 import org.apache.lucene.search.*;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.document.Document;
 
-import nl.leocms.evenementen.Evenement;
 import nl.leocms.util.*;
 import nl.leocms.util.tools.HtmlCleaner;
 
@@ -25,7 +24,7 @@ import nl.leocms.util.tools.HtmlCleaner;
  * Utilities functions for the search pages
  *
  * @author H. Hangyi
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.10 $
  */
 public class SearchUtil {
 
@@ -35,19 +34,11 @@ public class SearchUtil {
    public SearchUtil() {
    }
 
-   public final static String sEmployeeConstraint = "(( medewerkers.importstatus = 'active' ) OR ( medewerkers.externid LIKE 'extern' ))";
+   public final static String sEmployeeConstraint = "( medewerkers.importstatus != 'inactive' ) OR ( medewerkers.externid LIKE 'extern' )";
    public final static String sAfdelingenConstraints = "( afdelingen.importstatus != 'inactive' ) OR ( afdelingen.externid LIKE 'extern' )";
    public final static String sNatuurgebiedenConstraint = "natuurgebieden.bron!=''";
    public String articleConstraint(long nowSec, int quarterOfAnHour) {
       return "(artikel.embargo < '" + (nowSec+quarterOfAnHour) + "') AND (artikel.use_verloopdatum='0' OR artikel.verloopdatum > '" + nowSec + "' )";
-   }
-   private static boolean articleMatchesConstraint(long embargo, String use_verloopdatum, long verloopdatum, long nowSec, int quarterOfAnHour) {
-      if ((embargo < (nowSec+quarterOfAnHour) ) 
-         && ("0".equals(use_verloopdatum) || verloopdatum > nowSec )) {
-         return true; 
-         } else { 
-         return false;
-         }
    }
 
    public String getConstraint(String objecttype, long nowSec, int quarterOfAnHour) {
@@ -288,125 +279,19 @@ public class SearchUtil {
 
       return period;
    }
-   
-    /* 
-    * version used by natmm search page
-    */
-    public HashSet addPages(
-      Cloud cloud,
-      net.sf.mmapps.modules.lucenesearch.SearchConfig cf,
-      String sQuery,
-      int index,
-      String path,
-      String rootRubriek,
-      long nowSec,
-      HashSet hsetPagesNodes) {
 
-      HashSet hsetNodes = new HashSet();
-      try { 
-        net.sf.mmapps.modules.lucenesearch.SearchIndex si = cf.getIndex(index);
-        Analyzer analyzer = si.getAnalyzer();
-        
-        QueryParser qp = new QueryParser("indexed.text", analyzer);
-        qp.setDefaultOperator(QueryParser.AND_OPERATOR);
-        org.apache.lucene.search.Query result = null;
-        //SearchValidator sv = new SearchValidator();
-        String value = SearchValidator.validate(sQuery);
-        try {
-          result = qp.parse(value);
-        } catch (Exception e) {
-          log.error("Error parsing field 'indexed.text' with value '" + value + "'");
-        }
-        if (result != null) {
-        int quarterOfAnHour = 60*15;
-        BooleanQuery constructedQuery = new BooleanQuery();
-        constructedQuery.add(result, BooleanClause.Occur.MUST);
-        
-        IndexReader ir = IndexReader.open(si.getIndex());
-        IndexSearcher searcher = new IndexSearcher(ir); 
-        Hits hits = searcher.search(constructedQuery);
-
-        TreeSet includedEvents = new TreeSet();
-      
-        for (int i = 0; i < hits.length(); i++) {
-            Document doc = hits.doc(i);
-            String docNumber = doc.get("node");
-            if(path!=null) {
-                NodeList list = cloud.getList(docNumber,path,"pagina.number",null,null,null,"SOURCE",true);
-                for(int j=0; j<list.size(); j++) {
-                  String paginaNumber = list.getNode(j).getStringValue("pagina.number");
-                  if(PaginaHelper.getSubsiteRubriek(cloud,paginaNumber).equals(rootRubriek)) {
-                    if (index==1) {
-                      PaginaHelper ph = new PaginaHelper(cloud);
-                      String sConstraints = (new nl.leocms.util.tools.SearchUtil()).articleConstraint(nowSec, quarterOfAnHour);
-                      NodeList nl = cloud.getList(docNumber,"natuurgebieden,rolerel,artikel","artikel.number",sConstraints,null,null,null,true);
-                      if (ph.getPaginaTemplate(paginaNumber).getStringValue("url").equals("routes.jsp")
-                        &&(nl.size()>0)){
-                        hsetPagesNodes.add(paginaNumber);
-                        hsetNodes.add(docNumber);
-                      }
-                    } else if (index==2) {
-                      PaginaHelper ph = new PaginaHelper(cloud);
-                      if (ph.getPaginaTemplate(paginaNumber).getStringValue("url").equals("natuurgebieden.jsp")){
-                        hsetPagesNodes.add(paginaNumber);
-                        hsetNodes.add(docNumber);
-                      }
-                    } else {
-                       //FIX FOR NMCMS-230
-                       //verloopdatum filter for articles
-                       PaginaHelper ph = new PaginaHelper(cloud);
-                       String sConstraints = (new nl.leocms.util.tools.SearchUtil()).articleConstraint(nowSec, quarterOfAnHour);
-                       Node foundNode = cloud.getNode(docNumber);
-                       //boolean test = articleMatchesConstraint(foundNode.getLongValue("embargo"), foundNode.getStringValue("use_verloopdatum"), foundNode.getLongValue("verloopdatum"), nowSec, quarterOfAnHour);
-                       
-                       if (true) {
-                          hsetPagesNodes.add(paginaNumber);
-                          hsetNodes.add(docNumber);
-                       }
-                       
-                    }
-                  }
-                }
-            } else { // *** no path implies an Evenement ***
-                Node e = cloud.getNode(docNumber);
-               String sParent =  Evenement.findParentNumber(docNumber);
-                if(!includedEvents.contains(sParent) && Evenement.isOnInternet(e,nowSec)) {
-                  String paginaNumber = cloud.getNode("agenda").getStringValue("number");
-                   if(PaginaHelper.getSubsiteRubriek(cloud,paginaNumber).equals(rootRubriek)) {
-                     hsetNodes.add(docNumber);
-                      includedEvents.add(sParent);
-                  }
-                }
-             }
-         }
-        
-        //Close resources when they are not needed anymore.
-        if(searcher!=null) { searcher.close(); }
-        if(ir!=null) { ir.close(); }
-        
-        }
-      } catch (Exception e) { 
-        log.error("lucene index " + index + " throws error on query " + sQuery + " - " + e); 
-        //Also log the specific error
-      } 
-      return hsetNodes;
-   }
-
-   /* 
-    * version used by nmintra search page
-    */
-    public HashSet addPages(
+   public HashSet addPages(
       Cloud cloud,
       SearchConfig cf,
-		  String sQuery,
+		String sQuery,
       int index,
       String path,
       String sRubriekNumber,
-		  String sPoolNumber,
+		String sPoolNumber,
       long nowSec,
-		  long fromTime,
-		  long toTime,
-		  boolean searchArchive,
+		long fromTime,
+		long toTime,
+		boolean searchArchive,
       HashSet hsetPagesNodes) {
       HashSet hsetNodes = new HashSet();
       try {
@@ -438,8 +323,6 @@ public class SearchUtil {
                   hsetNodes.addAll(calculate(cloud, path, sRubriekNumber, sPoolNumber,
                                docNumber, nowSec, fromTime, toTime,
                                searchArchive, hsetPagesNodes)) ;
-               } else { // add all hits for null path
-                 hsetNodes.add(docNumber);
                }
             }
             if (searcher != null) { searcher.close(); }
@@ -452,10 +335,6 @@ public class SearchUtil {
       return hsetNodes;
    }
 
-   /* 
-    * version used by nmintra search page, if the query is empty
-    * see for a good example of usage: templates/nmintra/info.jsp
-    */
    public HashSet addPages(
       Cloud cloud,
       String path,
@@ -493,16 +372,6 @@ public class SearchUtil {
       boolean searchArchive,
       HashSet hsetPagesNodes) {
 
-      log.debug("calculate(path="+path
-        +" sRubriekNumber="+sRubriekNumber
-        +" sPoolNumber="+sPoolNumber
-        +" docNumber="+docNumber
-        +" nowSec="+nowSec
-        +" fromTime="+fromTime
-        +" toTime="+toTime
-        +" searchArchive="+searchArchive
-        +" hsetPagesNodes="+hsetPagesNodes+")");
-      
       HashSet hsetNodes = new HashSet();
       String sBuiderName = getBuilderName(path);
       String sConstraints = "";
@@ -513,37 +382,28 @@ public class SearchUtil {
                "') AND (" + sBuiderName + ".embargo < '" + toTime + "')";
          }
       }
-      Node doc = null;
-      try {
-        doc = cloud.getNode(docNumber);
-      } catch (Exception e) {
-        log.error("Node " + docNumber + " does not exist, maybe it was deleted.");
+      NodeList list = cloud.getList(docNumber, path, "pagina.number," +
+                                    sBuiderName + ".number",
+                                    sConstraints, null, null, null, true);
+      for (int j = 0; j < list.size(); j++) {
+         String paginaNumber = list.getNode(j).getStringValue("pagina.number");
+         if (docNumber.equals("")){
+            docNumber = list.getNode(j).getStringValue(sBuiderName + ".number");
+         }
+         Vector breadcrumbs = PaginaHelper.getBreadCrumbs(cloud, paginaNumber);
+         boolean inRubriek = sRubriekNumber.equals("") || breadcrumbs.contains(sRubriekNumber);
+         // exclude builders that do not have a relation to pools
+         boolean inPool = sPoolNumber.equals("")
+                  || ( !sBuiderName.equals("producttypes") 
+                        && !sBuiderName.equals("documents")
+                        && PoolUtil.getPool(cloud, docNumber).contains(cloud.getNode(sPoolNumber)));
+         boolean inArchive = breadcrumbs.contains(cloud.getNode("archive").getStringValue("number"));
+         // when not searching the archive, exclude contentelements that are in the archive
+         if(inRubriek && inPool && !(!searchArchive && inArchive) ) {
+            hsetPagesNodes.add(paginaNumber);
+            hsetNodes.add(docNumber);
+         }
       }
-      if(doc!=null) {
-        NodeList list = cloud.getList(docNumber, path, "pagina.number," +
-                                      sBuiderName + ".number",
-                                      sConstraints, null, null, null, true);
-        for (int j = 0; j < list.size(); j++) {
-           String paginaNumber = list.getNode(j).getStringValue("pagina.number");
-           if (docNumber.equals("")){
-              docNumber = list.getNode(j).getStringValue(sBuiderName + ".number");
-           }
-           Vector breadcrumbs = PaginaHelper.getBreadCrumbs(cloud, paginaNumber);
-           boolean inRubriek = sRubriekNumber.equals("") || breadcrumbs.contains(sRubriekNumber);
-           // exclude builders that do not have a relation to pools
-           boolean inPool = sPoolNumber.equals("")
-                    || ( !sBuiderName.equals("producttypes") 
-                          && !sBuiderName.equals("documents")
-                          && PoolUtil.containsPool(cloud, docNumber, sPoolNumber));
-           boolean inArchive = breadcrumbs.contains(cloud.getNode("archive").getStringValue("number"));
-           // when not searching the archive, exclude contentelements that are in the archive
-           if(inRubriek && inPool && !(!searchArchive && inArchive) ) {
-              hsetPagesNodes.add(paginaNumber);
-              hsetNodes.add(docNumber);
-           }
-        }
-      }
-      log.debug("found " + hsetNodes);
       return hsetNodes;
    }
 
@@ -559,17 +419,4 @@ public class SearchUtil {
       return cloud.getList(sPaginaID,"pagina,contentrel,artikel","artikel.number",
       sConstraints,"artikel.embargo",null,"destination",true);
    }
-   
-   
-   public String queryString(String sQuery) {
-     String DOUBLESPACE = "  ";
-     String SINGLESPACE = " ";
-     String qStr = sQuery;
-     while(qStr.indexOf(DOUBLESPACE)>-1) {
-       qStr = qStr.replaceAll(DOUBLESPACE,SINGLESPACE);
-     }
-     qStr = qStr.trim().replaceAll(SINGLESPACE,"* AND ") + "*";
-     return  qStr;
-   }
-
 }

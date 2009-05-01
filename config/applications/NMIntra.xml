@@ -20,7 +20,6 @@
 
       <!-- relations NMIntra -->
       <builder version="0" maintainer="mmbase.org">discountrel</builder>
-      <builder version="0" maintainer="mmbase.org">kaart_bestel_regel</builder>
 
       <!-- objects NatMM -->
       <builder version="0" maintainer="mmbase.org">ads</builder>
@@ -52,7 +51,7 @@
       <builder version="0" maintainer="mmbase.org">teaser</builder>
       <builder version="0" maintainer="mmbase.org">template</builder>
       <builder version="0" maintainer="mmbase.org">vacature</builder>
-      
+
       <!-- objects NMIntra -->
       <builder version="0" maintainer="mmbase.org">community</builder>
       <builder version="0" maintainer="mmbase.org">companies</builder>
@@ -64,12 +63,15 @@
       <builder version="0" maintainer="mmbase.org">discounts</builder>
       <builder version="0" maintainer="mmbase.org">divisions</builder>
       <builder version="0" maintainer="mmbase.org">documents</builder>
+      <builder version="0" maintainer="mmbase.org">education_keywords</builder>  <!-- should be removed after migration -->
+      <builder version="0" maintainer="mmbase.org">education_pools</builder>  <!-- should be removed after migration -->
       <builder version="0" maintainer="mmbase.org">educations</builder>
       <builder version="0" maintainer="mmbase.org">evenement_blueprint</builder>
       <builder version="0" maintainer="mmbase.org">evenement_distance</builder>
       <builder version="0" maintainer="mmbase.org">evenement_duration</builder>
       <builder version="0" maintainer="mmbase.org">feedback</builder>
       <builder version="0" maintainer="mmbase.org">items</builder>
+      <builder version="0" maintainer="mmbase.org">item_pools</builder>  <!-- should be removed after migration -->
       <builder version="0" maintainer="mmbase.org">medewerkers_update</builder>
       <builder version="0" maintainer="mmbase.org">mmevents</builder>
       <builder version="0" maintainer="mmbase.org">natuurgebieden_type</builder>
@@ -84,14 +86,10 @@
       <builder version="0" maintainer="mmbase.org">projecttypes</builder>
       <builder version="0" maintainer="mmbase.org">providers</builder>
       <builder version="0" maintainer="mmbase.org">responses</builder>
-      <builder version="0" maintainer="mmbase.org">style</builder> <!-- should be removed after migration -->
+      <builder version="0" maintainer="mmbase.org">style</builder>
       <builder version="0" maintainer="mmbase.org">terms</builder>
-      <builder version="0" maintainer="mmbase.org">thema_plot_kaart</builder>
-      <builder version="0" maintainer="mmbase.org">bestelling_vastgoed</builder>
       <builder version="0" maintainer="mmbase.org">topics</builder>
       <builder version="0" maintainer="mmbase.org">users</builder>
-      <builder version="0" maintainer="mmbase.org">vraagbaak</builder>      
-      <builder version="0" maintainer="mmbase.org">vraagbaak_keywords</builder>    
    </neededbuilderlist>
    <neededreldeflist>
       <reldef source="altrel" target="altrel" direction="bidirectional" guisourcename="altrel" guitargetname="altrel" builder="altrel" />
@@ -107,7 +105,6 @@
       <reldef source="related" target="related" direction="bidirectional" guisourcename="Related" guitargetname="Related" builder="insrel"/>
       <reldef source="rolerel" target="rolerel" direction="bidirectional" guisourcename="RoleRel" guitargetname="RoleRel" builder="rolerel"/>
       <reldef source="synonymrel" target="synonymrel" direction="bidirectional" guisourcename="Synonymrel" guitargetname="Synonymrel" builder="insrel"/>
-      <reldef source="kaart_bestel_regel" target="kaart_bestel_regel" direction="bidirectional" guisourcename="KaartBestelRegel" guitargetname="KaartBestelRegel" builder="kaart_bestel_regel"/>
    </neededreldeflist>
    <allowedrelationlist>
       <relation from="afdelingen" to="afdelingen" type="readmore"/>
@@ -119,14 +116,6 @@
       <relation from="artikel" to="items" type="readmore"/>
       <relation from="artikel" to="paragraaf" type="posrel"/>
       <relation from="artikel" to="persoon" type="readmore"/>
-      <relation from="artikel" to="contentblocks" type="readmore"/>
-      <relation from="vraagbaak" to="attachments" type="posrel"/>
-      <relation from="vraagbaak" to="images" type="posrel"/> 
-      <relation from="vraagbaak" to="items" type="readmore"/>
-      <relation from="vraagbaak" to="paragraaf" type="posrel"/>
-      <relation from="vraagbaak" to="persoon" type="related"/>
-      <relation from="vraagbaak" to="vraagbaak_keywords" type="related"/>      
-      <relation from="vraagbaak" to="contentblocks" type="readmore"/>
       <relation from="community" to="pools" type="related"/>
       <relation from="competencies" to="competencetypes" type="posrel"/>
       <relation from="contentblocks" to="attachments" type="readmore"/>
@@ -158,12 +147,11 @@
       <relation from="evenement_blueprint" to="paragraaf" type="posrel"/>
       <relation from="formulier" to="formulierveld" type="posrel"/>
       <relation from="formulierveld" to="formulierveldantwoord" type="posrel"/>
+      <relation from="formulierveld" to="pools" type="posrel"/> <!-- should be removed after migration -->
       <relation from="images" to="artikel" type="pos4rel"/>
-      <relation from="images" to="vraagbaak" type="pos4rel"/>
       <relation from="images" to="mmevents" type="related"/>
       <relation from="images" to="pagina" type="pos4rel"/> 
       <relation from="items" to="artikel" type="posrel"/>
-      <relation from="items" to="vraagbaak" type="posrel"/>      
       <relation from="items" to="attachments" type="posrel"/>
       <relation from="items" to="discounts" type="posrel"/>
       <relation from="items" to="formulier" type="posrel"/>
@@ -180,7 +168,6 @@
       <relation from="organisatie" to="organisatie_type" type="posrel"/>
       <relation from="pagina" to="ads" type="contentrel"/>
       <relation from="pagina" to="artikel" type="readmore"/>
-      <relation from="pagina" to="vraagbaak" type="readmore"/>
       <relation from="pagina" to="attachments" type="posrel"/> 
       <relation from="pagina" to="competencetypes" type="posrel"/> 
       <relation from="pagina" to="contentblocks" type="readmore"/> 
@@ -240,9 +227,7 @@
       <relation from="terms" to="projects" type="posrel"/>
       <relation from="terms" to="terms" type="rolerel"/>
       <relation from="terms" to="terms" type="synonymrel"/>
-      <relation from="thema_plot_kaart" to="images" type="related"/>
-      <relation from="bestelling_vastgoed" to="thema_plot_kaart" type="kaart_bestel_regel"/>
-      <relation from="topics" to="pools" type="posrel" />
+	    <relation from="topics" to="pools" type="posrel" />
       <relation from="topics" to="keywords" type="posrel" />
       <relation from="users" to="medewerkers" type="related"/> 
       <relation from="users" to="menu" type="gebruikt"/>
@@ -290,6 +275,8 @@
       <datasource builder="discounts" path="NMIntra/discounts.xml"/>
       <datasource builder="divisions" path="NMIntra/divisions.xml"/>
       <datasource builder="documents" path="NMIntra/documents.xml"/>
+      <datasource builder="education_keywords" path="NMIntra/education_keywords.xml"/>  <!-- should be removed after migration -->
+      <datasource builder="education_pools" path="NMIntra/education_pools.xml"/>  <!-- should be removed after migration -->
       <datasource builder="educations" path="NMIntra/educations.xml"/>
       <datasource builder="evenement_blueprint" path="NMIntra/evenement_blueprint.xml"/>
       <datasource builder="evenement_distance" path="NMIntra/evenement_distance.xml"/>
@@ -298,6 +285,7 @@
       <datasource builder="feedback" path="NMIntra/feedback.xml"/>
       <datasource builder="groups" path="NMIntra/groups.xml"/>
       <datasource builder="items" path="NMIntra/items.xml"/>
+      <datasource builder="item_pools" path="NMIntra/item_pools.xml"/>  <!-- should be removed after migration -->
       <datasource builder="medewerkers_update" path="NMIntra/medewerkers_update.xml"/>
       <datasource builder="mmevents" path="NMIntra/mmevents.xml"/>
       <datasource builder="natuurgebieden_type" path="NMIntra/natuurgebieden_type.xml"/>
@@ -315,12 +303,8 @@
       <datasource builder="responses" path="NMIntra/responses.xml"/>
       <datasource builder="style" path="NMIntra/style.xml"/>  <!-- should be removed after migration -->
       <datasource builder="terms" path="NMIntra/terms.xml"/>
-      <datasource builder="thema_plot_kaart" path="NMIntra/thema_plot_kaart.xml"/>
-      <datasource builder="bestelling_vastgoed" path="NMIntra/bestelling_vastgoed.xml"/>
       <datasource builder="topics" path="NMIntra/topics.xml"/>
       <datasource builder="users" path="NMIntra/users.xml"/>
-      <datasource builder="vraagbaak" path="NMIntra/vraagbaak.xml"/>
-      <datasource builder="vraagbaak_keywords" path="NMIntra/vraagbaak_keywords.xml"/>     
    </datasourcelist>
    <relationsourcelist>
       <relationsource builder="childrel" path="NMIntra/childrel.xml"/>
@@ -333,7 +317,6 @@
       <relationsource builder="posrel" path="NMIntra/posrel.xml"/>
       <relationsource builder="readmore" path="NMIntra/readmore.xml"/>
       <relationsource builder="rolerel" path="NMIntra/rolerel.xml"/>
-      <relationsource builder="kaart_bestel_regel" path="NMIntra/kaart_bestel_regel.xml"/>
     </relationsourcelist>
     <contextsourcelist>
         <contextsource type="full" goal="backup" path=""/>

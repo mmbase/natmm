@@ -1,16 +1,9 @@
 html { 
    font-size: 100%; 
 }
-body /* Internet Explorer */ 
-{ 
-text-align: center; 
-background-color: #FFFFFF;
-} 
-body /* Mozilla Firefox alignment */ 
-{ 
-text-align: -moz-center; 
-background-color: #FFFFFF;
-} 
+body {
+   background-color: #FFFFFF;
+}
 td {
 	font-family: Arial, Helvetica, sans-serif; 
 	color: #050080;
@@ -60,7 +53,6 @@ form {
 }
 .imagecaption{
 	color: #a0a0a0;
-	padding-bottom:10;
 }
 .dotline {
    width: 100%;
@@ -177,74 +169,4 @@ A.navbutton {
 	padding-left: 10px;
 	vertical-align: bottom;
 	height:18px;
-}
-/* styles for the shop */
-.subtitlebar {
-	color: #595959;
-	background-color: #DFDFDF;
-	font-size: 10px;
-	letter-spacing: 2px;
-	text-align: center;
-}
-input.cart {
-	border: 0px;
-	font-size: 10px;
-	font-family: Arial, sans-serif;
-	text-align: center;
-	width:21px;
-	height:13px;
-}
-table.thumbnail {
-	border: 1px #DFDFDF solid;
-	width: 46px;
-	height: 71px;
-}
-td.thumbnail {
-	padding-top:6px;
-	padding-bottom:6px;
-	padding-left:3px;
-	padding-right:3px;
-	text-align: center;
-	vertical-align: middle;
-}
-td.nav {
-	color: #F37021;
-	font-size: 13px;
-	font-weight: bold;
-	background-repeat:no-repeat;
-	background-position: right bottom;
-}
-td.cartheader {
-	color: #F37021;
-	padding: 4px;
-	padding-top: 8px;
-	font-size: 12px;
-	font-weight: bold;
-	text-align: center;
-	line-height : 85%;
-  vertical-align: top;	
-}
-td.cartodd {
-	background-color: #FFF5EC;
-	padding-left: 2px;
-	padding-right: 2px;
-	padding-top: 14px;
-	padding-bottom: 9px;
-	font-size: 10px;
-	text-align: center;
-	vertical-align: middle;
-}
-td.carteven {
-	padding-left: 2px;
-	padding-right: 2px;
-	padding-top: 14px;
-	padding-bottom: 9px;
-	font-size: 10px;
-	text-align: center;
-	vertical-align: middle;
-}
-td.thumbnailparent {
-	font-size: 10px;
-	align: center;
-	text-align: center;
 }

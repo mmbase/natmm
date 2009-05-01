@@ -17,8 +17,7 @@ if (ntypeId.equals("opleiding")) {
 	sUrl = "event_blueprints.jsp";
 } 
 if(!postingStr.equals("")){
-
-  postingStr += "|";
+   postingStr += "|";
 	boolean bAllFieldsOk = true;
 	String warningMessage = "U bent vergeten de volgende velden in te vullen:<ul>";
 	HashMap hm = new HashMap();
@@ -39,24 +38,21 @@ if(!postingStr.equals("")){
 		}
 	}
 	
-
 	if (bAllFieldsOk) {
-
 		String messageTitle = "Bedankt voor uw feedback!";
 		String messageBody = "Uw feedback zal binnen een dag worden toegevoegd aan de " + ntypeId;
 		String messageHref = sUrl + "?p=" + paginaID + "&" + paramId + "=" + objectId;
 		String messageLinktext = "terug naar de " + ntypeId;
-		String messageLinkParam = "";
+		String messageLinkParam = """;
 		ArrayList al = new ArrayList();
 		al.add("namesender");
 		al.add("emailsender");
-    al.add("namereceiver");
+      al.add("namereceiver");
 		al.add("topic");
-	  al.add("text");
+	   al.add("text");
 		al.add("score");
 		Iterator itr = al.iterator();
-		String sFieldname = "";
-    %>
+		String sFieldname = "";%>
 		<mm:createnode type="feedback" id="feedback">
 			<% while (itr.hasNext()) { 
 					sFieldname = (String)itr.next();%>
@@ -66,7 +62,6 @@ if(!postingStr.equals("")){
 		</mm:createnode>
 		<mm:node number="<%= objectId %>" id="education"/>
 		<mm:createrelation role="related" source="education" destination="feedback" />
-    <cache:flush scope="application" group="<%= paginaID %>" />
 		<%@include file="../showmessage.jsp" %><%
 	} else {
 		String messageTitle = "Uw mening kon helaas nog niet worden verwerkt";
@@ -83,8 +78,9 @@ if(!postingStr.equals("")){
    	<table cellpadding="0" cellspacing="0" align="left" border="0" style="width:100%;margin-left:10px;">
    	<tr>
    		<td style="padding-bottom:10px;">
-        <b>
-            Feedback op:&nbsp;<mm:node number="<%= objectId %>"><mm:field name="<%= fieldId %>"/></mm:node>
+            <b>
+               Feedback op:&nbsp;<%= fieldId %>
+   		      <mm:node number="<%= objectId %>"><mm:field name="<%= fieldId %>"/></mm:node>
    			</b>
    		</td>
    	</tr>
@@ -145,11 +141,11 @@ if(!postingStr.equals("")){
    	</tr>
    	<tr>
    		<td>
-        (*) vul minimaal deze velden in i.v.m. een correcte afhandeling. 
+           (*) vul minimaal deze velden in i.v.m. een correcte afhandeling. 
    		</td>
    	</tr>
    	</table>
    </form>
-   <%
+   <% 
 } %>
 </mm:cloud>
