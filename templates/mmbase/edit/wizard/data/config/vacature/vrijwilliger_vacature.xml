@@ -23,6 +23,7 @@
       <field name="afdeling" />  
       <field name="creatiedatum" />
       <field name="functieinhoud" />  
+      <field name="functieeisen" />  
       <field name="competenties" />  
       <field name="salarisschaal" />
       <field name="metatags" />
@@ -62,7 +63,7 @@
          <prompt>omschrijving</prompt>
       </field>
       <field name="functieinhoud" ftype="html" rows="16">
-         <prompt>Wat verwachten we van de vrijwilliger?</prompt>
+         <prompt>wat houdt de vrijwilligersfunctie in?</prompt>
       </field>
       <field name="functieomvang" ftype="html" rows="16" dtrequired="false">
          <prompt>functieomvang</prompt>
@@ -72,6 +73,9 @@
       </field>
       <field name="afdeling" ftype="html" rows="16" dtrequired="false">
          <prompt>Standplaats</prompt>
+      </field>
+      <field name="functieeisen" ftype="html" rows="16">
+         <prompt>wat verwachten wij van de vrijwilliger?</prompt>
       </field>
       <field name="competenties" ftype="html" rows="16">
          <prompt>extra opmerkingen</prompt>

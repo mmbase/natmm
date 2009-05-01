@@ -12,19 +12,13 @@ expireTime = 0;
 <%@include file="includes/top3_nav.jsp" %>
 <%@include file="includes/top4_head.jsp" %>
 <%@include file="includes/top5_breadcrumbs_and_pano.jsp" %>
-
-<%-- Any template calling others need to pass isNaardermeer as PaginaHelper/mm:import fails--%>
-<%request.setAttribute("isNaardermeer", isNaardermeer);%>
-
 <mm:node number="<%= paginaID %>">
 <%@include file="actie/includes/navsettings.jsp" %>
   <% if (isNaardermeer.equals("true")) { %>		
    	<div style="position:absolute; left:681px; width:70px; height:216px; background-image: url(media/natmm_logo_rgb2.gif); background-repeat:no-repeat;"></div>
   <% } %>
-<% if(artikelID.equals("-1")) {
-   String articleConstraint = (new SearchUtil()).articleConstraint(nowSec, quarterOfAnHour);
-%>
-	<mm:relatednodes type="artikel" path="contentrel,artikel" orderby="begindatum" directions="down" constraints="<%= articleConstraint %>" max="1">
+<% if(artikelID.equals("-1")) { %>
+	<mm:relatednodes type="artikel" path="contentrel,artikel" orderby="begindatum" directions="down" max="1">
        <mm:field name="number" jspvar="artikel_number" vartype="String" write="false">
           <% artikelID = artikel_number;%>
        </mm:field>
@@ -44,7 +38,6 @@ expireTime = 0;
       </jsp:include>
 	</td>
 	<td style="vertical-align:top;width:100%;padding-left:10px;padding-right:10px;text-align:right;">
-		<br/>
 	   <jsp:include page="includes/artikel_12_column.jsp">
          <jsp:param name="r" value="<%= rubriekID %>" />
          <jsp:param name="rs" value="<%= styleSheet %>" />
@@ -63,3 +56,6 @@ expireTime = 0;
 </mm:node>
 </cache:cache>
 </mm:cloud>
+
+
+

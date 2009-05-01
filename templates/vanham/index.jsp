@@ -19,6 +19,7 @@
           <tr><td style="height:43%;"></td></tr>
         </table>
     </mm:node>
+    </mm:node>
   </mm:list>
 </mm:cloud>
 <%@include file="includes/templatefooter.jsp" %>

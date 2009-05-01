@@ -40,7 +40,7 @@
            </form>
          <% 
       } else if(emailId!=null&&!emailId.equals("")&&emailId.indexOf("@")>1){
-         %><mm:createnode type="email" id="websitemail"
+         %><mm:createnode type="email"
               ><mm:setfield name="subject">Vraag om informatie van de website</mm:setfield
               ><mm:setfield name="from"><%= emailId %></mm:setfield
               ><mm:setfield name="to"><%= defaultEmailAddress %></mm:setfield
@@ -51,17 +51,14 @@
                   + "&#149; Vraag: " + textId + "<br><br>"
              %></HTML></mm:setfield
           ></mm:createnode
-          ><mm:node referid="websitemail"
-	  	><mm:field name="mail(oneshotkeep)"
-	  /></mm:node>
-	  <tr>
-            <td class="def" style="width:690px;padding-top:26px;padding-bottom:14px;">
-              <div align="left">
-                <h3><bean:message bundle="<%= "VANHAM." + language %>" key="contact.ok.title" /></h3>
-                <bean:message bundle="<%= "VANHAM." + language %>" key="contact.ok.message" />
-              </div>
-            </td>
-          </tr>
+         ><tr>
+          <td class="def" style="width:690px;padding-top:26px;padding-bottom:14px;">
+            <div align="left">
+              <h3><bean:message bundle="<%= "VANHAM." + language %>" key="contact.ok.title" /></h3>
+              <bean:message bundle="<%= "VANHAM." + language %>" key="contact.ok.message" />
+            </div>
+          </td>
+        </tr>
         <% 
        } else { 
         %>

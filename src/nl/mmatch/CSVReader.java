@@ -141,7 +141,7 @@ public class CSVReader implements Runnable {
         // mark all relations for employees and departments
         log.info("markNodesAndRelations " + thisType);
         NodeManager relatedNodeNM = cloud.getNodeManager(thisType);
-        NodeList thisnodesList = relatedNodeNM.getList("importstatus not like '%" + IGNORE_BEAUFORT + "%'",null,null);
+        NodeList thisnodesList = relatedNodeNM.getList(null,null,null);
         RelationList relations = null;
         Node thisnode = null;
         int i = 0;
@@ -174,16 +174,14 @@ public class CSVReader implements Runnable {
         // deletes all nodes relations for employees and departments, which are inactive
         log.info("deleteNodesAndRelations " + thisType);
         NodeManager relatedNodeNM = cloud.getNodeManager(thisType);
-        NodeList thisnodesList = relatedNodeNM.getList("importstatus not like '%" + IGNORE_BEAUFORT + "%'",null,null);
+        NodeList thisnodesList = relatedNodeNM.getList(null,null,null);
         RelationList relations = null;
         Node thisnode = null;
         int i = 0;
         int nodesDeleted = 0;
         while(i<thisnodesList.size()) {
             thisnode = thisnodesList.getNode(i);
-            if (log.isDebugEnabled()) {
-               log.debug("trying to access node " + thisnode.getValue(thisFields[0]).toString());
-            }
+            log.info("trying to access node " + thisnode.getValue(thisFields[0]).toString());
             if((thisnode.getValue(thisFields[0]).toString()).equals(thisFields[1])) {
                 thisnode.delete(true);
                 nodesDeleted++;
@@ -192,9 +190,7 @@ public class CSVReader implements Runnable {
                     relations = thisnode.getRelations(thisRelations[t],thisRelations[t+1]);
                     for(int r=0; r<relations.size(); r++) {
                         Relation relation = relations.getRelation(r);
-                        if (log.isDebugEnabled()) {
-                           log.debug("trying to access relation " + relation.getValue("readmore2"));
-                        }
+                        log.info("trying to access relation " + relation.getValue("readmore2"));
                         if(relation.getValue("readmore2").equals("inactive")) {
                             relation.delete(true);
                         }
@@ -359,30 +355,27 @@ public class CSVReader implements Runnable {
 
             }
         }
-        
-        // if null means not in db - new medewerker. set to active to prevent NullPE. also being in beaufort means it is an active medewerker
-        if ((personsNode.getValue("importstatus") == null) || (!personsNode.getValue("importstatus").equals(IGNORE_BEAUFORT))) {        
-        
-            personsNode.setValue("externid", thisPerson.get("SOFI_NR"));
-            String alias = (String) personsNode.getValue("account");
-            if(alias==null||alias.equals("")) { // no alias found, use the created one
-               personsNode.setValue("account", thisPerson.get("ALIAS"));
-            }
-            personsNode.setValue("prefix", thisPerson.get("E_TITUL"));
-            personsNode.setValue("firstname", thisPerson.get("E_ROEPNAAM"));
-            personsNode.setValue("initials", thisPerson.get("E_VRLT"));
-            if(thisPerson.get("GBRK_OMS").equals("Partnernaam-geboortenaam")) {
-               personsNode.setValue("suffix", thisPerson.get("P_VRVG"));
-               personsNode.setValue("lastname", thisPerson.get("P_NAAM") + " - " + thisPerson.get("E_VRVG") + " " + thisPerson.get("E_NAAM"));
-            } else {
-               personsNode.setValue("suffix", thisPerson.get("E_VRVG"));
-               personsNode.setValue("lastname", thisPerson.get("E_NAAM"));
-            }
-            personsNode.setValue("gender",getGender((String) thisPerson.get("GENDER")));
-
-            personsNode.setValue("importstatus","active");
-            personsNode.commit();
+        personsNode.setValue("externid", thisPerson.get("SOFI_NR"));
+        String alias = (String) personsNode.getValue("account");
+        if(alias==null||alias.equals("")) { // no alias found, use the created one
+            personsNode.setValue("account", thisPerson.get("ALIAS"));
         }
+        personsNode.setValue("prefix", thisPerson.get("E_TITUL"));
+        personsNode.setValue("firstname", thisPerson.get("E_ROEPNAAM"));
+        personsNode.setValue("initials", thisPerson.get("E_VRLT"));
+        if(thisPerson.get("GBRK_OMS").equals("Partnernaam-geboortenaam")) {
+            personsNode.setValue("suffix", thisPerson.get("P_VRVG"));
+            personsNode.setValue("lastname", thisPerson.get("P_NAAM") + " - " + thisPerson.get("E_VRVG") + " " + thisPerson.get("E_NAAM"));
+        } else {
+            personsNode.setValue("suffix", thisPerson.get("E_VRVG"));
+            personsNode.setValue("lastname", thisPerson.get("E_NAAM"));
+        }
+        personsNode.setValue("gender",getGender((String) thisPerson.get("GENDER")));
+        // if null means not in db - new medewerker. set to active to prevent NullPE. also being in beaufort means it is an active medewerker
+        if ((personsNode.getValue("importstatus") == null) || (!personsNode.getValue("importstatus").equals(IGNORE_BEAUFORT))) {
+        	personsNode.setValue("importstatus","active");
+        }
+        personsNode.commit();
         return personsNode;
     }
 
@@ -447,25 +440,18 @@ public class CSVReader implements Runnable {
     private TreeMap getEmails(String emailFile){
       log.info("getEmails " + emailFile);
       TreeMap emails = new TreeMap();
-      String separator = ";";
-      
+      String [] emailEndTag = { "%X400:", "%CCMAIL:", "\"" };
       try {
         BufferedReader dataFileReader = getBufferedReader(emailFile);
         String nextLine = dataFileReader.readLine();
 
         while(nextLine!=null) {
-        	String alias = "";
-        	String email = "";
-        	String[] tokens = nextLine.split(separator);
-        	if (tokens.length < 4) {
-        		log.warn("email file row contains less then expected tokens.");
-        	} else {
-        		alias = tokens[0];
-        		if (tokens[2].indexOf("@") != -1) {
-        			email = tokens[2];
-        		}
-        	}
-        	
+          nextLine += "\"";
+          String alias = getValue(nextLine,"Mailbox,",",");
+          String email = "";
+          for(int i=0; i<emailEndTag.length && email.equals(""); i++) {
+            email = getValue(nextLine,"SMTP:",emailEndTag[i]);
+          }
           if(!alias.equals("")&&!email.equals("")) { // use uppercase on alias for searching
             if(email.length()>64) {
               log.warn("email address " + email + " for alias " + alias + " is longer than 255 characters, therefore it will be truncated.");
@@ -585,7 +571,6 @@ public class CSVReader implements Runnable {
               Node destination = relatedNodes(cloud, thisPerson, personsNode, "afdelingen", "naam", "readmore", "readmore", "FUNC_OMS", logPerson);
               // this department is in use, so set to active
               destination.setValue("importstatus", "active");
-              destination.setValue("omschrijving", thisPerson.get("K_S_WAARDE")); 
               destination.commit();
           } else { // locatie, column KOSTEN equals E00375
               thisPerson.put("locations",thisPerson.get("K_S_WAARDE"));
@@ -760,7 +745,7 @@ public class CSVReader implements Runnable {
       ArrayList addresses = getAddresses(zipCodeMap, zipCode);
       if(addresses == null) {
     	  addresses = new ArrayList();
-        if (street != null) addresses.add(street);
+    	  addresses.add(street);
     	  return addresses;
       }
       ArrayList returner = new ArrayList();
