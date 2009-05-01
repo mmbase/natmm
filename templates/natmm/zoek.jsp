@@ -6,10 +6,6 @@
 <%@include file="includes/top3_nav.jsp" %>
 <%@include file="includes/top4_head.jsp" %>
 <%@include file="includes/top5_breadcrumbs_and_pano.jsp" %>
-
-<%-- Any template calling others need to pass isNaardermeer as PaginaHelper/mm:import fails--%>
-<%request.setAttribute("isNaardermeer", isNaardermeer);%>
-
 <mm:locale language="nl">
 <!-- /cache:cache -->
 <%
@@ -22,13 +18,10 @@ if(!sQueryForm.equals("")&&!sQueryForm.equals(sQuery)) {
    sQuery = sQueryForm;
 }
 %>
-  <% if (isNaardermeer.equals("true")) { %>		
-   	<div style="position:absolute; left:681px; width:70px; height:216px; background-image: url(media/natmm_logo_rgb2.gif); background-repeat:no-repeat;"></div>
-  <% } %>
+<br>
 <table width="744" border="0" cellspacing="0" cellpadding="0" align="center" valign="top">
 <tr>
    <td style="vertical-align:top;padding:10px;padding-top:0px;width:185px;">
-   <br/>
    <%@include file="includes/navleft.jsp" %>
    <br>
 	<jsp:include page="includes/teaser.jsp">
@@ -39,8 +32,7 @@ if(!sQueryForm.equals("")&&!sQueryForm.equals(sQuery)) {
    </jsp:include>
    </td>
    <td style="vertical-align:top;width:374px;padding:10px;padding-top:0px">
-	  <br/>
-	  <mm:import id="nodotline" />
+	   <mm:import id="nodotline" />
       <%@include file="includes/page_intro.jsp" %>
       <jsp:include page="includes/zoek/resultaten.jsp" flush="true">
          <jsp:param name="query" value="<%= sQuery %>"/>
@@ -50,10 +42,6 @@ if(!sQueryForm.equals("")&&!sQueryForm.equals(sQuery)) {
       </jsp:include>
    </td>
    <td style="vertical-align:top;padding-left:10px;padding-right:10px;width:185px;<jsp:include page="includes/rightcolumn_bgimage.jsp"><jsp:param name="rnimageid" value="<%= rnImageID %>" /></jsp:include>">
- 	 <% if (isNaardermeer.equals("true")) { %>			
-   		<img src="media/trans.gif" height="226" width="1">
-	  <% } %>	  
-	  <br/>
       <jsp:include page="includes/navright.jsp">
          <jsp:param name="s" value="<%= paginaID %>" />
          <jsp:param name="r" value="<%= rubriekID %>" />

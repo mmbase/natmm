@@ -34,7 +34,7 @@ import org.mmbase.bridge.RelationList;
  * Evenement
  *
  * @author Henk Hangyi
- * @version $Revision: 1.15 $, $Date: 2008-10-23 13:14:26 $
+ * @version $Revision: 1.10 $, $Date: 2006-10-06 10:07:17 $
  *
  */
 
@@ -239,8 +239,8 @@ public class Evenement extends DoubleDateNode {
       String nextChild = thisParent;
       String sChildConstraint =
          " (( evenement2.dagomschrijving LIKE '' AND evenement2.begindatum > " + now + ") "
-         + " OR ( evenement2.dagomschrijving NOT LIKE '' AND  evenement2.einddatum > " + now + ")) "
-         + " AND ( evenement2.isspare!='true') AND ( evenement2.isoninternet='true' )";
+         + " OR ( evenement2.dagomschrijving NOT LIKE '' AND  evenement2.einddatum > " + now + ") "
+         + " AND ( evenement.isspare!='true') AND ( evenement.isoninternet='true' )";
       Cloud cloud = CloudFactory.getCloud();
       NodeList cl = cloud.getList(thisParent,
                                   "evenement,partrel,evenement2", "evenement.begindatum,evenement2.number,evenement2.begindatum", sChildConstraint,
@@ -251,7 +251,6 @@ public class Evenement extends DoubleDateNode {
          if ( (parentBegin <= now) || (nextChildBegin < parentBegin)) {
             nextChild = cl.getNode(0).getStringValue("evenement2.number");
          }
-         
       }
       return nextChild;
    }
@@ -431,12 +430,7 @@ public class Evenement extends DoubleDateNode {
 
    public static boolean subscriptionClosed(Node parentEvent, Node childEvent) {
       boolean subscriptionClosed = true;
-      
-      // the subscription is always open if the option "geen sluitingstijd" has been set
-      if (parentEvent.getIntValue("reageer") == 0) {
-         return false;
-      }
-      
+
       // subscription is not used for multiple day events
       DoubleDateNode ddn = new DoubleDateNode(childEvent);
       Calendar cal = Calendar.getInstance();
@@ -460,7 +454,7 @@ public class Evenement extends DoubleDateNode {
 
    public NodeList getSortedList(Cloud cloud, String sParentEvent) {
       // insert the parent into the list of childs
-      NodeList nl = cloud.getList(sParentEvent, "evenement1,partrel,evenement", "evenement.number", null, "evenement.begindatum", "UP", "destination", true);
+      NodeList nl = cloud.getList(sParentEvent, "evenement1,partrel,evenement", "evenement.number", null, "evenement.begindatum", "UP", null, true);
       if (nl.size() != 0) {
          DoubleDateNode ddnParent = new DoubleDateNode(cloud.getNode(sParentEvent));
          NodeList parentList = cloud.getList(sParentEvent, "evenement", "evenement.number", null, null, null, null, false);
@@ -541,13 +535,7 @@ public class Evenement extends DoubleDateNode {
       }
       return events;
    }
-   
-   /**
-    * Find parent for child, if there is a parent.
-    *
-    * @param sEvent String
-    * @return String
-    */
+
    public static String findParentNumber(String sEvent) {
       Cloud cloud = CloudFactory.getCloud();
       Node thisEvent = cloud.getNode(sEvent);
@@ -559,7 +547,7 @@ public class Evenement extends DoubleDateNode {
             parentNumber = parentEvent.getStringValue("number");
          }
          else {
-            log.debug("Could not find parent for child " + thisEvent.getStringValue("number") + ", setting parent to child");
+            log.info("Could not find parent for child " + thisEvent.getStringValue("number") + ", setting parent to child");
          }
       }
       return parentNumber;

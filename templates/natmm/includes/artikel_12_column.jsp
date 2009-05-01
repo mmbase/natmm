@@ -64,7 +64,7 @@ if(hasRightCell) {
    %><table width="539px;" border="0" cellspacing="0" cellpadding="0">
    <tr>
    	<td style="vertical-align:top;padding-right:10px;padding-bottom:10px;width:364px;">
-		<mm:compare referid="showpageintro" value="true">
+         <mm:compare referid="showpageintro" value="true">
             <%@include file="../includes/page_intro.jsp" %>
          </mm:compare>
          <% if(!artikelID.equals("-1")) { %>
@@ -93,11 +93,7 @@ if(hasRightCell) {
       	<% } %>
       </td>
    	<td style="vertical-align:top;padding-left:10px;width:175px;<jsp:include page="../includes/rightcolumn_bgimage.jsp"><jsp:param name="rnimageid" value="<%= rnImageID %>" /></jsp:include>">
-<% if (isNaardermeer.equals("true")) { %>			
-   		<img src="media/trans.gif" height="226" width="1">
-	  <% } %>
-	  <br/>
-	  <% // back to weblog link according to existence of a passed callingPageID parameter
+	<% // back to weblog link according to existence of a passed callingPageID parameter
 	  if ((callingPageID !=null) || (!callingPageID.equals("-1"))) { %>
 	         <jsp:include page="../includes/fun/webcam_backlink.jsp">
             	<jsp:param name="cp" value="<%= callingPageID %>" />

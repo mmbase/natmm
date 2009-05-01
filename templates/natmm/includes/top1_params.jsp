@@ -19,7 +19,6 @@ ids.put("persoon", personID);
 ids.put("provincies", provID);
 ids.put("vacature", vacatureID);
 ids.put("items", shop_itemID);
-ids.put("isNaardermeer", isNaardermeer);
 
 ids = ph.findIDs(ids, path, "nm_pagina");
 
@@ -38,7 +37,6 @@ personID = (String) ids.get("persoon");
 provID = (String) ids.get("provincies");
 vacatureID = (String) ids.get("vacature");
 shop_itemID = (String) ids.get("items");
-isNaardermeer = (String) ids.get("isNaardermeer");
 
 Vector breadcrumbs = new Vector();
 String lnRubriekID = "";
@@ -117,9 +115,9 @@ if(application.getAttribute("request_url")==null) {
    application.setAttribute("request_url", javax.servlet.http.HttpUtils.getRequestURL(request).toString());
 }
 
-if(!(new java.io.File( NatMMConfig.getIncomingDir() )).exists()) {
+if(!(new java.io.File( NatMMConfig.incomingDir )).exists()) {
    %><div style="position:absolute;color:red;font-weight:bold;padding:30px;">
-         WARNING: The settings in NatMMConfig are incorrect: <%= NatMMConfig.getIncomingDir() %> is not a directory on this server.
+         WARNING: The settings in NatMMConfig are incorrect: <%= NatMMConfig.incomingDir %> is not a directory on this server.
          Please change the settings and place a new natmm.jar
    </div><%
 }

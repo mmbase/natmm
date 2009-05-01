@@ -4,7 +4,7 @@
 // <option id="3">klein rechts</option>
 // <option id="8">medium links</option>
 // <option id="9">medium rechts</option>
-// <option id="4">groot boven artikel</option>
+// <option id="4">groot</option>
 
 %><mm:related path="posrel,images"  max="1"
 	><mm:field name="posrel.pos" jspvar="posrel_pos" vartype="Integer" write="false"><%
@@ -16,13 +16,12 @@
 		 if(image_position==4) { // large image, no spacer between table and text
 			  imageTemplate = "+s(500)";
 			 %><table cellspacing="0" cellpadding="0" border="0" align="center">
-			     <tr><td colspan="3"><img src="media/spacer.gif" alt="" border="0" width="1" height="10px"></td></tr>
 				  <tr><td colspan="3" class="black"><img src="media/spacer.gif" alt="" border="0" width="1" height="1"></td></tr>
 				  <tr><td class="black"><img src="media/spacer.gif" alt="" border="0" width="1" height="1"></td>
 						<td><img src="<%@include file="../includes/imagessource.jsp" %>" alt="" border="0"></td>
 						<td class="black"><img src="media/spacer.gif" alt="" border="0" width="1" height="1"></td></tr>
 				  <tr><td colspan="3" class="black"><img src="media/spacer.gif" alt="" border="0" width="1" height="1"></td></tr>
-				  <tr><td colspan="3"><img src="media/spacer.gif" alt="" border="0" width="1" height="10px"></td></tr>
+				  <tr><td colspan="3"><img src="media/spacer.gif" alt="" border="0" width="1" height="5"></td></tr>
 				  </table><br><%
 				  
 		 } else { // medium or small image, spacer between table and text

@@ -66,21 +66,7 @@ String cardID = "-1";
    	}
    } 
 </SCRIPT>
-
-<%-- Any template calling others need to pass isNaardermeer as PaginaHelper/mm:import fails--%>
-<%request.setAttribute("isNaardermeer", isNaardermeer);%>
-<% if(artikelID.equals("-1")) { %>
-   <mm:list nodes="<%=paginaID%>" path="pagina,contentrel,artikel" fields="artikel.number" orderby="contentrel.pos" directions="up" max="1">
-   	<mm:field name="artikel.number" jspvar="artikel_number" vartype="String" write="false">
-   		<% artikelID = artikel_number;%>
-   	</mm:field>
-   </mm:list><%
-} %>
-  <% if (isNaardermeer.equals("true")) { %>		
-   	<div style="position:absolute; left:681px; width:70px; height:216px; background-image: url(media/natmm_logo_rgb2.gif); background-repeat:no-repeat;"></div>
-  <% } %>
-  
-  <br/>
+<br>
    <table width="744" border="0" cellspacing="0" cellpadding="0" align="center" valign="top">
    <tr>
    	<td style="vertical-align:top;width:185px;padding:10px;padding-top:0px;">
@@ -93,13 +79,7 @@ String cardID = "-1";
             <jsp:param name="sr" value="0" />
          </jsp:include>
    	</td>
-   	
-  <% if (isNaardermeer.equals("true")) { %>		
-      	<td style="vertical-align:top;width:420px;padding:10px;padding-top:0px;">   
-  <% } else { %>
-      	<td style="vertical-align:top;width:559px;padding:10px;padding-top:0px;">   
-  <% } %>
-  
+   	<td style="vertical-align:top;width:559px;padding:10px;padding-top:0px;">   
       <% if(cardID.equals("-1")&&imgID.equals("-1")) { %>
       	<jsp:include page="includes/fun/fun_index.jsp">
    	      <jsp:param name="p" value="<%= paginaID %>" />
@@ -134,11 +114,7 @@ String cardID = "-1";
                		<% 
                		 if(!imgID.equals("-1")){%>
                				<mm:node number="<%= imgID %>">
-               					  <% if (isNaardermeer.equals("true")) { %>		
-	               					<img src="<mm:image template="s(416x380)" />" alt="<mm:field name="titel" />" border="0"></td>
-   								  <% } else { %>
-   	               					<img src="<mm:image template="s(500x330)" />" alt="<mm:field name="titel" />" border="0"></td>
-   								  <% } %>
+               					<img src="<mm:image template="s(500x330)" />" alt="<mm:field name="titel" />" border="0"></td>
                				</mm:node><%
                		}%>
             		   </td>

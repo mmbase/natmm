@@ -37,8 +37,7 @@ String attachmentID = request.getParameter("at");
 	     
 	<p>
 	<br/>
-
-	<mm:related path="contentrel,attachments" fields="contentrel.pos,attachments.titel" orderby="contentrel.pos">
+	<mm:related path="contentrel,attachments" fields="attachments.titel">
 	    <mm:field name="attachments.number" jspvar="pagina_number" vartype="String" write="false">  
 	    <mm:first>
 	       <span class="colortitle">Highlight video's</span>
@@ -59,7 +58,7 @@ String attachmentID = request.getParameter("at");
 	
 	<%
 	} else {
-	// displaying highlight video - not webcam, here
+	// displaying hightlight video - not webcam, here
 	%>
 	<mm:node number="<%= attachmentID %>">
 	<h3>Highlight Video</h3>
@@ -109,6 +108,8 @@ String attachmentID = request.getParameter("at");
 				
 			</mm:node>
     <p>
+	<br/>
+
 	
 	<%-- Links to all highlight videos - only displayed when not blank --%>
 	<mm:related path="contentrel,attachments" fields="attachments.titel,attachments.number">

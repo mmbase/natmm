@@ -11,7 +11,7 @@
 <%
 boolean debug = false;
 int numberOfPhotos = 0;
-String sFotoDir =  NMIntraConfig.getIncomingDir() + "fotos/";
+String sFotoDir =  NMIntraConfig.incomingDir + "fotos/";
 
 try {
 
