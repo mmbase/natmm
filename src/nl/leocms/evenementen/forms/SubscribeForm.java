@@ -93,7 +93,6 @@ public class SubscribeForm extends ActionForm {
    private String description;
    private String bankaccount;
 
-   
    private String selectedParticipant;
    private String numberInCategory;
    private String participantsCategory;
@@ -101,7 +100,6 @@ public class SubscribeForm extends ActionForm {
    private String status;
 
    private String TicketOffice;
-   private String TicketOfficeSource;   
    private String userId;
    private String paymentType;
    private String pageNumber;
@@ -265,9 +263,6 @@ public class SubscribeForm extends ActionForm {
    public String getTicketOffice() { return TicketOffice; }
    public void setTicketOffice(String TicketOffice) { this.TicketOffice = TicketOffice; }
 
-   public String getTicketOfficeSource() { return TicketOfficeSource; }
-   public void setTicketOfficeSource(String TicketOfficeSource) { this.TicketOfficeSource = TicketOfficeSource; }
-
    public String getUserId() { return userId; }
    public void setUserId(String userId ) { this.userId = userId; }
 
@@ -341,8 +336,11 @@ public class SubscribeForm extends ActionForm {
       this.skipValidation = "N";
 
       Node thisEvent = CloudFactory.getCloud().getNode(this.getNode());
-      
-      this.showAddress = "true";
+      if(thisEvent.getStringValue("adres_verplicht").equals("1")) {
+         this.showAddress = "true";
+      } else {
+         this.showAddress = "false";
+      }
 
       if(thisEvent.getLongValue("embargo") < (new Date()).getTime()/1000) {
          this.showPastDates = "false";
@@ -361,7 +359,6 @@ public class SubscribeForm extends ActionForm {
       this.status = "";
 
       this.TicketOffice = "backoffice";
-      this.TicketOfficeSource = "";
 
       this.lastSentMessage = "";
       this.extraText = "";      

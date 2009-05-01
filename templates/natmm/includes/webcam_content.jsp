@@ -25,7 +25,6 @@ String attachmentID = request.getParameter("at");
 	<% 
 	PaginaHelper pHelper = new PaginaHelper(cloud);
 	if (attachmentID == null) {
-	// displaying webcam - not hightlight video, here
 	%>
 	<p class="colortitle"><mm:field name="titel" vartype="String" /></p>
 	
@@ -37,34 +36,26 @@ String attachmentID = request.getParameter("at");
 	     
 	<p>
 	<br/>
-
-	<mm:related path="contentrel,attachments" fields="contentrel.pos,attachments.titel" orderby="contentrel.pos">
-	    <mm:field name="attachments.number" jspvar="pagina_number" vartype="String" write="false">  
-	    <mm:first>
-	       <span class="colortitle">Highlight video's</span>
-		   <br/>
-		  </mm:first>
-	    <img src="media/link_fun.gif" alt="" border="0" />
-	    <% 
-      			if(!pagina_number.equals(attachmentID)) { 
-      	         %><a href="<%= pHelper.createPaginaUrl(paginaID,request.getContextPath()) %>?at=<mm:field name="attachments.number" />"><mm:field name="attachments.titel" /></a><%
-      	      } else {
-      	         %><mm:field name="attachments.titel" /><%
-      	      }
-      	      %><br/>
-      	      </mm:field>
+	<img src="media/logo_nm.gif"><img src="media/logo_nuon.gif">
+	<br/>
+	<span class="colortitle">Highlight video's</span>
+	<br>
+		<mm:related path="contentrel,attachments" fields="attachments.titel">
+		<a href="<%= pHelper.createPaginaUrl(paginaID,request.getContextPath()) %>?at=<mm:field name="attachments.number" />">
+		<img src="media/link_fun.gif" alt="" border="0" />
+		<mm:field name="attachments.titel" />
+		</a><br/>
 	</mm:related>
 	<br/>
 	</p>
 	
 	<%
 	} else {
-	// displaying highlight video - not webcam, here
 	%>
 	<mm:node number="<%= attachmentID %>">
-	<h3>Highlight Video</h3>
+	
 	<p class="colortitle"><mm:field name="title" /></p>
-	<p><mm:field name="omschrijving" /></p><br/>
+	<%--<p><mm:field name="description" /></p>--%>
       
       <mm:field name="filename" jspvar="attachments_filename" vartype="String" write="false"><%
 					if(attachments_filename.indexOf(".mp3")>-1
@@ -109,23 +100,17 @@ String attachmentID = request.getParameter("at");
 				
 			</mm:node>
     <p>
+	<br/>
+	<img src="media/logo_nm.gif"><img src="media/logo_nuon.gif">
+	<br/>
+	<span class="colortitle">Highlight video's</span>
+	<br/>
 	
-	<%-- Links to all highlight videos - only displayed when not blank --%>
-	<mm:related path="contentrel,attachments" fields="attachments.titel,attachments.number">
-	    <mm:field name="attachments.number" jspvar="pagina_number" vartype="String" write="false">  
-	       <mm:first>
-	       <span class="colortitle">Highlight video's</span>
-		   <br/>
-		  </mm:first>
-	    <img src="media/link_fun.gif" alt="" border="0" />
-	    <% 
-      			if(!pagina_number.equals(attachmentID)) { 
-      	         %><a href="<%= pHelper.createPaginaUrl(paginaID,request.getContextPath()) %>?at=<mm:field name="attachments.number" />"><mm:field name="attachments.titel" /></a><%
-      	      } else {
-      	         %><mm:field name="attachments.titel" /><%
-      	      }
-      	      %><br/>
-      	</mm:field>
+	<mm:related path="contentrel,attachments" fields="attachments.titel">
+		<a href="<%= pHelper.createPaginaUrl(paginaID,request.getContextPath()) %>?at=<mm:field name="attachments.number" />">
+		<img src="media/link_fun.gif" alt="" border="0" />
+		<mm:field name="attachments.titel" />
+		</a><br/>
 	</mm:related>
 	
 	<br/>
@@ -138,31 +123,26 @@ String attachmentID = request.getParameter("at");
 	</td>
    	<td style="vertical-align:top;padding-left:10px;width:175px;<jsp:include page="../includes/rightcolumn_bgimage.jsp"><jsp:param name="rnimageid" value="<%= rnImageID %>" /></jsp:include>">
 
-<%-- link from webcam to weblog (pagina relation) / or if in highligh video mode to 'back to webcam'--%>
-<% if (attachmentID == null) { %>
-	<p valign="bottom">
-	<mm:related path="readmore,pagina" fields="pagina.number,pagina.titel">
-		<mm:field name="pagina.number" jspvar="pagina_number" vartype="String" write="false">  
-			<a href="<%= pHelper.createPaginaUrl(pagina_number,request.getContextPath()) %>?cp=<%=paginaID%>"><img src="media/arrowright_fun.gif" alt="" border="0" style="vertical-align:bottom" /></a>
-			&nbsp;<a href="<%= pHelper.createPaginaUrl(pagina_number,request.getContextPath()) %>?cp=<%=paginaID%>"><b><mm:field name="pagina.titel" /></b></a>
-		</mm:field><br/>
-	</mm:related>
-	</p><br/>				
 
-    <jsp:include page="../includes/navright.jsp">
-		<jsp:param name="s" value="<%= paginaID %>" />
-        <jsp:param name="r" value="<%= rubriekID %>" />
-        <jsp:param name="lnr" value="<%= lnRubriekID %>" />
-	</jsp:include>
-<% } else { %>
-	<p>
-			<a href="<%= pHelper.createPaginaUrl(paginaID,request.getContextPath()) %>>"><img src="media/arrowright_fun.gif" alt="" border="0" style="vertical-align:bottom" /></a>
-			&nbsp;<a href="<%= pHelper.createPaginaUrl(paginaID,request.getContextPath()) %>"><b>terug naar <mm:field name="titel" vartype="String" /></b></a>
 
-	</p><br/>	
-<% } %>	
-         
-<%-- link to weblog/webcam ends. shorty is standart in two modes --%>	
+<!-- link to weblog (pagina relation) -->
+<p>
+<mm:related path="readmore,pagina" fields="pagina.number,pagina.titel">
+					<mm:field name="pagina.number" jspvar="pagina_number" vartype="String" write="false">  
+					<a href="<%= pHelper.createPaginaUrl(pagina_number,request.getContextPath()) %>?cp=<%=paginaID%>"><img src="media/arrowright_fun.gif" alt="" border="0" /></a>
+					&nbsp;<b><mm:field name="pagina.titel" /></b>
+					</mm:field>
+</mm:related>
+</p>				
+<!-- -->	
+
+
+         <jsp:include page="../includes/navright.jsp">
+            <jsp:param name="s" value="<%= paginaID %>" />
+            <jsp:param name="r" value="<%= rubriekID %>" />
+            <jsp:param name="lnr" value="<%= lnRubriekID %>" />
+         </jsp:include>
+
          <jsp:include page="../includes/shorty.jsp">
    	      <jsp:param name="s" value="<%= paginaID %>" />
    	      <jsp:param name="r" value="<%= rubriekID %>" />
