@@ -158,7 +158,6 @@ String paymentCondition = "";
 
 int iMinNumber = 0;
 int iMaxNumber = 9999;
-int curAantalDeelnemers = 0;
 
 String sHighLight = "style=\"background-color:#729DC2;\"";
 %>
@@ -183,9 +182,6 @@ String sHighLight = "style=\"background-color:#729DC2;\"";
    } %>">
 <html:form action="/editors/evenementen/SubscribeAction" scope="session">
 <html:hidden property="ticketOffice" value="backoffice" />
-
-<html:hidden property="ticketOfficeSource" value="CAD" />
-
 <html:hidden property="userId" value="<%= cloud.getUser().getIdentifier() %>" />
 <html:hidden property="selectedParticipant" />
 <html:hidden property="subscriptionNumber" />
@@ -227,9 +223,7 @@ DoubleDateNode ddn = new DoubleDateNode();
    try { iMinNumber = parentEvent.getIntValue("min_aantal_deelnemers"); } catch (Exception e) { }
    if(iMinNumber==-1) iMinNumber = 0;
    try { iMaxNumber = parentEvent.getIntValue("max_aantal_deelnemers"); } catch (Exception e) { }
-   if(iMaxNumber==-1) iMaxNumber = 9999;
-   try { curAantalDeelnemers = parentEvent.getIntValue("cur_aantal_deelnemers"); } catch (Exception e) { }
-   if(curAantalDeelnemers==-1) curAantalDeelnemers = 0;
+   if(iMaxNumber==-1) iMaxNumber = 9999; 
 
    addressIsRequired = parentEvent.getStringValue("adres_verplicht").equals("1");
 
@@ -339,7 +333,7 @@ DoubleDateNode ddn = new DoubleDateNode();
       %>
       <tr><td class="fieldname" style="<%= fNStyle %>">behandeld door</td>
           <td>
-          <mm:list nodes="<%= nodenr %>" path="evenement,posrel,inschrijvingen,schrijver,users" fields="users.number" distinct="true">
+          <mm:list nodes="<%= parent_number %>" path="evenement,posrel,inschrijvingen,schrijver,users" fields="users.number" distinct="true">
                <mm:node element="users">
                <mm:first><table class="formcontent"></mm:first>
                <tr>
@@ -389,9 +383,9 @@ DoubleDateNode ddn = new DoubleDateNode();
       %> style="width:<% if(isExtendedAct) {  %>500px<% } else { %>300px<% } %>;margin-bottom:20px;">
    <tr <%= sHighLight %>><td>categorie&nbsp;&nbsp;</td><td>kosten&nbsp;&nbsp;</td>
          <% if(isExtendedAct) {  %>
-         	<% if(actionId.indexOf("printdates")==-1) { 
+            <% if(actionId.indexOf("printdates")==-1) { 
                 %><td>deelnemers&nbsp;&nbsp;</td><% } %>
-            <td>aantal&nbsp;plaatsen</td>
+            <td>aantal&nbsp;plaatsen&nbsp;op&nbsp;boot</td>
          <% } %>
          <% if(actionId.indexOf("printdates")==-1) { 
              %><td>aanmeldingen</td><% } %>
@@ -417,20 +411,16 @@ DoubleDateNode ddn = new DoubleDateNode();
             </mm:related>
             <% iTotalParticipants += iParticipantsInCat*iNumberPerParticipant; %>
             <tr <mm:even><%= sHighLight %></mm:even>><td style="width:130px;"><mm:field name="naam" /></td>
-                  <% // kosten %>
                <td><%= SubscribeAction.priceFormating(costs) %></td>
                <% 
                if(isExtendedAct) {
                   if(actionId.indexOf("printdates")==-1) { 
-                	  // deelnemers
                      %><td style="text-align:center;"><%= iParticipantsInCat %></td><% 
-                  } 
-                  // aantal plaatsen %>
+                  } %>
                   <td style="text-align:center;"><%= iNumberPerParticipant %></td>
                   <% 
                }
                if(actionId.indexOf("printdates")==-1) { 
-            	   // aanmeldingen
                      %><td style="text-align:center;"><%= iParticipantsInCat*iNumberPerParticipant %></td><%
                } %>
             </tr>
@@ -443,8 +433,6 @@ DoubleDateNode ddn = new DoubleDateNode();
    </mm:related>
    <% 
    // inschrijving related to this_event that do not have a deelnemers_categorie
-   // it is meant no deelnemers_categorie attached to the deelnemer
-   // this can be reproduced by deleting the deelnemers_categorie relation attached to the deelnemer, or the whole deelnemers_categorie
    if(!isGroupExcursion) {
       int iParticipantsWithoutCat = 0;
          
@@ -465,17 +453,13 @@ DoubleDateNode ddn = new DoubleDateNode();
       if(iParticipantsWithoutCat>0) { 
          %>
          <tr><td style="width:130px;">Zonder categorie</td>
-         	<% // kosten %>
             <td><%=  SubscribeAction.priceFormating("-1") %></td>
             <% if(isExtendedAct) {  %>
                <% if(actionId.indexOf("printdates")==-1) { 
-            	   // deelnemers
                   %><td style="text-align:center;"><%= iParticipantsWithoutCat %></td><% } %>
-                  <% // aantal plaatsen %>
-                  <td style="text-align:center;"></td>
+               <td style="text-align:center;"></td>
             <% } %>
             <% if(actionId.indexOf("printdates")==-1) { 
-            	// aanmeldingen
                %><td style="text-align:center;"><%= iParticipantsWithoutCat %></td><% } %>      
          </tr>
          <%
@@ -486,12 +470,7 @@ DoubleDateNode ddn = new DoubleDateNode();
      %><tr>
          <td>TOTAAL</td>
          <td></td>
-         <% if(isExtendedAct) {  %>
-         	<% // deelnemers %>
-         	<td></td>
-         	<% // aantal plaatsen %>
-         	<td></td>
-         <% } %>
+         <% if(isExtendedAct) {  %><td></td><td></td><% } %>
          <td style="text-align:center;"><%= iTotalParticipants  %></td>
       </tr><%
    } %>
@@ -684,6 +663,7 @@ DoubleDateNode ddn = new DoubleDateNode();
          </td>
          <td colspan="5">
             <nobr>
+               <html:submit property="action" value="<%= SubscribeForm.ADDRESS_ACTION %>" style="<%= extButtonStyle %>" onclick="deleteCookie('ew')"/>
                <html:submit property="action" value="<%= SubscribeForm.SUBSCRIBE_ACTION %>" style="<%= buttonStyle %>" onclick="<%= ((!isGroupExcursion ? "checkMaxPerGroup()": "") + ";deleteCookie('ew')") %>" />
                <html:submit property="action" value="<%= SubscribeForm.CHANGE_ACTION %>" style="<%= buttonStyle %>" onclick="<%= ((!isGroupExcursion ? "checkMaxPerGroup()": "") + ";deleteCookie('ew')")%>" />
                
@@ -875,7 +855,7 @@ DoubleDateNode ddn = new DoubleDateNode();
                      </a><%
                   } %>
                </td>
-               <td colspan="8">
+               <td colspan="8">   
                   <mm:list nodes="<%= snumber %>" path="inschrijvingen,daterel,bevestigings_teksten">
                      <mm:node element="bevestigings_teksten">
                         <mm:field name="titel" />

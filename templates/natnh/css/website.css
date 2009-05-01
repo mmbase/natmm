@@ -15,7 +15,7 @@ select {
 }
 .parkop {
 	font-weight: bold;
-	color: #9ba400;
+	color: #709A01;
 }
 .thumb {
 	margin-right: 15px;
@@ -39,20 +39,20 @@ select {
 .pageheader {
 	font-size: 16px;
 	font-weight: bold;
-	color: #9ba400;
+	color: #709A01;
 }
 .projecttitle {
 	font-size: 30px;
 	font-weight: bold;
-	color: #9ba400;
+	color: #709A01;
 }
 .fototitle {
-	color: #9ba400;
+	color: #709A01;
 }
 .fotopopupparkop {
 	font-size: 13px;
 	font-weight: bold;
-	color: #9ba400;
+	color: #709A01;
 }
 .fotopopuptitel {
 	background-color: #AEAF36;
@@ -63,9 +63,9 @@ td.topgradient {
 }
 td.nav {
 	font-size: 12px;
-	color: #9ba400;
+	color: #709A01;
 	padding: 6px 0px 6px 6px;
-	border: 1px none #9ba400;
+	border: 1px none #709A01;
 	height: 29px;
 	white-space: nowrap;
 }
@@ -83,10 +83,10 @@ td.small {
 	color: #FFFFFF;
 }
 .linktext {
-	color: #9ba400;
+	color: #719B03;
 }
 a {
-	color: #9ba400;
+	color: #719B03;
 }
 a.contrast {
 	color: #FFFFFF;

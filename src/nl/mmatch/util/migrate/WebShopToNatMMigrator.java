@@ -15,7 +15,7 @@ public void run() throws Exception{
         
       TreeMap tmRenamingFields = new TreeMap();
       ArrayList alDeletingFields = new ArrayList();
-      String sFolder =  NatMMConfig.getIncomingDir() + "Shop/";
+      String sFolder =  NatMMConfig.incomingDir + "Shop/";
   
       tmRenamingFields.put("title","titel");
       tmRenamingFields.put("body","omschrijving");

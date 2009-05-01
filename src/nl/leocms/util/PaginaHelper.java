@@ -46,8 +46,7 @@ public class PaginaHelper {
 
    public final static int MAX_NUMBER_LINKLIJST_ELEMENTS = 7;
    public final static int MAX_NUMBER_DOSSIER_ELEMENTS = 7;
-   final static int NAARDERMEER_LAYOUT_INDEX = 1; // index to Naardermeer layout entry, as defined in NatMMConfig.java
-   
+
    Cloud cloud;
 	 ApplicationHelper ap;
    public HashMap pathsFromPageToElements;
@@ -1233,11 +1232,6 @@ public class PaginaHelper {
 
 		// set the rubriekID on basis of the paginaID
 		if(!paginaID.equals("-1")&&rubriekID.equals("-1")) {
-		   // pages might be called with a url with anchors attached after #
-          if (paginaID.indexOf("#") != -1) {
-             paginaID = paginaID.substring(0, paginaID.indexOf("#"));
-          }
-          
 			 NodeList nlRubriek = cloud.getList(paginaID,
 														"pagina,posrel,rubriek",
 														"rubriek.number",
@@ -1254,22 +1248,6 @@ public class PaginaHelper {
       ids.put("object", ID);
       ids.put("rubriek", rubriekID);
       ids.put("pagina", paginaID);
-      
-      // Checking if page belongs to the Neerdermeer rubriek layout
-      String isNaardermeer = "false";
-      String subRubriek = getSubsiteRubriek(cloud, paginaID); //node number of our sub rubriek
-      // Naardermeer huisstijl is applied based on layout that can be selected in editors for top rubrieks
-      // this is for some reason stored in variable naam_fra, as an index to an array defined in NatMMConfig.java
-      int siteLayout = 0;
-      Node subRubriekNode = cloud.getNode(subRubriek);
-      if(subRubriekNode!=null) {
-         siteLayout = Integer.parseInt(subRubriekNode.getStringValue("naam_fra"));
-      }
-      if (siteLayout == NAARDERMEER_LAYOUT_INDEX) {
-         isNaardermeer = "true";
-      }
-      ids.put("isNaardermeer", isNaardermeer);
-
       return ids;
    }
 

@@ -4,8 +4,7 @@
 <%@taglib uri="http://www.opensymphony.com/oscache" prefix="cache" %>
 <%@page import="java.util.*,java.text.*,java.io.*,org.mmbase.bridge.*,org.mmbase.util.logging.Logger,nl.leocms.util.*,nl.leocms.util.tools.HtmlCleaner" %>
 <mm:import id="paginaID" externid="p" jspvar="paginaID" vartype="String">-1</mm:import>
-<mm:import externid="language" jspvar="language" vartype="String"><%= 
-  (request.getHeader("Accept-Language").toUpperCase().indexOf("NL")>-1 ? "nl" : "eng") %></mm:import>
+<mm:import externid="language" jspvar="language" vartype="String">nl</mm:import>
 <mm:import externid="material" jspvar="materialTypeID" vartype="String">-1</mm:import>
 <mm:import externid="orgtype" jspvar="organisationTypeID" vartype="String">-1</mm:import>
 <mm:import externid="locatie" jspvar="locatieID" vartype="String">-1</mm:import>
@@ -14,11 +13,11 @@
 <mm:import externid="a" jspvar="artikelID" vartype="String">-1</mm:import>
 <%
 
+String imageId = request.getParameter("i");
+String offsetId = request.getParameter("offset"); if(offsetId==null){ offsetId=""; }
 String emailId = request.getParameter("e");
 String nameId = request.getParameter("n");
 String textId = request.getParameter("d");
-
-boolean isIE = (request.getHeader("User-Agent").toUpperCase().indexOf("MSIE")>-1);
 
 String thisLanguage = "?language=nl";
 String otherLanguage = "?language=eng";
@@ -43,9 +42,9 @@ if(queryString!=null&&!queryString.equals("")) {
 
 %>
 <mm:cloud>
+<base href="<%= javax.servlet.http.HttpUtils.getRequestURL(request) %>" />
 <html>
   <head>
-    <base href="<%= javax.servlet.http.HttpUtils.getRequestURL(request) %>" />
     <title>
       <mm:node number="$paginaID" notfound="skipbody">
          <mm:relatednodes type="rubriek" path="posrel,rubriek"><mm:field name="naam" /></mm:relatednodes> - <mm:field name="titel" />
@@ -53,12 +52,12 @@ if(queryString!=null&&!queryString.equals("")) {
     </title>
     <link rel="stylesheet" type="text/css" href="css/website.css">
     <style>
-    td {
+    td { 
        width: 30px;
        height: 30px;
        font-size: 140%;
        text-align: center;
-    }
+    } 
     </style>
     <meta http-equiv="imagetoolbar" content="no" />
     <mm:node number="home" jspvar="dummy">

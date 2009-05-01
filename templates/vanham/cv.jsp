@@ -24,7 +24,7 @@
   <% String pageUrl = ph.createPaginaUrl(paginaID,request.getContextPath()); %>
   <script language="JavaScript" type="text/javascript">
     function clearForm() {
-      document.location = "<%= pageUrl %>?language=<%=language%>"; 
+      document.location = "<%= pageUrl %>"; 
       return false; 
     }
   </script>
@@ -86,7 +86,6 @@
         sProjects = lu.getObjectsConstraint(sProjects,"projects","projects",durationConstraint);
         if(debug) { %>durationConstraint: <%= sProjects %><br/><% }
      }
-
   %>
   
   <tr>
@@ -96,7 +95,7 @@
      <td colspan="21">
         <table cellpadding="3" cellspacing="0" border="1"  class="content">
         <tr class="cv">
-           <td style="width:14%;"><a href="cv_text.jsp?language=<%=language%>" target="_blank"><img src="media/print.gif" border="0" title="print"></a></td>
+           <td style="width:14%;"></td>
            <td class="def" style="width:1%;"></td>
            <form name="selectform" method="post" action="">
               <td class="def" style="width:55%;vertical-align:middle;" colspan="2">
@@ -207,13 +206,11 @@
            </td>
            </form>
         </tr>
-        <% if (!sProjects.equals("")) { 
-           %>
+        <% if (!sProjects.equals("")) { %>
            <mm:list nodes="<%= sProjects %>" path="projects" orderby="projects.begindate" directions="DOWN">
               <mm:node element="projects" jspvar="thisProject">
                  <mm:import id="projectID" jspvar="projectID" vartype="String" reset="true"><mm:field name="number"/></mm:import>
                  <%
-                    String imagesList = "";
                     String projectDesc = LocaleUtil.getField(cloud.getNode(projectID),"omschrijving", language);
                     boolean hasToggle = !projectDesc.equals("");
                  %>
@@ -231,8 +228,12 @@
                              cal.setTimeInMillis(endDate.longValue() * 1000);
                              int endYear = cal.get(Calendar.YEAR);
                              yearString += "" + beginYear;
-                             if (beginYear != endYear && endDate.longValue() <= now) {
+                             if (beginYear != endYear) {
+                                if (endDate.longValue() > now) {
+                                   yearString += " - now";
+                                } else {
                                    yearString += " - " + endYear;
+                                }
                              }
                           %>
                           <td class="def" style="width:14%;">
@@ -251,11 +252,11 @@
                         + LocaleUtil.getField(thisProject,"titel",language)
                         + (hasToggle?"</span>":"") %>
                     </td>
-                    <td class="def" style="width:30%;">
-                       <mm:relatednodes type="organisatie" path="readmore,organisatie" jspvar="dummy">
-                         <%=(hasToggle?"<span onClick='toggle("+projectID+");'>":"")%><%= LocaleUtil.getField(dummy,"naam",language, "") %><%=(hasToggle?"</span>":"")%>
-                       </mm:relatednodes>
-                    </td>
+                    <mm:relatednodes type="organisatie" path="readmore,organisatie">
+                       <td class="def" style="width:30%;">
+                         <%=(hasToggle?"<span onClick='toggle("+projectID+");'>":"")%><mm:field name="titel" /><%=(hasToggle?"</span>":"")%>
+                       </td>
+                    </mm:relatednodes>
                  </tr>
                  <% if (hasToggle) {  %>
                     <tr id="toggle_div<%=projectID %>" style="display:none">
@@ -272,37 +273,27 @@
                              <mm:field name="year"><mm:compare value="<%= yearString %>" inverse="true"><mm:write /><br/></mm:compare></mm:field>
                              <%= LocaleUtil.getField(dummy,"material",language, "<br/>") %>
                              <%= LocaleUtil.getField(dummy,"subtitle",language, "<br/>") %>
-                             <mm:field name="piecesize"/><br/><br/>
-                             <%= LocaleUtil.getField(dummy,"omschrijving",language, "<br/>") %>
+                    <mm:field name="piecesize"/><br/>
+                    <%= LocaleUtil.getField(dummy,"omschrijving",language, "<br/>") %>
                           </mm:relatednodes>
                        </td>
                        <td class="def" style="width:30%;">
-                         <mm:related path="posrel1,items,posrel2,images" orderby="posrel1.pos,posrel2.pos" directions="DOWN,DOWN">
-                         <mm:field name="images.number" jspvar="dummy" vartype="String" write="false">
-                               <% if(imagesList.equals("")) {
-                                    imagesList = dummy;
-                                  } else {
-                                    imagesList = dummy + "," + imagesList;
-                                  }
-                               %>
-                            </mm:field
-                            ><mm:last
-                               ><mm:node element="images" jspvar="dummy"
-                                  ><mm:field name="number" jspvar="imageID" vartype="String"><% 
-                                  String jsString = "javascript:launchCenter('/vanham/slideshow.jsp?i="
-                                     + imagesList + "&language=" + language
-                                     + "', 'center', 784, 784, 'resizable=1,scrollbars=1');setTimeout('newwin.focus();',250);"; 
-                                  %><div style="position:relative;left:185px;top:7px;"><div style="visibility:visible;position:absolute;top:0px;left:0px;"><% 
-                                  %><a href="javascript:void(0);" onclick="<%= jsString %>"  alt="<bean:message bundle="<%= "VANHAM." + language %>" key="cv.click.to.enlarge" />"><img src="media/zoom.gif" border="0" /></a><%
-                                  %></div></div><%
-                                  %><a href="javascript:void(0);" onclick="<%= jsString %>" title="<bean:message bundle="<%= "VANHAM." + language %>" key="cv.click.to.enlarge" />"><% 
-                                  %><img src="<mm:image template="s(207)" />" style="margin-bottom:8px;border-width:0px;" /><%
-                                  %></a><%
-                                  %></mm:field
-                               ></mm:node
-                            ></mm:last
-                         ></mm:related
-                       ></td>
+                          <mm:related path="posrel,items,posrel,images" max="1"
+                    ><mm:node element="images" jspvar="dummy"
+                      ><mm:field name="number" jspvar="imageID" vartype="String"><% 
+                        String jsString = "javascript:launchCenter('/vanham/slideshow.jsp?i="
+                                   + imageID + "&language=" + language
+                                   + "', 'center', 550, 740);"; 
+                                   %><div style="position:relative;left:185px;top:7px;"><div style="visibility:visible;position:absolute;top:0px;left:0px;"><% 
+                          %><a href="javascript:void(0);" onclick="<%= jsString %>"  alt="<bean:message bundle="<%= "VANHAM." + language %>" key="cv.click.to.enlarge" />"><img src="media/zoom.gif" border="0" /></a><%
+                        %></div></div><%
+                        %><a href="javascript:void(0);" onclick="<%= jsString %>" title="<bean:message bundle="<%= "VANHAM." + language %>" key="cv.click.to.enlarge" />"><% 
+                          %><img src="<mm:image template="s(207)" />" style="margin-bottom:8px;border-width:0px;" /><%
+                        %></a><%
+                      %></mm:field
+                    ></mm:node
+                  ></mm:related
+                ></td>
                     </tr>
                  <% } %>
               </mm:node>

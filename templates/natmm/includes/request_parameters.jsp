@@ -19,4 +19,3 @@
 <mm:import jspvar="offsetID" externid="offset" id="offset">0</mm:import>
 <mm:import jspvar="ID" externid="id">-1</mm:import>
 <mm:import jspvar="callingPageID" externid="cp">-1</mm:import>
-<mm:import jspvar="isNaardermeer" externid="isNaardermeer">-1</mm:import>
