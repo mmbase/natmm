@@ -27,7 +27,7 @@ import java.io.PrintWriter;
  * Date :Sep 15, 2003
  * 
  */
-public class DefaultCellRenderer extends TreeCellRendererAdapter {
+public class DefaultCellRenderer extends TreeCellRendererAdapter implements TreeCellRenderer {
 
    /* (non-Javadoc)
     * @see com.finalist.tree.TreeCellRenderer#render(java.lang.Object)

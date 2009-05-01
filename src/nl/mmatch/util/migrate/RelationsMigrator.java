@@ -21,7 +21,7 @@ public class RelationsMigrator {
 
    public static void run() throws Exception{
 
-      String sFolder = NMIntraConfig.getIncomingDir() + "NMIntraXML/";
+      String sFolder = NMIntraConfig.incomingDir + "NMIntraXML/";
      
       log.info("RelationsMigrator.run()");
       log.info("Importing files from " + sFolder);
@@ -309,7 +309,7 @@ public class RelationsMigrator {
             al.add(sOneString.substring(sOneString.indexOf("<node number=\"") + 14,
                    sOneString.indexOf("\" ")));
             }
-      }
+         }
       fr.close();
 
       return al;

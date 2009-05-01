@@ -2,13 +2,9 @@
 <mm:cloud jspvar="cloud">
 <%@include file="includes/templateheader.jsp" %>
 <%@include file="includes/cacheparams.jsp" %>
-
-<%@include file="includes/calendar.jsp" %>
-
-<%@include file="includes/vastgoed/override_templateparams.jsp" %>
-
+<cache:cache groups="<%= paginaID %>" key="<%= cacheKey %>" time="<%= expireTime %>" scope="application">
 <%@include file="includes/header.jsp" %>
-
+<%@include file="includes/calendar.jsp" %>
 <%
 String indexLetter = "A";
 String passedLetter = (String) request.getParameter("k");
@@ -32,25 +28,13 @@ function ShowHideLayer(divID) {
 	}
 }
 </script>
-
-<% boolean bibliotheekStyle = !printPage && NMIntraConfig.style1[iRubriekStyle].equals("bibliotheek"); %>
-<td <% if(bibliotheekStyle) { %>colspan="2"<% } %>>
-
-<table border="0" cellpadding="0" cellspacing="0">
-   <tr>
-      <%-- <td><img src="media/rdcorner.gif" style="filter:alpha(opacity=75)"></td> --%>
-      <td class="transperant" style="width:100%;"><img src="media/spacer.gif" width="1" height="6"><br></td>
-      <td class="transperant"><img src="media/spacer.gif" width="10" height="28"></td>
-   </tr>
-</table>
-
-</td>
-
+<% boolean twoColumns = !printPage && ! NMIntraConfig.style1[iRubriekStyle].equals("bibliotheek"); %>
+<td <% if(!twoColumns) { %>colspan="2"<% } %>><%@include file="includes/pagetitle.jsp" %></td>
 <% 
+if(twoColumns) { 
    String rightBarTitle = "";
-%>
-   
-<td><%@include file="includes/rightbartitle.jsp" %></td>
+   %><td><%@include file="includes/rightbartitle.jsp" %></td><%
+} %>
 </tr>
 <tr>
 <td class="transperant" <% if(NMIntraConfig.style1[iRubriekStyle].equals("bibliotheek")) { %>colspan="2"<% } %>>
@@ -60,19 +44,10 @@ function ShowHideLayer(divID) {
 
 <% if(vraagNode != null) { %>
 	 
-	<%-- directly forwarding to not the vraagbaak, but a/the page that includes the vraagbaak --%>
-    <% String vraagpageLink = ""; %>
-  
-    <mm:node number="<%=vraagNode%>" >
-		<mm:relatednodes type="pagina" max="1" >
-  			<mm:field name="number" jspvar="page_node" vartype="String" write="false" >
-  			<% vraagpageLink = "vraagbaak.jsp?p=" + page_node + "#" + vraagNode; %>
-			</mm:field>
-		</mm:relatednodes>
-    </mm:node>
-    
-    <mm:redirect page="<%=vraagpageLink%>" />
-      
+	 <jsp:include page="includes/relatedvraagbaak.jsp">
+         	<jsp:param name="v" value="<%=vraagNode%>"/>
+     </jsp:include>
+         
 <% } else {%>
 
     <%@include file="includes/back_print.jsp" %>
@@ -88,16 +63,53 @@ function ShowHideLayer(divID) {
     	<br/>
     	
     	<div id ="<mm:field name="number"/>" style="display:none;">
-    		<mm:relatednodes path="related,vraagbaak" searchdir="source" orderby="titel">
+    		<mm:relatednodes path="related,vraagbaak" searchdir="source">
 	    		&nbsp;&nbsp;<a href='?v=<mm:field name="number"/>' class="underlined"><mm:field name="titel"/></a><br/>
 	    	</mm:relatednodes>
 	    	<br/>
     	</div>
     	
+    
+    
     </mm:listnodes>
     
     <% } %>
-     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <%-- These are article related view items - MIGHT BE REMOVED 
+    <% 
+      if(!"false".equals(request.getParameter("showteaser"))) { 
+         %>
+         <%@include file="includes/relatedteaser.jsp" %>
+         <%
+      }
+      String startnodeId = articleId;
+      String articlePath = "artikel";
+      String articleOrderby = "";
+      if(articleId.equals("-1")) { 
+      startnodeId = paginaID;
+      articlePath = "pagina,contentrel,artikel";
+      articleOrderby = "contentrel.pos";
+      }
+      %><mm:list nodes="<%= startnodeId %>"  path="<%= articlePath %>" orderby="<%= articleOrderby %>"
+         ><%@include file="includes/relatedarticle.jsp" 
+      %></mm:list>
+      <mm:node number="<%= paginaID %>">
+         <%@include file="includes/relatedcompetencies.jsp" %>
+      </mm:node>
+      <%@include file="includes/pageowner.jsp" 
+    %>
+     THE ABOVE BLOCK MIGHT BE SELECTIVELY REMOVED --%>
+    
+    
+    
     
     </td>
 </tr>
@@ -108,8 +120,7 @@ function ShowHideLayer(divID) {
 
 
 <% 
-
-if(!printPage) { 
+if(twoColumns) { 
    // *********************************** right bar *******************************
    String styleClass = "white";
    String styleClassDark = "white";
@@ -132,5 +143,5 @@ if(!printPage) {
 } %>
 
 <%@include file="includes/footer.jsp" %>
-
+</cache:cache>
 </mm:cloud>

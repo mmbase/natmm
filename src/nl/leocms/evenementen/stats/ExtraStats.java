@@ -87,52 +87,46 @@ public class ExtraStats {
 
    private int getCounts(Cloud cloud, String sEvenementenNumbers, String evenementTimeConstraint, String statstype, String boekingenTypeName){
 
-      String sRealNodepath = "evenement,posrel,inschrijvingen,posrel2,deelnemers,related,deelnemers_categorie";
-      String sRealConstraints = null;
-      
-      if (boekingenTypeName.equals(BOEKINGEN_TYPE_INDIVIDUELE_BOEKINGEN)) {
-         sRealConstraints = evenementTimeConstraint + " AND deelnemers_categorie.groepsactiviteit != '1'";
-      } else if(boekingenTypeName.equals(BOEKINGEN_TYPE_GROEPSBOEKINGEN)) {
-         sRealConstraints = evenementTimeConstraint + " AND deelnemers_categorie.groepsactiviteit = '1'";         
-      }
+      String sRealNodepath = "evenement,posrel,inschrijvingen";
+      String sRealConstraints = evenementTimeConstraint;
 
       NodeList nl = null;
       int iResult = 0;
 
       if (statstype.equals("inschrijvingen")){
-         nl = cloud.getList(sEvenementenNumbers,sRealNodepath,"inschrijvingen.number",sRealConstraints,null,null,null,true);
+         nl = cloud.getList(sEvenementenNumbers,sRealNodepath,"inschrijvingen.number",sRealConstraints,null,null,null,false);
          iResult += nl.size();
       }
 
       else if (statstype.equals("deelnemers")){
-    	 if (boekingenTypeName.equals(BOEKINGEN_TYPE_INDIVIDUELE_BOEKINGEN)) {
+    	 if(boekingenTypeName.equals(BOEKINGEN_TYPE_INDIVIDUELE_BOEKINGEN)){
+    		 sRealNodepath += ",posrel2,deelnemers";
              nl = cloud.getList(sEvenementenNumbers,sRealNodepath,"inschrijvingen.number,deelnemers.bron",sRealConstraints,null,null,null,false);
              for(int i = 0; i < nl.size(); i++) {
                 iResult += nl.getNode(i).getIntValue("deelnemers.bron");
              }
-    	 } else if(boekingenTypeName.equals(BOEKINGEN_TYPE_GROEPSBOEKINGEN)) {
+    	 }else if(boekingenTypeName.equals(BOEKINGEN_TYPE_GROEPSBOEKINGEN)){
     		 // In the case of a groepsboeking the deelnemers.bron field is empty and the deelnemers_categorie.aantal_per_deelnemer should be used. 
+    		 sRealNodepath += ",posrel2,deelnemers,related,deelnemers_categorie";
              nl = cloud.getList(sEvenementenNumbers,sRealNodepath,"deelnemers_categorie.aantal_per_deelnemer",sRealConstraints,null,null,null,false);
              for(int i = 0; i < nl.size(); i++) {
                 iResult += nl.getNode(i).getIntValue("deelnemers_categorie.aantal_per_deelnemer");
              }
-    	    }
+    	 }
       }
 
       else if (statstype.equals("leden")){
-         if (boekingenTypeName.equals(BOEKINGEN_TYPE_INDIVIDUELE_BOEKINGEN)) {
-            if(!sRealConstraints.equals("")) { sRealConstraints += " AND "; }
-            sRealConstraints += " ( UPPER(deelnemers_categorie.naam) NOT like '%NIET%' )";
-            nl = cloud.getList(sEvenementenNumbers,sRealNodepath,"inschrijvingen.number,deelnemers.bron",sRealConstraints,null,null,null,false);
-            for(int i = 0; i < nl.size(); i++) {
-               iResult += nl.getNode(i).getIntValue("deelnemers.bron");             
-            }
-         } else {
-            iResult = 0;
+         sRealNodepath += ",posrel2,deelnemers,related,deelnemers_categorie";
+         if(!sRealConstraints.equals("")) { sRealConstraints += " AND "; }
+         sRealConstraints += " ( UPPER(deelnemers_categorie.naam) NOT like '%NIET%' )";
+         nl = cloud.getList(sEvenementenNumbers,sRealNodepath,"inschrijvingen.number,deelnemers.bron",sRealConstraints,null,null,null,false);
+         for(int i = 0; i < nl.size(); i++) {
+            iResult += nl.getNode(i).getIntValue("deelnemers.bron");
          }
       }
 
       else if (statstype.equals("opbrengst")){
+         sRealNodepath += ",posrel2,deelnemers";
          nl = cloud.getList(sEvenementenNumbers,sRealNodepath,"inschrijvingen.number,posrel2.pos",sRealConstraints,null,null,null,false);
          for(int i = 0; i < nl.size(); i++) {
             iResult += nl.getNode(i).getIntValue("posrel2.pos");
@@ -148,7 +142,7 @@ public class ExtraStats {
                tsEvenementNumbers.add(eventNumber);
                iResult++;
             }
-         }        
+         }
       }
 
       return iResult;
@@ -294,9 +288,6 @@ public class ExtraStats {
       // *** count total for tmNames ***
       String evenementenNumbers = null;
       String key = null;
-      
-      // collection = EVENEMENT_TYPES ("evenement_type" objects or "inschrijvings_categorie")
-      
       Set set = collection.entrySet();
       Iterator iterator = set.iterator();
       while (iterator.hasNext()) {
@@ -424,7 +415,7 @@ public class ExtraStats {
       /*NodeList nl = cloud.getList("","events_attachments","events_attachments.number","events_attachments.filename = '" + fileName + "'",null,null,null,false);
       if(nl.isEmpty()) {*/
 
-         WritableWorkbook workbook = Workbook.createWorkbook(new File(NatMMConfig.getTempDir() + fileName));
+         WritableWorkbook workbook = Workbook.createWorkbook(new File(NatMMConfig.tempDir + fileName));
         
          TreeMap regioMap = getRegios(cloud,"Regio");
          TreeMap extraOrdinaryRegioMap = getRegios(cloud,"Comm., Fondsenw., Ledens.");
@@ -555,8 +546,6 @@ public class ExtraStats {
              currentExcelRow++;
              int maxRow = 0;
              int[] thisBoekingenTypeTotal = new int[] {0,0,0,0,0};
-             int totalLedenValue = 0;
-             int totalDeelnemersValue = 0;
              Map deelnemers = new HashMap();
              jxl.write.Number nValue = null;
 
@@ -602,13 +591,7 @@ public class ExtraStats {
 	                 //	If we have "zonder aanmeldingscategorie" we have to subtract the column totals from the values of this row.
 	                 // NB: it is assumed this is the last row of "Groepsboekingen". ( The sListTypeName starts with a "z". )
 	                 if(sListTypeName.equals(INSCHRIJVINGS_CATEGORIE_NIET_INGEDEELD)){
-
-                      if(sStatsType.equals("opbrengst")) {
-                         value = value - (thisBoekingenTypeTotal[columnNo-1] * 100);
-                      } 
-                      else {
-                         value = value - thisBoekingenTypeTotal[columnNo-1];
-                      }                     
+	                	 value = value - thisBoekingenTypeTotal[columnNo-1];
 	                 }
 	
 	                 if(sStatsType.equals("opbrengst")) {
@@ -621,51 +604,33 @@ public class ExtraStats {
 	
 	                 if(sStatsType.equals("leden")) {
 		                 int deelnemersValue = ((Integer)deelnemers.get(sListTypeName)).intValue();
-                       totalLedenValue += value;
-                       totalDeelnemersValue += deelnemersValue;
-		                 if (deelnemersValue!=0) {
+		                 if (deelnemersValue!=0)
 		                    value = value * 100 / deelnemersValue;
-                       } else {
+		                 else
 		                    value = 0;
-                       }
 	                 }
-
+	
 	                 thisBoekingenTypeTotal[columnNo-1] += value;
 	                 nValue = new jxl.write.Number(columnNo, rowNo, value);
 	                 sheet.addCell(nValue);
 	             //}
                  rowNo++;
             }
-  
                
             // print TOTAL
             if (columnNo==1) {
                staticLabel = new Label(0,rowNo,"TOTAAL");
                sheet.addCell(staticLabel);
              }
-            if (columnNo != 5) {
              nValue = new jxl.write.Number(columnNo, rowNo, thisBoekingenTypeTotal[columnNo-1]);
-            } else {
-               int percentage = (totalDeelnemersValue > 0) ? (100*totalLedenValue/totalDeelnemersValue) : 0;
-               thisBoekingenTypeTotal[columnNo-1] = percentage;
-               nValue = new jxl.write.Number(columnNo, rowNo, percentage);
-            }
              sheet.addCell(nValue);
              maxRow = (rowNo>maxRow) ? rowNo : maxRow;
              
              // for totals sheet
              if(isIndividueleBoekingenType){
             	 afdeling.setIndividueleBoekingenTotal(thisBoekingenTypeTotal);
-                if (columnNo == 5) {
-                   afdeling.setIndividueleBoekingenLedenTotal(afdeling.getIndividueleBoekingenLedenTotal() + totalLedenValue);
-                   afdeling.setIndividueleBoekingenDeelnemersTotal(afdeling.getIndividueleBoekingenDeelnemersTotal() + totalDeelnemersValue);
-                }
              } else if(isGroepsBoekingenType) {
             	 afdeling.setGroepsBoekingenTotal(thisBoekingenTypeTotal);
-                if (columnNo == 5) {
-                   afdeling.setGroepsBoekingenLedenTotal(afdeling.getGroepsBoekingenLedenTotal() + totalLedenValue);
-                   afdeling.setGroepsBoekingenDeelnemersTotal(afdeling.getGroepsBoekingenDeelnemersTotal() + totalDeelnemersValue);
-                }
              }
              
              columnNo++;
@@ -762,10 +727,6 @@ public class ExtraStats {
          jxl.write.Number nValue = null;
          int[] individueleBoekingenGrandTotal = new int[] {0,0,0,0,0};
          int[] groepsBoekingenGrandTotal = new int[] {0,0,0,0,0};
-         int individueleBoekingenGrandTotalLedenValue = 0;
-         int individueleBoekingenGrandTotalDeelnemersValue = 0;
-         int groepsBoekingenGrandTotalLedenValue = 0;
-         int groepsBoekingenGrandTotalDeelnemersValue = 0;
          Collections.reverse(afdelingen);
          for (Iterator iter = afdelingen.iterator(); iter.hasNext();) {
 			AfdelingBean afdeling = (AfdelingBean) iter.next();
@@ -781,17 +742,12 @@ public class ExtraStats {
                 sheet.addCell(nValue);
                 individueleBoekingenGrandTotal[i] += afdeling.getIndividueleBoekingenTotal()[i];
 	   		}
-            // grand total percentages require tracking of nominator and denominator
-            individueleBoekingenGrandTotalLedenValue += afdeling.getIndividueleBoekingenLedenTotal();
-            individueleBoekingenGrandTotalDeelnemersValue += afdeling.getIndividueleBoekingenDeelnemersTotal();
             
             for (int i = 0; i < 5; i++) {
             	nValue = new jxl.write.Number(i+8, currentExcelRow, afdeling.getGroepsBoekingenTotal()[i]);
                 sheet.addCell(nValue);
                 groepsBoekingenGrandTotal[i] += afdeling.getGroepsBoekingenTotal()[i];
 	   		}
-            groepsBoekingenGrandTotalLedenValue += afdeling.getGroepsBoekingenLedenTotal();
-            groepsBoekingenGrandTotalDeelnemersValue += afdeling.getGroepsBoekingenDeelnemersTotal();
 		 }
          
          currentExcelRow++;
@@ -802,29 +758,20 @@ public class ExtraStats {
          staticLabel = new Label(0,currentExcelRow,"GRAND TOTAL");
          sheet.addCell(staticLabel);
          
-         int grandPercentage = 0;
-         for (int i = 0; i < 4; i++) {
+         for (int i = 0; i < 5; i++) {
          	 nValue = new jxl.write.Number(i+2, currentExcelRow, individueleBoekingenGrandTotal[i]);
              sheet.addCell(nValue);
 	   	 }
-         // percentage grand totals
-         grandPercentage = (individueleBoekingenGrandTotalDeelnemersValue > 0) ? (100*individueleBoekingenGrandTotalLedenValue/individueleBoekingenGrandTotalDeelnemersValue) : 0;
-         nValue = new jxl.write.Number(4+2, currentExcelRow, grandPercentage);
-         sheet.addCell(nValue);
          
-         for (int i = 0; i < 4; i++) {
+         for (int i = 0; i < 5; i++) {
 	     	 nValue = new jxl.write.Number(i+8, currentExcelRow, groepsBoekingenGrandTotal[i]);
 	         sheet.addCell(nValue);
    		 }
-         // percentage grand totals
-         grandPercentage = (groepsBoekingenGrandTotalDeelnemersValue > 0) ? (100*groepsBoekingenGrandTotalLedenValue/groepsBoekingenGrandTotalDeelnemersValue) : 0;
-         nValue = new jxl.write.Number(4+8, currentExcelRow, grandPercentage);
-         sheet.addCell(nValue);
-         
+
 		 workbook.write();
 		 workbook.close();
 
-         String sFile = NatMMConfig.getTempDir() + fileName;
+         String sFile = NatMMConfig.tempDir + fileName;
          File f = new File(sFile);
          int fsize = (int)f.length();
          byte[] thedata = new byte[fsize];

@@ -184,47 +184,47 @@ public class ApplicationHelper {
 
    public String getRootDir() {
       if (isInstalledNatMM) {
-         return NatMMConfig.getRootDir();
+         return NatMMConfig.rootDir;
       }
       return null;
    }
 
    public String getTempDir() {
       if (isInstalledNatMM) {
-         return NatMMConfig.getTempDir();
+         return NatMMConfig.tempDir;
       }
       if (isInstalledNMIntra) {
-         return NMIntraConfig.getTempDir();
+         return NMIntraConfig.tempDir;
       }
       return null;
    }
 
    public String getIncomingDir() {
       if (isInstalledNatMM) {
-         return NatMMConfig.getIncomingDir();
+         return NatMMConfig.incomingDir;
       }
       if (isInstalledNMIntra) {
-         return NMIntraConfig.getIncomingDir();
+         return NMIntraConfig.incomingDir;
       } 
       return null;
    }
    
    public String getToEmailAddress() {
       if (isInstalledNatMM) {
-         return NatMMConfig.getToEmailAddress();
+         return NatMMConfig.toEmailAddress;
       }
       if (isInstalledNMIntra) {
-         return NMIntraConfig.getToEmailAddress();
+         return NMIntraConfig.toEmailAddress;
       }
       return null;
    }
 
    public String getFromEmailAddress() {
       if (isInstalledNatMM) {
-         return NatMMConfig.getFromEmailAddress();
+         return NatMMConfig.fromEmailAddress;
       }
       if (isInstalledNMIntra) {
-         return NMIntraConfig.getFromEmailAddress();
+         return NMIntraConfig.fromEmailAddress;
       }
       return null;
    }
@@ -232,7 +232,7 @@ public class ApplicationHelper {
    public String getSiteUrl() {
      String siteUrl = null;
       if (isInstalledNatMM) {
-         siteUrl = NatMMConfig.getLiveUrl();
+         siteUrl = NatMMConfig.liveUrl[0];
       }
       if(siteUrl!=null) {
          siteUrl = siteUrl.substring(0,siteUrl.length()-1);

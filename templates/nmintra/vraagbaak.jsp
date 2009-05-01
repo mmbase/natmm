@@ -5,22 +5,20 @@
 <cache:cache groups="<%= paginaID %>" key="<%= cacheKey %>" time="<%= expireTime %>" scope="application">
 <%@include file="includes/header.jsp" %>
 <%@include file="includes/calendar.jsp" %>
-
-<% boolean bibliotheekStyle = !printPage && NMIntraConfig.style1[iRubriekStyle].equals("bibliotheek"); %>
-<td <% if(bibliotheekStyle) { %>colspan="2"<% } %>><%@include file="includes/pagetitle_vraagbaak.jsp" %></td>
-
+<% boolean twoColumns = !printPage && ! NMIntraConfig.style1[iRubriekStyle].equals("bibliotheek"); %>
+<td <% if(!twoColumns) { %>colspan="2"<% } %>><%@include file="includes/pagetitle.jsp" %></td>
 <% 
+if(twoColumns) { 
    String rightBarTitle = "";
-%>
-<td><%@include file="includes/rightbartitle.jsp" %></td>
-   
+   %><td><%@include file="includes/rightbartitle.jsp" %></td><%
+} %>
 </tr>
 <tr>
 <td class="transperant" <% if(NMIntraConfig.style1[iRubriekStyle].equals("bibliotheek")) { %>colspan="2"<% } %>>
 <div class="<%= infopageClass %>" id="infopage">
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr><td style="padding:10px;padding-top:18px;">
-    <a name="top"></a>
+    <a name="top">
     
     <div align="right">
        <mm:node number="<%= rbLogoID %>" notfound="skipbody"><img src="<mm:image template='s(120x80)'/>" border="0" alt=""></mm:node>
@@ -86,17 +84,14 @@
       
       }
       %>
-      <%-- list of vraagbaaks --%>
+      <%-- list of raagbaaks --%>
+      <p> <b>Inhoud:</b>
       <mm:list nodes="<%= startnodeId %>"  path="<%= vraagPath %>" orderby="<%= vraagOrderby %>"
-         ><mm:size jspvar="size" write="false" >
-         <mm:isgreaterthan value="1">
-        	<mm:first><p class="black"><b>Inhoud:</b></mm:first>
-         	<mm:node element="vraagbaak">  
-          		<li/> <a href="<%= ph.createPaginaUrl(startnodeId,request.getContextPath()) %>#<mm:field name="number"/>"><mm:field name="titel"/></a>
-         	</mm:node>
-		</mm:isgreaterthan>
-      	</mm:size>
-      </mm:list>
+         >
+         <mm:node element="vraagbaak">  
+          <li/> <a href="<%= ph.createPaginaUrl(startnodeId,request.getContextPath()) %>#<mm:field name="number"/>"><mm:field name="titel"/></a>
+         </mm:node>
+         </mm:list>
       </p><br/>
       
       <mm:list nodes="<%= startnodeId %>"  path="<%= articlePath %>" orderby="<%= articleOrderby %>"
@@ -109,18 +104,17 @@
          >
          <mm:node element="vraagbaak" id="this_vraagbaak">  
          <mm:field name="number" jspvar="dummy" vartype="String" write="false" ><% currentVraag = dummy; %></mm:field>
-         <a name="<%=currentVraag%>"></a>
+         <a name="<%=currentVraag%>">
          <jsp:include page="includes/relatedvraagbaak.jsp">
          	<jsp:param name="v" value="<%=currentVraag%>"/>
          	<jsp:param name="c" value="<%=startnodeId%>"/>
-            <jsp:param name="rb" value="<%=iRubriekStyle%>"/>
-            <jsp:param name="rbid" value="<%=rubriekId%>"/>
-            <jsp:param name="pgid" value="<%=paginaID%>"/>     
-            <jsp:param name="ssid" value="<%=subsiteID%>"/>       
          </jsp:include>
          </mm:node>
      </mm:list>
-       
+      
+      
+      
+      
       <mm:node number="<%= paginaID %>">
          <%@include file="includes/relatedcompetencies.jsp" %>
       </mm:node>
@@ -132,14 +126,12 @@
 </td>
 
 <% 
-
-if(!printPage) { 
+if(twoColumns) { 
    // *********************************** right bar *******************************
    String styleClass = "white";
    String styleClassDark = "white";
          
-%>
-   <td style="padding-left:10px;">
+   %><td style="padding-left:10px;">
    <div class="rightcolumn" id="rightcolumn">
    
    <p>

@@ -7,10 +7,6 @@
 <%@include file="includes/top3_nav.jsp" %>
 <%@include file="includes/top4_head.jsp" %>
 <%@include file="includes/top5_breadcrumbs_and_pano.jsp" %>
-
-<%-- Any template calling others need to pass isNaardermeer as PaginaHelper/mm:import fails--%>
-<%request.setAttribute("isNaardermeer", isNaardermeer);%>
-
 <% if(artikelID.equals("-1")) { %>
    <mm:list nodes="<%=paginaID%>" path="pagina,contentrel,artikel" fields="artikel.number" orderby="contentrel.pos" directions="up" max="1">
    	<mm:field name="artikel.number" jspvar="artikel_number" vartype="String" write="false">
@@ -21,27 +17,6 @@
   <% if (isNaardermeer.equals("true")) { %>		
    	<div style="position:absolute; left:681px; width:70px; height:216px; background-image: url(media/natmm_logo_rgb2.gif); background-repeat:no-repeat;"></div>
   <% } %>
-
-<%--     
-<div id="bigdiv" style="position:relative;">
-
-<div id="skyscraper" style="visibility: hidden; position:absolute; left:-625px; top:-700px; width:2000; height:2000; color:#000000; z-index:101;">
-   <div style="position: absolute; left: 1220px; top:722px; z-index:102; display: block;">
-      <img src="flash/cross.gif" onclick="closeSkyscraper();"/>
-   </div>
-   <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="2000" height="2000" id="overlayerbanner_pop_600x600" align="middle">
-      <param name="allowScriptAccess" value="sameDomain" />
-      <param name="movie" value="flash/080923_hart_v1.swf?clickTag=http://www.natuurmonumenten.nl&clickTarget=_blank" />
-      <param name="menu" value="false" />
-      <param name="quality" value="high" />
-      <param name="scale" value="noscale" />
-      <param name="wmode" value="transparent" />
-      <param name="bgcolor" value="#ffffff" />
-      <embed src="flash/080923_hart_v1.swf?clickTag=http://www.natuurmonumenten.nl&clickTarget=_blank" menu="false" quality="high" scale="noscale" wmode="transparent" bgcolor="#ffffff" width="2000" height="2000" name="overlayerbanner_pop_600x600" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
-   </object>
-</div>
---%>
-  
 <table width="744" border="0" cellspacing="0" cellpadding="0" align="center" valign="top">
 <tr>
 	<td style="vertical-align:top;width:185px;padding:10px;padding-top:0px;">
@@ -87,9 +62,9 @@
    </td>
 </tr>
 </table>
-
-<%-- </div> --%>
-
 <%@include file="includes/footer.jsp" %>
 </cache:cache>
 </mm:cloud>
+
+
+

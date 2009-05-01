@@ -16,7 +16,7 @@ import com.sun.xml.bind.RIElement;
 
 /**
  * @author
- * @version $Id: KaartenForm.java,v 1.12 2007-08-02 09:51:57 evdberg Exp $
+ * @version $Id: KaartenForm.java,v 1.4 2007-06-13 11:55:41 ieozden Exp $
  *
  * @struts:form name="KaartenForm"
  */
@@ -24,51 +24,51 @@ import com.sun.xml.bind.RIElement;
 public class KaartenForm extends ActionForm{
    private static final Logger log = Logging.getLoggerInstance(KaartenForm.class);
    
-   private String aantal;
-   private String rad_Schaal;
-   private String schaal;
-   private String formaat;
-   private String rad_Gevouwen;
-   private String[] sel_Kaart;
-   private String rad_Gebied;
-   private String sel_Beheereenheden;
-   private String[] sel_NatGeb;
-   private String sel_gebieden;
-   private String[] sel_Areaal;
-   private String linksX;
-   private String linksY;
-   private String rechtsX;
-   private String rechtsY;
+	private String aantal;
+	private String rad_Schaal;
+	private String schaal;
+	private String formaat;
+	private String rad_Gevouwen;
+	private String[] sel_Kaart;
+	private String rad_Gebied;
+	private String sel_Beheereenheden;
+	private String[] sel_NatGeb;
+	private String sel_gebieden;
+	private String[] sel_Areaal;
+	private String linksX;
+	private String linksY;
+	private String rechtsX;
+	private String rechtsY;
    private String opmerkingen;
    //data structures
    private Map natGebMap;
    private Map gebiedMap;
    private Map selKaartMap;
    // constants
-   // these keys should be same in jsp templates and java forms and classes
-   private static String natuurgebiedKey = "Natuurgebied";
+   // these keys should be same in jsp templates and java forms and classes 
+   private static String natuurgebiedKey = "Natuurgebied(en)"; 
    private static String eenheidKey = "Eenheid";
    private static String nederlandKey = "Nederland";
    private static String coordinatenKey = "Coordinaten";
-   
-   public KaartenForm() {
+	
+	public KaartenForm() {
       //init for first load
-      aantal="1";
-      rad_Schaal = "schaal";
-      schaal = "1:5.000";
-      formaat = "A4";
-      rad_Gevouwen = "gevouwen";
-      rad_Gebied = natuurgebiedKey;
+		aantal="1";
+		rad_Schaal = "schaal";
+		schaal = "1:5000";
+		formaat = "A4";
+		rad_Gevouwen = "gevouwen";
+		rad_Gebied = natuurgebiedKey;
       //
       resetMaps();
    }
    
-   
-   
+
+	
    //this is to use private values to set booleans in maps. making ready for jsp
-   public void updateMapValues(){
+	public void updateMapValues(){
       resetMaps();
-      
+
       //
       if (rad_Gebied.equals(natuurgebiedKey)) {
          try {
@@ -79,25 +79,25 @@ public class KaartenForm extends ActionForm{
                if (targetMap.containsKey(sel_NatGeb[i])) {
                   targetMap.put(sel_NatGeb[i], new Boolean(true));
                }
-            }
+            }       
          } catch (Exception e) {
-            log.info("updateMapValues - no entry for key: " + sel_Beheereenheden);
+            log.debug("updateMapValues - no entry for key: " + sel_Beheereenheden);
          }
       }
       
       if (rad_Gebied.equals(eenheidKey)) {
-         try {
-            Map targetMap = (TreeMap) gebiedMap.get(sel_gebieden);
-            for(int i = 0; i < sel_Areaal.length; i++) {
-               Set keySet = targetMap.keySet();
-               Iterator keysIterator = keySet.iterator();
-               if (targetMap.containsKey(sel_Areaal[i])) {
-                  targetMap.put(sel_Areaal[i], new Boolean(true));
-               }
+      try {
+         Map targetMap = (TreeMap) gebiedMap.get(sel_gebieden);
+         for(int i = 0; i < sel_Areaal.length; i++) {        
+            Set keySet = targetMap.keySet();
+            Iterator keysIterator = keySet.iterator();
+            if (targetMap.containsKey(sel_Areaal[i])) {
+               targetMap.put(sel_Areaal[i], new Boolean(true));
             }
-         } catch (Exception e) {
-            log.debug("updateMapValues - no entry for key: " + sel_gebieden);
-         }
+         }       
+      } catch (Exception e) {
+         log.debug("updateMapValues - no entry for key: " + sel_gebieden);
+      }
       }
       
       if (!rad_Gebied.equals(coordinatenKey)) {
@@ -126,26 +126,26 @@ public class KaartenForm extends ActionForm{
          }
       }
    }
-   
-   
-   // Shopping Cart Getters
-   
-   public String getAantal() {
-      return this.aantal;
-   }
-   
-   public String getSchaalOfFormaat() {
-      if ("schaal".equals(rad_Schaal)) {
-         return this.schaal;
-      } else if ("formaat".equals(rad_Schaal)) {
-         return this.formaat;
-      } else {return "unknown format";}
-   }
-   
-   public String getGevouwenOfOpgerold() {
-      return this.rad_Gevouwen;
-   }
-   
+	
+
+	// Shopping Cart Getters
+	
+	public String getAantal() {
+		return this.aantal;
+	}
+	
+	public String getSchaalOfFormaat() {
+		if ("schaal".equals(rad_Schaal)) {
+			  return this.schaal;
+		  } else if ("formaat".equals(rad_Schaal)) {
+			  return this.formaat;
+		  } else {return "unknown format";}
+	}
+	
+	public String getGevouwenOfOpgerold() {
+		return this.rad_Gevouwen;
+	}
+	
    //sel_Kaart will contain node numbers not kart names so has to be directly retrieved in jsp and processed with mm tags
 //	public String getKaartSoort() {
 //		String kaartSoort = "";
@@ -154,13 +154,10 @@ public class KaartenForm extends ActionForm{
 //		}
 //		return kaartSoort;
 //	}
-   
-   //kart type for jsp forms
-   public String getKaartType() {
-      String kartType  = rad_Gebied;
-      if (kartType == null) {
-         return "";
-      }
+	
+    //kart type for jsp forms
+	public String getKaartType() {
+		String kartType  = rad_Gebied;
       if (kartType.equals(natuurgebiedKey)) {
          kartType += "";
       } else if (kartType.equals(eenheidKey)) {
@@ -168,179 +165,256 @@ public class KaartenForm extends ActionForm{
       } else if (kartType.equals(coordinatenKey)) {
          kartType += " (" + linksX + ":" + linksY + " " + rechtsX + ":" + rechtsY + ")";
       }
+      
       return kartType;
-   }
-   
-   //kart type detail string for email
-   public String getKaartTypeDetail() {
+      
+	}
+
+    //kart type detail string for email
+    public String getKaartTypeDetail() {
       String kartTypeDetail  = "";
       if (rad_Gebied.equals(natuurgebiedKey)) {
-         kartTypeDetail += sel_Beheereenheden + " (";
-         for(int i=0; (sel_NatGeb!= null) && (i<sel_NatGeb.length) ; i++) {
-            kartTypeDetail += sel_NatGeb[i];
-            if (i != sel_NatGeb.length -1) {
-               kartTypeDetail += ", ";
-            }
-         }
-         kartTypeDetail += ")";
-      }
+          kartTypeDetail += sel_Beheereenheden + "(";
+          for(int i=0; (sel_NatGeb!= null) && (i<sel_NatGeb.length) ; i++) {
+              kartTypeDetail += sel_NatGeb[i];
+              if (i != sel_NatGeb.length -1) {
+                  kartTypeDetail += ", ";
+              }
+          }
+          kartTypeDetail += ")";
+      } 
       if (rad_Gebied.equals(eenheidKey)) {
-         kartTypeDetail += sel_gebieden + "(";
-         for(int i=0; (sel_Areaal!= null) && (i<sel_Areaal.length) ; i++) {
-            kartTypeDetail += sel_Areaal[i];
-            if (i != sel_Areaal.length -1) {
-               kartTypeDetail += ", ";
-            }
-         }
-         kartTypeDetail += ")";
-      }
-      
+          kartTypeDetail += sel_gebieden + "(";
+          for(int i=0; (sel_Areaal!= null) && (i<sel_Areaal.length) ; i++) {
+              kartTypeDetail += sel_Areaal[i];
+              if (i != sel_Areaal.length -1) {
+                  kartTypeDetail += ", ";
+              }
+          }
+          kartTypeDetail += ")";
+      } 
+
       return kartTypeDetail;
       
-   }
-   
-   // getters and setters
-   
-   public String getFormaat() {
-      return formaat;
-   }
-   
-   public void setFormaat(String formaat) {
-      this.formaat = formaat;
-   }
-   
-   public String getRad_Gevouwen() {
-      return rad_Gevouwen;
-   }
-   
-   public void setRad_Gevouwen(String rad_Gevouwen) {
-      this.rad_Gevouwen = rad_Gevouwen;
-   }
-   
-   public String getRad_Schaal() {
-      return rad_Schaal;
-   }
-   
-   public void setRad_Schaal(String rad_Schaal) {
-      this.rad_Schaal = rad_Schaal;
-   }
-   
-   public String getSchaal() {
-      return schaal;
-   }
-   
-   public void setSchaal(String schaal) {
-      this.schaal = schaal;
-   }
-   
-   public String[] getSel_Kaart() {
-      return sel_Kaart;
-   }
-   
-   public void setSel_Kaart(String[] sel_Kaart) {
-      this.sel_Kaart = sel_Kaart;
-   }
-   
-   public void setAantal(String aantal) {
-      this.aantal = aantal;
-   }
-   
-   public String getLinksX() {
-      return linksX;
-   }
-   
-   public void setLinksX(String linksX) {
-      this.linksX = linksX;
-   }
-   
-   public String getLinksY() {
-      return linksY;
-   }
-   
-   public void setLinksY(String linksY) {
-      this.linksY = linksY;
-   }
-   
-   public String getRad_Gebied() {
-      return rad_Gebied;
-   }
-   
-   public void setRad_Gebied(String rad_Gebied) {
-      this.rad_Gebied = rad_Gebied;
-   }
-   
-   public String getRechtsX() {
-      return rechtsX;
-   }
-   
-   public void setRechtsX(String rechtsX) {
-      this.rechtsX = rechtsX;
-   }
-   
-   public String getRechtsY() {
-      return rechtsY;
-   }
-   
-   public void setRechtsY(String rechtsY) {
-      this.rechtsY = rechtsY;
-   }
-   
-   public String[] getSel_Areaal() {
-      return sel_Areaal;
-   }
-   
-   public void setSel_Areaal(String[] sel_Areaal) {
-      this.sel_Areaal = sel_Areaal;
-   }
-   
-   public String getSel_Beheereenheden() {
-      return sel_Beheereenheden;
-   }
-   
-   public void setSel_Beheereenheden(String sel_Beheereenheden) {
-      this.sel_Beheereenheden = sel_Beheereenheden;
-   }
-   
-   public String getSel_gebieden() {
-      return sel_gebieden;
-   }
-   
-   public void setSel_gebieden(String sel_gebieden) {
-      this.sel_gebieden = sel_gebieden;
-   }
-   
-   public String[] getSel_NatGeb() {
-      return sel_NatGeb;
-   }
-   
-   public void setSel_NatGeb(String[] sel_NatGeb) {
-      this.sel_NatGeb = sel_NatGeb;
-   }
-   
-   // copying values from another KaartenForm object
-   public void copyValuesFrom(KaartenForm copyForm) {
-      this.aantal = copyForm.getAantal();
-      this.rad_Schaal = copyForm.getRad_Schaal();
-      this.schaal = copyForm.getSchaal();
-      this.formaat = copyForm.getFormaat();
-      this.rad_Gevouwen = copyForm.getRad_Gevouwen();
-      this.sel_Kaart = copyForm.getSel_Kaart();
-      this.rad_Gebied = copyForm.getRad_Gebied();
-      this.sel_Beheereenheden = copyForm.getSel_Beheereenheden();
-      this.sel_NatGeb = copyForm.getSel_NatGeb();
-      this.sel_gebieden = copyForm.getSel_gebieden();
-      this.sel_Areaal = copyForm.getSel_Areaal();
-      this.linksX = copyForm.getLinksX();
-      this.linksY = copyForm.getLinksY();
-      this.rechtsX = copyForm.getRechtsX();
-      this.rechtsY = copyForm.getRechtsY();
+    }
+    
+	// getters and setters
+	
+	public String getFormaat() {
+		return formaat;
+	}
+
+	public void setFormaat(String formaat) {
+		this.formaat = formaat;
+	}
+
+	public String getRad_Gevouwen() {
+		return rad_Gevouwen;
+	}
+
+	public void setRad_Gevouwen(String rad_Gevouwen) {
+		this.rad_Gevouwen = rad_Gevouwen;
+	}
+
+	public String getRad_Schaal() {
+		return rad_Schaal;
+	}
+
+	public void setRad_Schaal(String rad_Schaal) {
+		this.rad_Schaal = rad_Schaal;
+	}
+
+	public String getSchaal() {
+		return schaal;
+	}
+
+	public void setSchaal(String schaal) {
+		this.schaal = schaal;
+	}
+
+	public String[] getSel_Kaart() {
+		return sel_Kaart;
+	}
+
+	public void setSel_Kaart(String[] sel_Kaart) {
+		this.sel_Kaart = sel_Kaart;
+	}
+
+	public void setAantal(String aantal) {
+		this.aantal = aantal;
+	}
+	
+	public String getLinksX() {
+		return linksX;
+	}
+
+	public void setLinksX(String linksX) {
+		this.linksX = linksX;
+	}
+
+	public String getLinksY() {
+		return linksY;
+	}
+
+	public void setLinksY(String linksY) {
+		this.linksY = linksY;
+	}
+
+	public String getRad_Gebied() {
+		return rad_Gebied;
+	}
+
+	public void setRad_Gebied(String rad_Gebied) {
+		this.rad_Gebied = rad_Gebied;
+	}
+
+	public String getRechtsX() {
+		return rechtsX;
+	}
+
+	public void setRechtsX(String rechtsX) {
+		this.rechtsX = rechtsX;
+	}
+
+	public String getRechtsY() {
+		return rechtsY;
+	}
+
+	public void setRechtsY(String rechtsY) {
+		this.rechtsY = rechtsY;
+	}
+
+	public String[] getSel_Areaal() {
+		return sel_Areaal;
+	}
+
+	public void setSel_Areaal(String[] sel_Areaal) {
+		this.sel_Areaal = sel_Areaal;
+	}
+
+	public String getSel_Beheereenheden() {
+		return sel_Beheereenheden;
+	}
+
+	public void setSel_Beheereenheden(String sel_Beheereenheden) {
+		this.sel_Beheereenheden = sel_Beheereenheden;
+	}
+
+	public String getSel_gebieden() {
+		return sel_gebieden;
+	}
+
+	public void setSel_gebieden(String sel_gebieden) {
+		this.sel_gebieden = sel_gebieden;
+	}
+
+	public String[] getSel_NatGeb() {
+		return sel_NatGeb;
+	}
+
+	public void setSel_NatGeb(String[] sel_NatGeb) {
+		this.sel_NatGeb = sel_NatGeb;
+	}
+	
+	// copying values from another KaartenForm object
+	public void copyValuesFrom(KaartenForm copyForm) {
+		this.aantal = copyForm.getAantal();
+		this.rad_Schaal = copyForm.getRad_Schaal();
+		this.schaal = copyForm.getSchaal();
+		this.formaat = copyForm.getFormaat();
+		this.rad_Gevouwen = copyForm.getRad_Gevouwen();
+		this.sel_Kaart = copyForm.getSel_Kaart();
+		this.rad_Gebied = copyForm.getRad_Gebied();
+		this.sel_Beheereenheden = copyForm.getSel_Beheereenheden();
+		this.sel_NatGeb = copyForm.getSel_NatGeb();
+		this.sel_gebieden = copyForm.getSel_gebieden();
+		this.sel_Areaal = copyForm.getSel_Areaal();
+		this.linksX = copyForm.getLinksX();
+		this.linksY = copyForm.getLinksY();
+		this.rechtsX = copyForm.getRechtsX();
+		this.rechtsY = copyForm.getRechtsY();
       this.opmerkingen = copyForm.getOpmerkingen();
-   }
-   
+	}
+
    private void resetMaps() {
-      NelisReader nelis = NelisReader.getInstance();
-      natGebMap = nelis.getNatGebMap();
-      gebiedMap = nelis.getGebiedMap();
+      natGebMap = new TreeMap();
+      Map dummy = new TreeMap();
+      dummy.put("Harger- en Pettemerpolder", new Boolean(false));
+      dummy.put("Loterijlanden", new Boolean(false));
+      dummy.put("Nijenburg", new Boolean(false));
+      dummy.put("Weidse Polder", new Boolean(false));
+      dummy.put("etc.", new Boolean(false));
+      natGebMap.put("Kennemerland", dummy);
+      
+      dummy = new TreeMap();
+      dummy.put("Kadelanden", new Boolean(false));
+      dummy.put("Nieuwkoopse plassen", new Boolean(false));
+      dummy.put("etc.", new Boolean(false));
+      natGebMap.put("Nieuwkoop", dummy);
+      
+      dummy = new TreeMap();
+      dummy.put("Beekbergerwoud", new Boolean(false));
+      dummy.put("Hoeve Delle", new Boolean(false));
+      dummy.put("Loenense Hooilanden", new Boolean(false));
+      dummy.put("etc.", new Boolean(false));
+      natGebMap.put("Oost-Veluwe", dummy);
+      
+      dummy = new TreeMap();
+      dummy.put("Ankeveense plassen", new Boolean(false));
+      dummy.put("Loosdrechtse plassen", new Boolean(false));
+      dummy.put("Tienhovense plassen", new Boolean(false));
+      dummy.put("etc.", new Boolean(false));
+      natGebMap.put("Vechtplassen", dummy);
+      
+      dummy = new TreeMap();
+      dummy.put("Chaamse Beek", new Boolean(false));
+      dummy.put("Markdal", new Boolean(false));
+      dummy.put("Oosterheide", new Boolean(false));
+      dummy.put("etc.", new Boolean(false));
+      natGebMap.put("West-Brabant", dummy);
+      
+      dummy = new TreeMap();
+      dummy.put("Genhoes", new Boolean(false));
+      dummy.put("Geuldal", new Boolean(false));
+      dummy.put("Gulpdal", new Boolean(false));
+      dummy.put("Sint-Pietersberg", new Boolean(false));
+      dummy.put("etc.", new Boolean(false));
+      natGebMap.put("Zuid-Limburg", dummy);
+      
+      // gebied map (area)
+      gebiedMap = new TreeMap();
+      dummy = new TreeMap();
+      dummy.put("Noordenveld", new Boolean(false));
+      dummy.put("Waddengebied", new Boolean(false));
+      dummy.put("Zuid-Drenthe", new Boolean(false));
+      dummy.put("de Wieden", new Boolean(false));
+      dummy.put("Salland", new Boolean(false));
+      dummy.put("Twente", new Boolean(false));
+      dummy.put("etc.", new Boolean(false));
+      gebiedMap.put("Eenheid", dummy);
+      
+      dummy = new TreeMap();
+      dummy.put("Groningen/Friesland/Drenthe", new Boolean(false));
+      dummy.put("Overijssel en Flevoland", new Boolean(false));
+      dummy.put("Gelderland", new Boolean(false));
+      dummy.put("Noord-Holland en Utrecht", new Boolean(false));
+      dummy.put("Zuid-Holland en Zeeland", new Boolean(false));
+      dummy.put("Noord-Brabant en Limburg", new Boolean(false));
+      gebiedMap.put("Regio", dummy);
+      
+      dummy = new TreeMap();
+      dummy.put("Groningen", new Boolean(false));
+      dummy.put("Friesland", new Boolean(false));
+      dummy.put("Drenthe", new Boolean(false));
+      dummy.put("Overijssel", new Boolean(false));
+      dummy.put("Flevoland", new Boolean(false));
+      dummy.put("Gelderland", new Boolean(false));
+      dummy.put("Utrecht", new Boolean(false));
+      dummy.put("Noord-Holland", new Boolean(false));
+      dummy.put("Zuid-Holland", new Boolean(false));
+      dummy.put("Zeeland", new Boolean(false));
+      dummy.put("Noord-Brabant", new Boolean(false));
+      gebiedMap.put("Provincie", dummy);
       
       //kaart type
       selKaartMap = new TreeMap();
@@ -350,39 +424,38 @@ public class KaartenForm extends ActionForm{
       selKaartMap.put(coordinatenKey, new ArrayList());
       
    }
-   
-   public Set getGebiedList() {
-      return natGebMap.keySet();
-   }
-   
+
+
    public Map getNatGebMap() {
       return natGebMap;
    }
-   
+
+
+
    public Map getGebiedMap() {
       return gebiedMap;
    }
-   
-   
-   
+
+
+
    public String getOpmerkingen() {
       return opmerkingen;
    }
-   
-   
-   
+
+
+
    public void setOpmerkingen(String opmerkingen) {
       this.opmerkingen = opmerkingen;
    }
-   
-   
-   
+
+
+
    public Map getSelKaartMap() {
       return selKaartMap;
    }
-   
-   
-   
+
+
+
    public void setGebiedMap(Map gebiedMap) {
       this.gebiedMap = gebiedMap;
    }

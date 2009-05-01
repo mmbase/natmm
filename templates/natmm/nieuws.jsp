@@ -19,8 +19,6 @@ if(NatMMConfig.hasClosedUserGroup) {
 <%@include file="includes/top3_nav.jsp" %>
 <%@include file="includes/top4_head.jsp" %>
 <%@include file="includes/top5_breadcrumbs_and_pano.jsp" %>
-<%-- Fix for NMCMS-261. Any template calling others need to pass isNaardermeer as PaginaHelper/mm:import fails--%>
-<%request.setAttribute("isNaardermeer", isNaardermeer);%>
 
 <mm:locale language="nl"><% // used in <mm:time time=".." format="dd-MM-yyyy"/> %>
 <%
@@ -55,7 +53,10 @@ if(artCnt==1&&artikelID.equals("-1")) { // *** select the unique article related
    <% 
    if(!artikelID.equals("-1")&&artCnt<2) { // *** show the selected article, or the unique article related to this page
       %><td style="vertical-align:top;width:75%;padding:10px;padding-top:0px;">
-		<br/>
+      <% if (isNaardermeer.equals("true")) { %>			
+   		<img src="media/trans.gif" height="226" width="1">
+	  <% } %>	
+			  <br/>
          <mm:list nodes="<%= artikelID %>" path="artikel,posrel,dossier" orderby="dossier.naam">
             <mm:first>Dossier: </mm:first>
             <mm:first inverse="true">, </mm:first>
@@ -78,7 +79,7 @@ if(artCnt==1&&artikelID.equals("-1")) { // *** select the unique article related
    } else {  // *** show the dossiers if there are dossiers related to this page
       %>
 	      <% if (isNaardermeer.equals("true")) { %>			
-   			<td style="vertical-align:top;width:100%;padding-left:10px;padding-right:66px;">
+   			<td style="vertical-align:top;width:75%;padding-left:10px;padding-right:10px;">
 		  <% } else { %>
 		    <td style="vertical-align:top;width:100%;padding-left:10px;padding-right:10px;">
 		  <% } %>	

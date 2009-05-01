@@ -17,16 +17,17 @@ String kartType = "";
 </head>
 <body>
 
-<b><%=kartName%></b>
-
-<br/><br/>
-	<mm:relatednodes type="images" max="1">
-		<img src="<mm:image template="s(920)" />" border="0">
-	</mm:relatednodes>
-
-<br/>
+Naam van de kaart: <b><%=kartName%></b> 
+&nbsp;&nbsp;&nbsp;<a href="javascript:window.close()"><img border="0" src="../../media/vastgoed/close.gif"/> close</a> 
+<br>
+Informatie betreffende de kaart uit het opmerkingen veld: <br/>
 <mm:field name="opmerking"/>
+<br/>
 
+	<mm:relatednodes type="images" max="1">
+		<img src="<mm:image template="s(480x480)" />" border="0">
+	</mm:relatednodes>
+	
 </body>
 </html>
 

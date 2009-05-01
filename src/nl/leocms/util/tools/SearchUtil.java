@@ -1,5 +1,6 @@
 package nl.leocms.util.tools;
 
+import java.io.*;
 import java.util.*;
 
 import org.mmbase.bridge.*;
@@ -9,7 +10,6 @@ import org.mmbase.util.logging.Logging;
 
 import net.sf.mmapps.modules.lucenesearch.*;
 import net.sf.mmapps.modules.lucenesearch.util.*;
-
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.analysis.*;
 import org.apache.lucene.search.*;
@@ -25,7 +25,7 @@ import nl.leocms.util.tools.HtmlCleaner;
  * Utilities functions for the search pages
  *
  * @author H. Hangyi
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.16 $
  */
 public class SearchUtil {
 
@@ -43,7 +43,7 @@ public class SearchUtil {
    }
    private static boolean articleMatchesConstraint(long embargo, String use_verloopdatum, long verloopdatum, long nowSec, int quarterOfAnHour) {
       if ((embargo < (nowSec+quarterOfAnHour) ) 
-         && ("0".equals(use_verloopdatum) || verloopdatum > nowSec )) {
+         && (use_verloopdatum == "0" || verloopdatum > nowSec )) {
          return true; 
          } else { 
          return false;
@@ -306,12 +306,12 @@ public class SearchUtil {
       try { 
         net.sf.mmapps.modules.lucenesearch.SearchIndex si = cf.getIndex(index);
         Analyzer analyzer = si.getAnalyzer();
-        
+        IndexReader ir = IndexReader.open(si.getIndex());
         QueryParser qp = new QueryParser("indexed.text", analyzer);
         qp.setDefaultOperator(QueryParser.AND_OPERATOR);
         org.apache.lucene.search.Query result = null;
-        //SearchValidator sv = new SearchValidator();
-        String value = SearchValidator.validate(sQuery);
+        SearchValidator sv = new SearchValidator();
+        String value = sv.validate(sQuery);
         try {
           result = qp.parse(value);
         } catch (Exception e) {
@@ -321,11 +321,9 @@ public class SearchUtil {
         int quarterOfAnHour = 60*15;
         BooleanQuery constructedQuery = new BooleanQuery();
         constructedQuery.add(result, BooleanClause.Occur.MUST);
-        
-        IndexReader ir = IndexReader.open(si.getIndex());
+      
         IndexSearcher searcher = new IndexSearcher(ir); 
         Hits hits = searcher.search(constructedQuery);
-
         TreeSet includedEvents = new TreeSet();
       
         for (int i = 0; i < hits.length(); i++) {
@@ -357,9 +355,8 @@ public class SearchUtil {
                        PaginaHelper ph = new PaginaHelper(cloud);
                        String sConstraints = (new nl.leocms.util.tools.SearchUtil()).articleConstraint(nowSec, quarterOfAnHour);
                        Node foundNode = cloud.getNode(docNumber);
-                       //boolean test = articleMatchesConstraint(foundNode.getLongValue("embargo"), foundNode.getStringValue("use_verloopdatum"), foundNode.getLongValue("verloopdatum"), nowSec, quarterOfAnHour);
-                       
-                       if (true) {
+                       boolean test = articleMatchesConstraint(foundNode.getLongValue("embargo"), foundNode.getStringValue("use_verloopdatum"), foundNode.getLongValue("verloopdatum"), nowSec, quarterOfAnHour);
+                       if (test) {
                           hsetPagesNodes.add(paginaNumber);
                           hsetNodes.add(docNumber);
                        }
@@ -379,15 +376,12 @@ public class SearchUtil {
                 }
              }
          }
-        
-        //Close resources when they are not needed anymore.
-        if(searcher!=null) { searcher.close(); }
-        if(ir!=null) { ir.close(); }
-        
+      
+          if(searcher!=null) { searcher.close(); }
+          if(ir!=null) { ir.close(); }
         }
       } catch (Exception e) { 
-        log.error("lucene index " + index + " throws error on query " + sQuery + " - " + e); 
-        //Also log the specific error
+        log.error("lucene index " + index + " throws error on query " + sQuery); 
       } 
       return hsetNodes;
    }
