@@ -129,8 +129,8 @@ public class HTMLTree {
       return expandAll;
    }
 
-   public void renderCookieScripts(PrintWriter pw) {
-      pw.println("function saveCookie(name,value,days) {");
+	public void renderCookieScripts(PrintWriter pw) {
+	   pw.println("function saveCookie(name,value,days) {");
       pw.println("   if (days) {");
       pw.println("      var date = new Date();");
       pw.println("      date.setTime(date.getTime()+(days*24*60*60*1000))");
@@ -157,8 +157,8 @@ public class HTMLTree {
       pw.println("      if(lastclicknode!=null) { clickNode(lastclicknode); }");
       pw.println("   }");
       pw.println("}");
-   }
-   
+	}
+	
    public void render(Writer out) {
       PrintWriter pw = new PrintWriter(out);
       pw.println("<script>");

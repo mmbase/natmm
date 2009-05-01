@@ -25,7 +25,6 @@ String attachmentID = request.getParameter("at");
 	<% 
 	PaginaHelper pHelper = new PaginaHelper(cloud);
 	if (attachmentID == null) {
-	// displaying webcam - not hightlight video, here
 	%>
 	<p class="colortitle"><mm:field name="titel" vartype="String" /></p>
 	
@@ -37,8 +36,9 @@ String attachmentID = request.getParameter("at");
 	     
 	<p>
 	<br/>
-
-	<mm:related path="contentrel,attachments" fields="contentrel.pos,attachments.titel" orderby="contentrel.pos">
+	<img src="media/logo_nm.gif"><img src="media/logo_nuon.gif">
+	<br/>
+	<mm:related path="contentrel,attachments" fields="attachments.titel">
 	    <mm:field name="attachments.number" jspvar="pagina_number" vartype="String" write="false">  
 	    <mm:first>
 	       <span class="colortitle">Highlight video's</span>
@@ -59,10 +59,9 @@ String attachmentID = request.getParameter("at");
 	
 	<%
 	} else {
-	// displaying highlight video - not webcam, here
 	%>
 	<mm:node number="<%= attachmentID %>">
-	<h3>Highlight Video</h3>
+	
 	<p class="colortitle"><mm:field name="title" /></p>
 	<p><mm:field name="omschrijving" /></p><br/>
       
@@ -109,8 +108,10 @@ String attachmentID = request.getParameter("at");
 				
 			</mm:node>
     <p>
+	<br/>
+	<img src="media/logo_nm.gif"><img src="media/logo_nuon.gif">
+	<br/>
 	
-	<%-- Links to all highlight videos - only displayed when not blank --%>
 	<mm:related path="contentrel,attachments" fields="attachments.titel,attachments.number">
 	    <mm:field name="attachments.number" jspvar="pagina_number" vartype="String" write="false">  
 	       <mm:first>
@@ -138,31 +139,26 @@ String attachmentID = request.getParameter("at");
 	</td>
    	<td style="vertical-align:top;padding-left:10px;width:175px;<jsp:include page="../includes/rightcolumn_bgimage.jsp"><jsp:param name="rnimageid" value="<%= rnImageID %>" /></jsp:include>">
 
-<%-- link from webcam to weblog (pagina relation) / or if in highligh video mode to 'back to webcam'--%>
-<% if (attachmentID == null) { %>
-	<p valign="bottom">
-	<mm:related path="readmore,pagina" fields="pagina.number,pagina.titel">
-		<mm:field name="pagina.number" jspvar="pagina_number" vartype="String" write="false">  
-			<a href="<%= pHelper.createPaginaUrl(pagina_number,request.getContextPath()) %>?cp=<%=paginaID%>"><img src="media/arrowright_fun.gif" alt="" border="0" style="vertical-align:bottom" /></a>
-			&nbsp;<a href="<%= pHelper.createPaginaUrl(pagina_number,request.getContextPath()) %>?cp=<%=paginaID%>"><b><mm:field name="pagina.titel" /></b></a>
-		</mm:field><br/>
-	</mm:related>
-	</p><br/>				
 
-    <jsp:include page="../includes/navright.jsp">
-		<jsp:param name="s" value="<%= paginaID %>" />
-        <jsp:param name="r" value="<%= rubriekID %>" />
-        <jsp:param name="lnr" value="<%= lnRubriekID %>" />
-	</jsp:include>
-<% } else { %>
-	<p>
-			<a href="<%= pHelper.createPaginaUrl(paginaID,request.getContextPath()) %>>"><img src="media/arrowright_fun.gif" alt="" border="0" style="vertical-align:bottom" /></a>
-			&nbsp;<a href="<%= pHelper.createPaginaUrl(paginaID,request.getContextPath()) %>"><b>terug naar <mm:field name="titel" vartype="String" /></b></a>
 
-	</p><br/>	
-<% } %>	
-         
-<%-- link to weblog/webcam ends. shorty is standart in two modes --%>	
+<!-- link to weblog (pagina relation) -->
+<p>
+<mm:related path="readmore,pagina" fields="pagina.number,pagina.titel">
+					<mm:field name="pagina.number" jspvar="pagina_number" vartype="String" write="false">  
+					<a href="<%= pHelper.createPaginaUrl(pagina_number,request.getContextPath()) %>?cp=<%=paginaID%>"><img src="media/arrowright_fun.gif" alt="" border="0" /></a>
+					&nbsp;<b><mm:field name="pagina.titel" /></b>
+					</mm:field>
+</mm:related>
+</p><br/>				
+<!-- -->	
+
+
+         <jsp:include page="../includes/navright.jsp">
+            <jsp:param name="s" value="<%= paginaID %>" />
+            <jsp:param name="r" value="<%= rubriekID %>" />
+            <jsp:param name="lnr" value="<%= lnRubriekID %>" />
+         </jsp:include>
+
          <jsp:include page="../includes/shorty.jsp">
    	      <jsp:param name="s" value="<%= paginaID %>" />
    	      <jsp:param name="r" value="<%= rubriekID %>" />
