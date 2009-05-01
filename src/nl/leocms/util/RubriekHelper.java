@@ -301,20 +301,6 @@ public class RubriekHelper {
             rubriekNodeList.add(rubriek);
          }
       }
-      
-      // FIX FOR NMCMS-206
-      // matching rubrieks must be returned by reverse order of their length
-      // the longest rubriek we can find that matches the passed url, will be the first in the returned list
-      Collections.sort( rubriekNodeList, new Comparator()
-      {
-      public int compare( Object a, Object b )
-         {
-         Integer aLength = new Integer(getUrlPathToRootString((Node) a,"").toString().length());
-         Integer bLength = new Integer(getUrlPathToRootString((Node) b,"").toString().length());
-         return ( bLength ).compareTo( aLength );
-         }
-      } );
-      
       return rubriekNodeList;
    }
    

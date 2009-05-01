@@ -3,7 +3,8 @@
 // pre-condition: variables allShop_items, thisForm must be defined.
 
 if(true) { 
-%><script type="text/javascript">
+%><script language="JavaScript">
+<%= "<!--" %>
 var needToConfirm = true;
 window.onbeforeunload = confirmExit;
 function confirmExit()
@@ -80,6 +81,7 @@ function changeIt(url) {
 	document.location = url + href + "|";
 	return false; 
 }
+<%= "//-->" %>
 </script><%
 } %>
 

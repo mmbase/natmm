@@ -16,7 +16,6 @@ if(iRubriekLayout==NatMMConfig.DEFAULT_LAYOUT) {
         %>
 				<span style="font-size:22px;color:#FFFFFF;margin:0px 0px 5px 0px; font-weight: bold;">Natuurmonumenten.</span>
 				<span style="font-size:16px;color:#FFFFFF;margin:0px 0px 5px 0px;">Als je van Nederland houdt.</span>
-				
         <% 
       } else { 
         for(int r=breadcrumbs.size()-2; r>=0; r--) {
@@ -76,7 +75,7 @@ if(iRubriekLayout==NatMMConfig.DEFAULT_LAYOUT) {
 	</td>
 	<td style="width:48%;background-color:#c6d5ec;vertical-align:bottom;">
 	<%--
-      <script type="text/javascript" src="scripts/styleswitcher.js">
+      <script language="JavaScript1.1" src="scripts/styleswitcher.js">
       </script>
       <input type="button" value="0" onclick="setActiveStyleSheet('default')">
       <input type="button" value="+" onclick="setActiveStyleSheet('groot')">

@@ -21,7 +21,6 @@ if(NatMMConfig.hasClosedUserGroup) {
 <%@include file="includes/top5_breadcrumbs_and_pano.jsp" %>
 <%-- Fix for NMCMS-261. Any template calling others need to pass isNaardermeer as PaginaHelper/mm:import fails--%>
 <%request.setAttribute("isNaardermeer", isNaardermeer);%>
-
 <mm:locale language="nl"><% // used in <mm:time time=".." format="dd-MM-yyyy"/> %>
 <%
 
@@ -82,7 +81,7 @@ if(artCnt==1&&artikelID.equals("-1")) { // *** select the unique article related
 		  <% } else { %>
 		    <td style="vertical-align:top;width:100%;padding-left:10px;padding-right:10px;">
 		  <% } %>	
-			  <br/>
+		  <br/>
          <%@include file="includes/page_intro.jsp" %>
          <%@include file="includes/dossier_form.jsp" %>
          <% 
