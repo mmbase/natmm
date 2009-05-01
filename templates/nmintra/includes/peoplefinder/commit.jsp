@@ -98,8 +98,8 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
             faxId = e.getStringValue("fax");
             emailId = e.getStringValue("email");
             jobId = e.getStringValue("job");
-            omschrijving_engId = e.getStringValue("omschrijving_eng"); // lokatie, regio/afdeling en functie
-            omschrijving_deId = e.getStringValue("omschrijving_de");   // werkzaamheden
+            omschrijving_engId = e.getStringValue("omschrijving_eng"); // regio/afdeling en functie
+            omschrijving_deId = e.getStringValue("omschrijving_de");   // lokatie
             omschrijving_fraId = e.getStringValue("omschrijving_fra"); // vaste vrije/werk dag(en)
             omschrijvingId = e.getStringValue("omschrijving");         // en verder
             %><mm:deletenode 
@@ -110,7 +110,7 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
                 %><mm:createnode type="email" id="thismail" 
                     ><mm:setfield name="subject"><%= "Beaufort wijzigingen voor " + thisPerson %></mm:setfield
                     ><mm:setfield name="from"><%= ap.getFromEmailAddress() %></mm:setfield
-                    ><mm:setfield name="to"><%= NMIntraConfig.getDefaultPZAddress() %></mm:setfield
+                    ><mm:setfield name="to"><%= NMIntraConfig.defaultPZAddress %></mm:setfield
                     ><mm:setfield name="replyto"><%= ap.getFromEmailAddress() %></mm:setfield
                     ><mm:setfield name="body">
                         <multipart id="plaintext" type="text/plain" encoding="UTF-8">
@@ -129,7 +129,7 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
                 %><mm:createnode type="email" id="thismail" 
                     ><mm:setfield name="subject"><%= "Telefoonboek wijzigingen voor " + thisPerson %></mm:setfield
                     ><mm:setfield name="from"><%= ap.getFromEmailAddress() %></mm:setfield
-                    ><mm:setfield name="to"><%= NMIntraConfig.getDefaultFZAddress() %></mm:setfield
+                    ><mm:setfield name="to"><%= NMIntraConfig.defaultFZAddress %></mm:setfield
                     ><mm:setfield name="replyto"><%= ap.getFromEmailAddress() %></mm:setfield
                     ><mm:setfield name="body">
                         <multipart id="plaintext" type="text/plain" encoding="UTF-8">
@@ -155,8 +155,8 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
             
             messageTitle = "Je wijzigingen zijn bevestigd";
             messageBody = "Bedankt voor het doorgeven van je wijzigingen:<br><br><br>Je wijzigingen zijn:";
-            if(!pzText.equals("")) messageBody += "<br><li>verstuurd aan de afdeling Personeelszaken (" + NMIntraConfig.getDefaultPZAddress() + ")";
-            if(!fzText.equals("")) messageBody += "<br><li>verstuurd aan de afdeling Facilitaire Zaken (" + NMIntraConfig.getDefaultFZAddress() + ")";
+            if(!pzText.equals("")) messageBody += "<br><li>verstuurd aan de afdeling Personeelszaken (" + NMIntraConfig.defaultPZAddress + ")";
+            if(!fzText.equals("")) messageBody += "<br><li>verstuurd aan de afdeling Facilitaire Zaken (" + NMIntraConfig.defaultFZAddress + ")";
             if(!dcText.equals("")) messageBody += "<br><li>verwerkt in \"" + specialDays + "\" en/of \"En verder\"";
             if(!pzText.equals("")||!fzText.equals("")) {
                     messageBody += "<br><br><br>Afhankelijk van de bezetting en hoeveelheid werk op deze afdelingen zullen je wijzigingen "

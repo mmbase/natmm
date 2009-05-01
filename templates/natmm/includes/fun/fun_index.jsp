@@ -5,6 +5,7 @@
 <mm:import id="nodotline" />
 <%@include file="../../includes/image_vars.jsp" %>
 <%@include file="../../includes/page_intro.jsp" %>
+<div style="margin:7px 0px 7px 0x">Maak een keuze uit de volgende categorie&euml;n:</div>
 <%@include file="../../includes/dossier_form.jsp" %>
 <br>
 <jsp:include page="../includes/shorty.jsp">
@@ -13,12 +14,14 @@
    <jsp:param name="rs" value="<%= styleSheet %>" />
    <jsp:param name="sr" value="1" />
 </jsp:include>
+
 <%
 int imagesInARow = 3;
 if (isNaardermeer.equals("true")) {
 	imagesInARow = 2;
 } 
 %>
+
 <table class="dotline"><tr><td height="3"></td></tr></table>
 <table border="0" cellspacing="0" cellpadding="0">
 	<tr>

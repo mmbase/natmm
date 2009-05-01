@@ -21,7 +21,7 @@ if(referrer.indexOf("paginamanagement")>-1) {
 <style>
 input { width: 100px;}
 </style>
-<script type="text/javascript">
+<script language="JavaScript1.1">
       function refreshParentFrameAndClose() {
          opener.top.bottompane.location = "<%= parentFrame %>";
          window.close();
