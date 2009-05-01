@@ -2,24 +2,16 @@ package nl.natuurmonumenten.activiteiten;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.log4j.Logger;
+import nl.leocms.util.DoubleDateNode;
+
 import org.mmbase.bridge.Cloud;
 import org.mmbase.bridge.Node;
 import org.mmbase.bridge.NodeIterator;
 import org.mmbase.bridge.NodeList;
-import org.mmbase.bridge.NodeManager;
 
-/**
- * Factory om value objects van mmbase nodes voor de activiteiten webservice te maken
- * 
- */
 class BeanFactory {
-    
-    private static Logger logger = Logger.getLogger(BeanFactory.class);
 
     public Provincie createProvincie(Node node) {
         Provincie bean = new Provincie();
@@ -120,9 +112,12 @@ class BeanFactory {
         if (imageNode != null) {
             bean.setFoto(createFoto(imageNode));
         }
+        // evenent_type zit alleen bij details
+        // TODO provincie id , ook bij details ??
         Node parentEvent = cloud.getNode(parentNumber);
         boolean volgeboekt = nl.leocms.evenementen.Evenement.isFullyBooked(parentEvent, node);
         boolean aanmeldingGesloten = nl.leocms.evenementen.Evenement.subscriptionClosed(parentEvent, node);
+        boolean canceled = node.getBooleanValue("iscanceled");
         bean.setVolgeboekt(volgeboekt);
         bean.setAanmeldingGesloten(aanmeldingGesloten);
         return bean;
@@ -149,7 +144,6 @@ class BeanFactory {
         if (!isEmpty(tekst)) {
             bean.setVolledigeOmschrijving(tekst);
         }
-        
         bean.setAanvangstijd(toDate(node.getLongValue("begindatum")));
         bean.setEindtijd(toDate(node.getLongValue("einddatum")));
         NodeList eventTypeNodeList = node.getRelatedNodes("evenement_type");
@@ -160,60 +154,21 @@ class BeanFactory {
         bean.setExtraInfo(createLijst(extraInfoNodeList));
         NodeList vertrekpuntenNodeList = node.getRelatedNodes("vertrekpunten");
         bean.setVertrekpuntId(createLijst(vertrekpuntenNodeList));
+        NodeList deelnemersCategorieNodeList = node.getRelatedNodes("deelnemers_categorie"); // posrel
+        bean.setKosten(createKosten(deelnemersCategorieNodeList));
         
-        NodeList deelnemersCategorieNodeList = node.getRelatedNodes("deelnemers_categorie", "posrel", "both"); // posrel
-        bean.setKosten(createKosten(node, deelnemersCategorieNodeList));
-        
+        // TODO bean.setAantalPlaatsenBeschikbaar();
         Cloud cloud = node.getCloud();
         String eventNumber = node.getStringValue("number");
-        
-        NodeList medewerkerList = cloud.getList(eventNumber, "evenement,readmore,medewerkers", "medewerkers.email", null, null, null, "destination", true);
-        if (medewerkerList != null && !medewerkerList.isEmpty()) {
-            Node medewerkerNode= medewerkerList.getNode(0);
-             String email = medewerkerNode.getStringValue("medewerkers.email");
-             if (!isEmpty(email)) {
-                 bean.setContactPersoon("email");
-             }
-        }
-        
-        Node imageNode = ActiviteitenHelper.getFoto(cloud, eventNumber);
-        if (imageNode != null) {
-            bean.setFoto(createFoto(imageNode));
-        }
-        Set childEvents = ActiviteitenHelper.getChildEvents(cloud, eventNumber);
-        List data = new ArrayList();
-        if (childEvents.isEmpty()) {
-            bean.setEenmaligEvent(true);
-            // no childs put info of parent in EventData
-            EventData eventData = createEventData(node, node);
-            data.add(eventData);
-        } else {
-            for (Iterator iter = childEvents.iterator(); iter.hasNext();) {
-                String childNumber = (String) iter.next();
-                Node childNode = cloud.getNode(childNumber); 
-                EventData eventData = createEventData(node, childNode);
-                data.add(eventData);
-            }
-            bean.setEenmaligEvent(false);
-        }
-        bean.setEventData((EventData[])data.toArray(new EventData[data.size()]));
-        return bean;
-    }
-    
-    private EventData createEventData(Node parentNode, Node childNode) {
-        EventData bean = new EventData();
-        String eventNumber = childNode.getStringValue("number");
-        bean.setId(eventNumber);
-        boolean volgeboekt = nl.leocms.evenementen.Evenement.isFullyBooked(parentNode, childNode);
+        String parentNumber = nl.leocms.evenementen.Evenement.findParentNumber(eventNumber);
+        Node parentEvent = cloud.getNode(parentNumber);
+        boolean volgeboekt = nl.leocms.evenementen.Evenement.isFullyBooked(parentEvent, node);
+        boolean aanmeldingGesloten = nl.leocms.evenementen.Evenement.subscriptionClosed(parentEvent, node);
+        boolean canceled = node.getBooleanValue("iscanceled");
         bean.setVolgeboekt(volgeboekt);
-        boolean aanmeldingGesloten = nl.leocms.evenementen.Evenement.subscriptionClosed(parentNode, childNode);
         bean.setAanmeldingGesloten(aanmeldingGesloten);
-        int aantalBeschikbarePlaatsen = ActiviteitenHelper.getAantalBeschikbarePlaatsen(parentNode, childNode);
-        bean.setAantalPlaatsenBeschikbaar(aantalBeschikbarePlaatsen);
-        bean.setAanvangstijd(toDate(childNode.getLongValue("begindatum")));
-        bean.setEindtijd(toDate(childNode.getLongValue("einddatum")));
-        boolean canceled = childNode.getBooleanValue("iscanceled");
         bean.setGeannuleerd(canceled);
+        
         return bean;
     }
     
@@ -226,27 +181,14 @@ class BeanFactory {
         return (String[]) list.toArray(new String[list.size()]);
     }
     
-    private Kosten[] createKosten(Node event, NodeList nodeList) {
+    private Kosten[] createKosten(NodeList nodeList) {
         List list = new ArrayList();
         for (NodeIterator iter = nodeList.nodeIterator(); iter.hasNext();) {
             Node node = iter.nextNode();
-            logger.debug("Kosten node: " + node.getNumber());
             Kosten kosten = new Kosten();
             kosten.setDeelnemersCategorieId(node.getStringValue("number"));
-
-            // de kosten staan in posrel.pos!!, rijp voor http://thedailywtf.com/
-            NodeManager manager = node.getCloud().getNodeManager("posrel");
-            String snumber = event.getStringValue("number");
-            String dnumber = node.getStringValue("number");
-            String constraint = "dnumber=" + dnumber + " and snumber=" + snumber;
-            NodeList relations = manager.getList(constraint, null, null);
-            if (relations != null && relations.size() > 0) {
-                Node relation = relations.getNode(0);
-                logger.debug("posrel.pos: " + relation.getStringValue("pos"));
-                kosten.setKostenInCenten(relation.getIntValue("pos"));
-            } else {
-                kosten.setKostenInCenten(-1);
-            }
+            // TODO kosten gaat via posrel, hoe krijg ik die te pakken?
+            kosten.setKostenInCenten(-1);
             list.add(kosten);
         }
         return (Kosten[]) list.toArray(new Kosten[list.size()]);
