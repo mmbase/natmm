@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import net.sf.mmapps.modules.cloudprovider.CloudProviderFactory;
 
@@ -35,7 +35,7 @@ public class ActiviteitenService implements IActiviteitenService {
      * nl.natuurmonumenten.activiteiten.ActiviteitenServiceInterf#getVersion()
      */
     public String getVersion() {
-        return "2.0";
+        return "1";
     }
 
     /*
@@ -56,6 +56,8 @@ public class ActiviteitenService implements IActiviteitenService {
             beans.add(beanFactory.createProvincie(node));
         }
         return (Provincie[]) beans.toArray(new Provincie[beans.size()]);
+        // if (true) throw new IllegalArgumentException("dit is een test fout");
+        // return null;
     }
 
     /*
@@ -75,12 +77,11 @@ public class ActiviteitenService implements IActiviteitenService {
             throw new IllegalArgumentException("Start en/of einddatum ontbreekt");
         }
         Cloud cloud = CloudProviderFactory.getCloudProvider().getCloud();
-        Set eventNodes = ActiviteitenHelper.findParentEvents(cloud, start, eind, eventTypeIds, provincieId, natuurgebiedenId);
+        Map eventNodes = ActiviteitenHelper.findEvents(cloud, start, eind, eventTypeIds, provincieId, natuurgebiedenId);
         List beans = new ArrayList();
-        for (Iterator iter = eventNodes.iterator(); iter.hasNext();) {
-            //Map.Entry entry = (Map.Entry) iter.next();
-            //String eventNumber = (String) entry.getValue();
-            String eventNumber = (String) iter.next();
+        for (Iterator iter = eventNodes.entrySet().iterator(); iter.hasNext();) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            String eventNumber = (String) entry.getValue();
             logger.debug("getting node for: " + eventNumber);
             Node event = cloud.getNode(eventNumber);
             beans.add(beanFactory.createEvent(event));
@@ -187,14 +188,7 @@ public class ActiviteitenService implements IActiviteitenService {
             logger.debug("Geen evenement: " + id);
             return null;
         }
-        // always return the parent node, childs details are in EventData[]
-        String parentNumber = nl.leocms.evenementen.Evenement.findParentNumber(id);
-        if (parentNumber == null) {
-            logger.debug("Geen parent gevonden: " + id);
-            return null;
-        }
-        Node parent = cloud.getNode(parentNumber);
-        return beanFactory.createEventDetails(parent);
+        return beanFactory.createEventDetails(node);
     }
 
     public Vertrekpunt[] getVertrekpunten() {
@@ -217,7 +211,7 @@ public class ActiviteitenService implements IActiviteitenService {
         try {
             eventNode = cloud.getNode(subscription.getEvenementId());
         } catch (NotFoundException ex) {
-            throw new IllegalArgumentException("Evenement id bestaat niet: " + subscription.getEvenementId());
+            throw new IllegalArgumentException("Evenement id bestaat niet: " + subscription.getEvenementId(), ex);
         }
         if (eventNode == null) {
             throw new IllegalArgumentException("Evenement id bestaat niet: " + subscription.getEvenementId());

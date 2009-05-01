@@ -181,9 +181,7 @@ public class CSVReader implements Runnable {
         int nodesDeleted = 0;
         while(i<thisnodesList.size()) {
             thisnode = thisnodesList.getNode(i);
-            if (log.isDebugEnabled()) {
-               log.debug("trying to access node " + thisnode.getValue(thisFields[0]).toString());
-            }
+            log.info("trying to access node " + thisnode.getValue(thisFields[0]).toString());
             if((thisnode.getValue(thisFields[0]).toString()).equals(thisFields[1])) {
                 thisnode.delete(true);
                 nodesDeleted++;
@@ -192,9 +190,7 @@ public class CSVReader implements Runnable {
                     relations = thisnode.getRelations(thisRelations[t],thisRelations[t+1]);
                     for(int r=0; r<relations.size(); r++) {
                         Relation relation = relations.getRelation(r);
-                        if (log.isDebugEnabled()) {
-                           log.debug("trying to access relation " + relation.getValue("readmore2"));
-                        }
+                        log.info("trying to access relation " + relation.getValue("readmore2"));
                         if(relation.getValue("readmore2").equals("inactive")) {
                             relation.delete(true);
                         }

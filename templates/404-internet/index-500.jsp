@@ -168,7 +168,7 @@ Alvast bedankt. <br />
 </body>
 
 <!-- Begin Sitestat4 code -->
-<script type="text/javascript">
+<script language="JavaScript1.1">
 <!--
 function sitestat(ns_l){
    ns_l+="&ns__t="+new Date().getTime();ns_pixelUrl=ns_l;

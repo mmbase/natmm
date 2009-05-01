@@ -2,9 +2,7 @@ package nl.natuurmonumenten.activiteiten;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.mmbase.bridge.Cloud;
@@ -149,7 +147,6 @@ class BeanFactory {
         if (!isEmpty(tekst)) {
             bean.setVolledigeOmschrijving(tekst);
         }
-        
         bean.setAanvangstijd(toDate(node.getLongValue("begindatum")));
         bean.setEindtijd(toDate(node.getLongValue("einddatum")));
         NodeList eventTypeNodeList = node.getRelatedNodes("evenement_type");
@@ -166,54 +163,21 @@ class BeanFactory {
         
         Cloud cloud = node.getCloud();
         String eventNumber = node.getStringValue("number");
-        
-        NodeList medewerkerList = cloud.getList(eventNumber, "evenement,readmore,medewerkers", "medewerkers.email", null, null, null, "destination", true);
-        if (medewerkerList != null && !medewerkerList.isEmpty()) {
-            Node medewerkerNode= medewerkerList.getNode(0);
-             String email = medewerkerNode.getStringValue("medewerkers.email");
-             if (!isEmpty(email)) {
-                 bean.setContactPersoon("email");
-             }
-        }
-        
-        Node imageNode = ActiviteitenHelper.getFoto(cloud, eventNumber);
+        String parentNumber = nl.leocms.evenementen.Evenement.findParentNumber(eventNumber);
+        Node imageNode = ActiviteitenHelper.getFoto(cloud, parentNumber);
         if (imageNode != null) {
             bean.setFoto(createFoto(imageNode));
         }
-        Set childEvents = ActiviteitenHelper.getChildEvents(cloud, eventNumber);
-        List data = new ArrayList();
-        if (childEvents.isEmpty()) {
-            bean.setEenmaligEvent(true);
-            // no childs put info of parent in EventData
-            EventData eventData = createEventData(node, node);
-            data.add(eventData);
-        } else {
-            for (Iterator iter = childEvents.iterator(); iter.hasNext();) {
-                String childNumber = (String) iter.next();
-                Node childNode = cloud.getNode(childNumber); 
-                EventData eventData = createEventData(node, childNode);
-                data.add(eventData);
-            }
-            bean.setEenmaligEvent(false);
-        }
-        bean.setEventData((EventData[])data.toArray(new EventData[data.size()]));
-        return bean;
-    }
-    
-    private EventData createEventData(Node parentNode, Node childNode) {
-        EventData bean = new EventData();
-        String eventNumber = childNode.getStringValue("number");
-        bean.setId(eventNumber);
-        boolean volgeboekt = nl.leocms.evenementen.Evenement.isFullyBooked(parentNode, childNode);
+        Node parentEvent = cloud.getNode(parentNumber);
+        bean.setAantalPlaatsenBeschikbaar(ActiviteitenHelper.getAantalBeschikbarePlaatsen(parentEvent, node));
+        boolean volgeboekt = nl.leocms.evenementen.Evenement.isFullyBooked(parentEvent, node);
+        boolean aanmeldingGesloten = nl.leocms.evenementen.Evenement.subscriptionClosed(parentEvent, node);
+        boolean canceled = node.getBooleanValue("iscanceled");
         bean.setVolgeboekt(volgeboekt);
-        boolean aanmeldingGesloten = nl.leocms.evenementen.Evenement.subscriptionClosed(parentNode, childNode);
         bean.setAanmeldingGesloten(aanmeldingGesloten);
-        int aantalBeschikbarePlaatsen = ActiviteitenHelper.getAantalBeschikbarePlaatsen(parentNode, childNode);
-        bean.setAantalPlaatsenBeschikbaar(aantalBeschikbarePlaatsen);
-        bean.setAanvangstijd(toDate(childNode.getLongValue("begindatum")));
-        bean.setEindtijd(toDate(childNode.getLongValue("einddatum")));
-        boolean canceled = childNode.getBooleanValue("iscanceled");
+        bean.setTypeAanmeldMogelijkheid(node.getStringValue("aanmelden_vooraf"));
         bean.setGeannuleerd(canceled);
+        
         return bean;
     }
     
