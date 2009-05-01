@@ -19,9 +19,6 @@ if(NatMMConfig.hasClosedUserGroup) {
 <%@include file="includes/top3_nav.jsp" %>
 <%@include file="includes/top4_head.jsp" %>
 <%@include file="includes/top5_breadcrumbs_and_pano.jsp" %>
-<%-- Fix for NMCMS-261. Any template calling others need to pass isNaardermeer as PaginaHelper/mm:import fails--%>
-<%request.setAttribute("isNaardermeer", isNaardermeer);%>
-
 <mm:locale language="nl"><% // used in <mm:time time=".." format="dd-MM-yyyy"/> %>
 <%
 
@@ -36,13 +33,10 @@ if(artCnt==1&&artikelID.equals("-1")) { // *** select the unique article related
    Long thisArticle = (Long) articles.firstKey();
    artikelID = (String) articles.get(thisArticle);
 } %>
-  <% if (isNaardermeer.equals("true")) { %>		
-   	<div style="position:absolute; left:681px; width:70px; height:216px; background-image: url(media/natmm_logo_rgb2.gif); background-repeat:no-repeat;"></div>
-  <% } %>
+<br>
 <table width="744" border="0" cellspacing="0" cellpadding="0" align="center" valign="top">
 <tr>
    <td style="vertical-align:top;padding:10px;padding-top:0px;width:185px;">
-   <br/>
    <%@include file="includes/navleft.jsp" %>
    <br>
    <jsp:include page="includes/teaser.jsp">
@@ -55,7 +49,6 @@ if(artCnt==1&&artikelID.equals("-1")) { // *** select the unique article related
    <% 
    if(!artikelID.equals("-1")&&artCnt<2) { // *** show the selected article, or the unique article related to this page
       %><td style="vertical-align:top;width:75%;padding:10px;padding-top:0px;">
-		<br/>
          <mm:list nodes="<%= artikelID %>" path="artikel,posrel,dossier" orderby="dossier.naam">
             <mm:first>Dossier: </mm:first>
             <mm:first inverse="true">, </mm:first>
@@ -76,13 +69,7 @@ if(artCnt==1&&artikelID.equals("-1")) { // *** select the unique article related
          </jsp:include>
       </td><%
    } else {  // *** show the dossiers if there are dossiers related to this page
-      %>
-	      <% if (isNaardermeer.equals("true")) { %>			
-   			<td style="vertical-align:top;width:100%;padding-left:10px;padding-right:66px;">
-		  <% } else { %>
-		    <td style="vertical-align:top;width:100%;padding-left:10px;padding-right:10px;">
-		  <% } %>	
-			  <br/>
+      %><td style="vertical-align:top;width:100%;padding-left:10px;padding-right:10px;">
          <%@include file="includes/page_intro.jsp" %>
          <%@include file="includes/dossier_form.jsp" %>
          <% 

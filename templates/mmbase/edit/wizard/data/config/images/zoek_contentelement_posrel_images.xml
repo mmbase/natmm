@@ -15,7 +15,7 @@
 			<search-fields>titel</search-fields>
 		</search-filter>
       <search-filter>
-			<name>bestandsnaam bevat</name>
+			<name>filenaam bevat</name>
 			<search-fields>filename</search-fields>
 		</search-filter>
       <search-filter>
@@ -23,7 +23,7 @@
          <search-fields>[metatags]</search-fields>
       </search-filter>
 		<search-filter>
-			<name>alt-tekst bevat</name>
+			<name>alt tekst bevat</name>
 			<search-fields>alt_tekst</search-fields>
 		</search-filter>
       <search-filter>

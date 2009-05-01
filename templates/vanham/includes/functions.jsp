@@ -32,22 +32,11 @@ public String getSimpleSelect(String nodeId, NodeList related, String destinatio
    return sSelect;
 }
 
-public String getTableCells(String word, String styleName, String link, boolean isIE) {
+public String getTableCells(String word, String styleName, String link) {
    String sOut = "";
    char letters[] = word.toCharArray();
    for(int i=0; i<letters.length; i++) {
-      String style = "";
-      // hacks to vertical center letters in the navigation
-      if(!isIE) { // firefox
-         if(letters[i]!='@') {
-            style="style='padding-top:3px;'";
-         }
-      } else { // ie
-         if(letters[i]=='@') {
-            style="style='padding-bottom:3px;'";
-         }         
-      }
-      sOut += "   <td class='" + styleName + "' " + style + "onclick=\"gotoURL('document','" + link + "')\">" + letters[i] + "</td>\n";
+      sOut += "   <td class='" + styleName + "' onclick=\"gotoURL('document','" + link + "')\">" + letters[i] + "</td>\n";
    }
    return sOut;
 }

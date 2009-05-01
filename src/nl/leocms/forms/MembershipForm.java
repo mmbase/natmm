@@ -439,22 +439,16 @@ public class MembershipForm extends ActionForm {
          } else if(this.getHousenumber().length()>6){
             errors.add("warning",new ActionError("membershipform.toolong.housenumber"));
          } else {
-            
-            int iHouseNumber = 0;
             try {
-               iHouseNumber = Integer.parseInt(this.getHousenumber());
-            } catch(Exception e) {
-               errors.add("warning",new ActionError("membershipform.housenumber.nan"));
-            }
-            try {
+               int iHouseNumber = Integer.parseInt(this.getHousenumber());
                if(!this.getAction().equals(skipValidationAction)
                   && assertZipCodeMap()
                   && !CSVReader.isInRange(zipCodeMap, zipcode, iHouseNumber)) {
                   errors.add("warning",new ActionError("membershipform.housenumber.notinrange"));
                }
             } catch(Exception e) {
-               errors.add("warning",new ActionError("membershipform.housenumber.notinrange"));
-            }            
+               errors.add("warning",new ActionError("membershipform.housenumber.nan"));
+            }
          }
 
          if(this.getHousenumber_extension().length()>6){
@@ -638,13 +632,13 @@ public class MembershipForm extends ActionForm {
 
   public void sendSubscription(Cloud cloud, Node thisMember) {
 
-      String fromEmailAddress = NatMMConfig.getFromEmailAddress();
+      String fromEmailAddress = NatMMConfig.fromEmailAddress;
 
       Node emailNode = cloud.getNodeManager("email").createNode();
       emailNode.setValue("from", fromEmailAddress);
       emailNode.setValue("subject", "Lid worden");
       emailNode.setValue("replyto", fromEmailAddress);
-      emailNode.setValue("to",  NatMMConfig.getToSubscribeAddress());
+      emailNode.setValue("to",  NatMMConfig.toSubscribeAddress);
       emailNode.setValue("body",
                       "<multipart id=\"plaintext\" type=\"text/plain\" encoding=\"UTF-8\">"
                          + getSubscribeMessage(thisMember, "plain")
@@ -691,9 +685,9 @@ public class MembershipForm extends ActionForm {
      String toEmailAddress = thisMember.getStringValue("email");
      Node emailNode = cloud.getNodeManager("email").createNode();
      emailNode.setValue("to", toEmailAddress);
-     emailNode.setValue("from", NatMMConfig.getToSubscribeAddress());
+     emailNode.setValue("from", NatMMConfig.toSubscribeAddress);
      emailNode.setValue("subject", emailSubject);
-     emailNode.setValue("replyto", NatMMConfig.getToSubscribeAddress());
+     emailNode.setValue("replyto", NatMMConfig.toSubscribeAddress);
      emailNode.setValue("body", "<multipart id=\"plaintext\" type=\"text/plain\" encoding=\"UTF-8\">"
         + getMessage(thisMember,"plain") + "</multipart>"
         + "<multipart id=\"htmltext\" alt=\"plaintext\" type=\"text/html\" encoding=\"UTF-8\">"
@@ -745,9 +739,9 @@ public class MembershipForm extends ActionForm {
      }
      message += "Heeft u vragen, mail ons dan via het vragen formulier op onze website: ";
      if(type.equals("html")) {
-         message += "<a href='" + NatMMConfig.getInfoUrl() + "'>" + NatMMConfig.getInfoUrl() + "</a>";
+         message += "<a href='" + NatMMConfig.infoUrl + "'>" + NatMMConfig.infoUrl + "</a>";
      } else {
-         message +=  NatMMConfig.getInfoUrl();
+         message +=  NatMMConfig.infoUrl;
      }
      message += " of bel 035-6559911. " + newline + newline;
      message +=
@@ -756,9 +750,9 @@ public class MembershipForm extends ActionForm {
         "algemeen directeur" + newline + newline;
      message += "P.S. Heeft u zich bedacht? Stuur dan binnen 3 dagen een mailtje met uw naam, postcode en huisnummer naar ";
      if(type.equals("html")) {
-         message += "<a href='mailto:" + NatMMConfig.getToSubscribeAddress() + "'>" + NatMMConfig.getToSubscribeAddress() + "</a>";
+         message += "<a href='mailto:" + NatMMConfig.toSubscribeAddress + "'>" + NatMMConfig.toSubscribeAddress + "</a>";
      } else {
-         message += NatMMConfig.getToSubscribeAddress();
+         message += NatMMConfig.toSubscribeAddress;
      }
      message += ". Wij maken uw aanmelding dan ongedaan. Deze email moet de volgende regels bevatten:" + newline + newline;
      message += "naam: " + thisMember.getStringValue("lastname") + newline;
