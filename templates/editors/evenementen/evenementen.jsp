@@ -1,10 +1,9 @@
-<%@page language="java" contentType="text/html;charset=UTF-8"
-%><%@page import="nl.leocms.util.DoubleDateNode,nl.leocms.evenementen.Evenement,java.util.*" 
-%><%@include file="/taglibs.jsp" 
-%><mm:content type="text/html" escaper="none">
+<%@page language="java" contentType="text/html;charset=UTF-8"%>
+<%@page import="nl.leocms.util.DoubleDateNode,nl.leocms.evenementen.Evenement,java.util.*" %>
+<%@include file="/taglibs.jsp" %>
 <mm:cloud method="http" rank="basic user" jspvar="cloud">
+<!-- ******************************* IMPORT PARAMETERS ******************************** -->
 <%
-//******************************* IMPORT PARAMETERS ********************************
 Calendar cal = Calendar.getInstance();
 cal.setTime(new Date());
 int maxAge = 60 * 60 * 24 * 365;
@@ -902,14 +901,15 @@ if(iEventCtr==0) {
 </table>
 </form>
 <script type="text/javascript" language="JavaScript">
+  <!--
   // works together with the the onkeypress for the titel field, to make sure the form is only posted once on [ENTER]-key
   var focusControl = document.forms["EvenementForm"].elements["titel"];
   if (focusControl.type != "hidden") {
      focusControl.focus();
   }
+  // -->
 </script>
 <br/><br/>
 </body>
 </html>
 </mm:cloud>
-</mm:content>
