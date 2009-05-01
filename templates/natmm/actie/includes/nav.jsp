@@ -25,13 +25,8 @@ try{
    int pagesCount = 0;
    %>
    
-    <%
-    //Please check the navsettings.jsp for details. 2 constraints should be seperated by e.g. ' AND '.
-    if (objectConstraint!= null && objectConstraint.length()>0) { 
-      objectConstraint += " AND ";
-    }  
-    objectConstraint += (new SearchUtil()).articleConstraint(nowSec, quarterOfAnHour);
-    %>
+       <% objectConstraint += (new SearchUtil()).articleConstraint(nowSec, quarterOfAnHour);
+       %>
    
    <mm:relatednodes type="<%= objecttype %>" path="<%= "contentrel," + objecttype %>" constraints="<%= objectConstraint %>">
     <mm:first><mm:size jspvar="dummy" vartype="String" write="false">
