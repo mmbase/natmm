@@ -1,7 +1,10 @@
 package nl.leocms.util.tools;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.*;
+import java.io.*;
+import java.text.*;
+import org.mmbase.util.logging.*;
+import java.net.URLEncoder; 
 
 /**
  * Created by Henk Hangyi (MMatch)
@@ -9,7 +12,7 @@ import java.net.URLEncoder;
 
 public class HtmlCleaner {
 
-//   private static final Logger log = Logging.getLoggerInstance(HtmlCleaner.class);
+   private static final Logger log = Logging.getLoggerInstance(HtmlCleaner.class);
 
    public static String filterUTFChars(String textStr) {
        int uPos = textStr.indexOf("%u");
@@ -369,29 +372,9 @@ public class HtmlCleaner {
            }
        }
        text = replace(text, "\'","&rsquo;"); // problem with '\u0027' ;-)
+       text = replace(text, "\"","&quot;");
        return text;
    }
-   
-   public static String filterEntitiesEvents(String text) {
-      // translatedChar --> rawString
-      // Excluded are:
-      // ,"&lt;","&gt;","&amp;"
-      // ,'\u003c','\u003e','\u0026'
-      String rawString[] = rawString();
-      char translatedChar[] = translatedChar();
-      for(int c= 0; c<translatedChar.length; c++) {
-          int cpos = text.indexOf(translatedChar[c]);
-          while(cpos>-1) {
-              if(!insideTag(text,cpos,"<",">")) { // *** not inside a tag ***
-                  text =  text.substring(0,cpos) + rawString[c] + text.substring(cpos+1);
-              }
-              cpos = text.indexOf(translatedChar[c],cpos+rawString[c].length());
-          }
-      }
-      text = replace(text, "\'","&rsquo;");
-      text = replace(text, "\"","&quot;");
-      return text;
-  }   
 
    public static String filterTextEntities(String text) {
        // rawString --> translatedChar
@@ -536,9 +519,6 @@ public class HtmlCleaner {
    }
 
    public static String cleanHtml(String text) {
-      if (text == null) return null;
-      if (text.equalsIgnoreCase("")) return text;
-      
        // *** everything in capitals ***
        text = replace(text,"<div","<DIV"); text = replace(text,"</div","</DIV");
        text = replace(text,"<h1","<H1"); text = replace(text,"</h1","</H1");
@@ -575,7 +555,7 @@ public class HtmlCleaner {
        text = cleanParam(text,"vAlign=");
        text = cleanParam(text,"width=");
        
-       // this looks strange but is intended to remove the crap that can come from the html-area
+       // this looks strange but is intended to remove the crapp that can come from the html-area
        text = replace(text,"<P >","<P>");
        text = cleanEmptyTag(text,"<P>","<P>","<P><P>");
        text = replace(text,"<P><P>","<P>");

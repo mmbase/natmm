@@ -1,24 +1,14 @@
-function giveInfo(infoIndex, urlPopup)
+function giveInfo(infoIndex)
 {
-  var popupWindow;
-  switch (infoIndex) {
-    case 0: wwidth = 560; wheight = 136; break;
-    case 1: wwidth = 560; wheight = 136; break;
-    case 2: wwidth = 560; wheight = 124; break;
-    case 3: wwidth = 466; wheight = 38; break;
-  }
-  wleft = (screen.width - wwidth) / 2;
-  wtop = (screen.height - wheight) / 2;
+var infoMessages = new Array();
 
-  if (wleft < 0) {
-    wleft = 0;
-  }
-  if (wtop < 0) {
-    wtop = 0;
-  }
-  
-  var props = 'scrollBars=no,resizable=no,toolbar=no,status=0,minimize=no,statusbar=0,menubar=no,directories=no,width='+wwidth+',height='+wheight+',top='+wtop+',left='+wleft;
-  urlPopup += '/nmintra/includes/vastgoed/vastgoed_alert.jsp?messageNumber='+infoIndex;
-  popupWindow = window.open(urlPopup, 'Informatie', props);
-  popupWindow.focus();
+infoMessages[0] = "Kies één gebied waarvan je kaart wilt toevoegen aan je bestelling. Je kunt slechts één gebied per keer toevoegen aan je bestelling.";
+
+infoMessages[1] = "Let op, niet alle kaartsoorten zijn bij elke schaal en/of gebied leverbaar. Bij een niet leverbare keuze krijg je een bericht van de GIS-afdeling. Geef speciale wensen op bij opmerkingen.";
+
+infoMessages[2] = "Kies hier voor een schaal of een papierformaat. Maak hier ook de keuze of je de kaarten gerold of gevouwen wilt ontvangen en geef ook het aantal exemplaren op. Let op, niet elke schaal of papierformaat is bij elke kaartsoort en/of gebied leverbaar. Bij een niet leverbare krijg je een bericht van de GIS-afdeling. Geef speciale wensen op bij opmerkingen.";
+
+infoMessages[3] = "Vul hier eventueel je speciale wensen in en/of eventuele andere opmerkingen.";
+
+alert(infoMessages[infoIndex]);
 }

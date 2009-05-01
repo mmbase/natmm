@@ -1,4 +1,3 @@
-<%@ page buffer="1000kb" autoFlush="false" %> 
 <%@include file="/taglibs.jsp" %>
 <mm:cloud jspvar="cloud">
    <%@include file="includes/templateheader.jsp" %>
@@ -10,7 +9,6 @@
    <%@include file="includes/getresponse.jsp" %>
    <html>
    <head>
-      <base href="<%= javax.servlet.http.HttpUtils.getRequestURL(request) %>" />
       <link rel="stylesheet" type="text/css" href="css/main.css">
       <link rel="stylesheet" type="text/css" href="<%= styleSheet %>" />
       <link rel="stylesheet" type="text/css" href="css/vastgoed.css" />
@@ -24,7 +22,7 @@
       <script language="javascript" src="scripts/launchcenter.js"></script>
       <script language="javascript" src="scripts/cookies.js"></script>
       <script language="javaScript" src="scripts/screensize.js"></script>
-      <script type="text/javascript">
+      <script language="javaScript">
       function resizeBlocks() {	
       var MZ=(document.getElementById?true:false); 
       var IE=(document.all?true:false);
@@ -94,7 +92,8 @@
       request.setAttribute("nelis", nelis);
       %>
       
-      <script type="text/javascript">
+      <SCRIPT LANGUAGE="JavaScript">
+<!--
 function validationMessage() {
 	if((document.BestelForm.naam.value == "") || (document.BestelForm.email.value == "")) {
 		alert("Voer uw naam en email in.");
@@ -106,6 +105,7 @@ function validationMessage() {
 	}
 	return true;
 }
+-->
       </script>
       
    </head>
@@ -245,7 +245,7 @@ function validationMessage() {
                <td class="vastgoed_light"><%= item.getAantal()%></td>
                <td class="vastgoed_light"><%= item.getGevouwenOfOpgerold()%></td>
                <td>
-                  <% String updateLink = "/nmintra/KaartenInitAction.eb" + rubriekParams + "&randNr=" + java.lang.Math.random(); %>
+                  <%String updateLink = "/nmintra/KaartenInitAction.eb" + rubriekParams; %>
                   <html:link 
                      page="<%=updateLink%>" 
                      paramId="number" paramName="i">
@@ -274,7 +274,6 @@ function validationMessage() {
       <input type="hidden" name="rb" value="<%=iRubriekStyle%>"/>
       <input type="hidden" name="rbid" value="<%=rubriekId%>"/>
       <input type="hidden" name="pgid" value="<%=paginaID%>"/>
-      <input type="hidden" name="ssid" value="<%=subsiteID%>"/>
    </html:form>
    
    <%

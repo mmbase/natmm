@@ -21,6 +21,7 @@
 package nl.leocms.util;
 
 import org.mmbase.util.logging.*;
+import nl.leocms.util.*;
 import java.util.zip.*;
 import java.util.*;
 import nl.leocms.util.tools.HtmlCleaner;
@@ -94,7 +95,7 @@ public class ZipUtil{
    
    public void createArchiveFile(String sFileName, String sArchiveName) {
       //by default archive is created in the folder where archiving file is.
-      //sFileName should contain path to the file and it's name, sArchiveName -
+      //sFileName should contait path to the file and it's name, sArchiveName -
       //only archive file name
       int iLastSlashIndex = sFileName.lastIndexOf("/");
       String sPath = sFileName.substring(0,iLastSlashIndex + 1);
@@ -127,7 +128,7 @@ public class ZipUtil{
       //listed in sDir
 
       //by default archive is creating in the folder where archiving file is.
-      //sFileName should contain path to the file and it's name, sArchiveName -
+      //sFileName should containt path to the file and it's name, sArchiveName -
       //only archive file name
       int iLastSlashIndex = sFileName.lastIndexOf("/");
       String sPath = sFileName.substring(0,iLastSlashIndex + 1);

@@ -25,7 +25,7 @@ public class NelisReader
     private Map natGebMap;
     private Map gebiedMap;
     private long timeStamp;
-    private final static long  EXPIRE_INTERVAL = 24 * 60 * 60 * 1000; //two hours of refresh interval since last read 
+    private final static long  EXPIRE_INTERVAL = 2 * 60 * 60 * 1000; //two hours of refresh interval since last read 
     private static final Logger log = Logging.getLoggerInstance(NelisReader.class);
     
     
@@ -107,7 +107,7 @@ public Set getEenheidListWithDepartments() {
  }
 
 
-public void readData() {
+private void readData() {
     //set time stamp 
     timeStamp = System.currentTimeMillis();
     log.debug("timestamp:" + timeStamp);
@@ -117,7 +117,7 @@ public void readData() {
     
     Cloud cloud = CloudFactory.getCloud();
     ApplicationHelper ap = new ApplicationHelper(cloud);
-    String temp = ap.getIncomingDir();
+    String temp = ap.getTempDir();
     
     String nelisPath= temp + NELIS_FILE;
     

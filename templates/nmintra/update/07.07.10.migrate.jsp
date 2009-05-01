@@ -45,6 +45,14 @@
    Processing ...<br/>
 
 1. <br/>
+<mm:createnode type="typedef">
+     <mm:setfield name="name">vraagbaak</mm:setfield>
+     <mm:setfield name="description"></mm:setfield>
+</mm:createnode>
+<mm:createnode type="typedef">
+      <mm:setfield name="name">vraagbaak_keywords</mm:setfield>
+      <mm:setfield name="description"></mm:setfield>
+</mm:createnode>
 
 
 2. <br/>
@@ -218,7 +226,10 @@
 
 17. <br/>
 
-<mm:listnodes constraints="[name]='thema_plot_kaart'" type="typedef" id="type_themaplotkaart" />
+<mm:createnode type="typedef" id="type_themaplotkaart">
+     <mm:setfield name="name">thema_plot_kaart</mm:setfield>
+     <mm:setfield name="description"></mm:setfield>
+</mm:createnode>
 
 
 18. <br/>
@@ -280,11 +291,17 @@
 
 22. <br/>
 
-<mm:listnodes constraints="[name]='bestelling_vastgoed'" type="typedef" id="type_bestellingvastgoed" />
+<mm:createnode type="typedef" id="type_bestellingvastgoed">
+     <mm:setfield name="name">bestelling_vastgoed</mm:setfield>
+     <mm:setfield name="description"></mm:setfield>
+</mm:createnode>
+
 
 23. <br/>
-
-<mm:listnodes constraints="[name]='kaart_bestel_regel'" type="typedef" id="type_kaartbestelregel" />
+<mm:createnode type="typedef" id="type_kaartbestelregel">
+     <mm:setfield name="name">kaart_bestel_regel</mm:setfield>
+     <mm:setfield name="description"></mm:setfield>
+</mm:createnode>
 
 <mm:createnode type="reldef" id="rel_kaartbestelregel">
       <mm:setfield name="sname">kaart_bestel_regel</mm:setfield>

@@ -17,8 +17,8 @@ if (request.getParameter("ssid") != null) {
    subsiteID = request.getParameter("ssid");
 }
 
-breadcrumbs = ph.getBreadCrumbs(cloud, paginaID);
-rubriekParams = "?rb=" + iRubriekStyle + "&rbid=" + rubriekId + "&pgid=" + paginaID + "&ssid=" + subsiteID;
+breadcrumbs.set(0, rubriekId);
+ rubriekParams = "?rb=" + iRubriekStyle + "&rbid=" + rubriekId + "&pgid=" + paginaID;
 %>
 
 <%-- we override stylesheet with the value we get using the passed rubriek --%>
