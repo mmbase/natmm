@@ -2,13 +2,16 @@ package nl.mmatch;
 
 import java.util.*;
 import java.io.*;
+import java.text.*;
 import javax.servlet.*;
 import org.mmbase.bridge.*;
 import org.mmbase.module.core.*;
 import org.mmbase.util.logging.*;
 import com.finalist.mmbase.util.CloudFactory;
+import nl.leocms.evenementen.Evenement;
 import nl.leocms.util.*;
 import nl.leocms.util.tools.*;
+import nl.leocms.applications.NatMMConfig;
 
 /**
  * @author Henk Hangyi (MMatch)
@@ -20,8 +23,6 @@ public class CSVReader implements Runnable {
 
     private static final Logger log = Logging.getLoggerInstance(CSVReader.class);
     private static final ServerUtil su = new ServerUtil();
-    
-    private static final String IGNORE_BEAUFORT = "inactive (en negeer Beaufort)";
     
     public static int FULL_IMPORT = 1;
     public static int ONLY_MEMBERLOAD = 2;
@@ -141,7 +142,7 @@ public class CSVReader implements Runnable {
         // mark all relations for employees and departments
         log.info("markNodesAndRelations " + thisType);
         NodeManager relatedNodeNM = cloud.getNodeManager(thisType);
-        NodeList thisnodesList = relatedNodeNM.getList("importstatus not like '%" + IGNORE_BEAUFORT + "%'",null,null);
+        NodeList thisnodesList = relatedNodeNM.getList(null,null,null);
         RelationList relations = null;
         Node thisnode = null;
         int i = 0;
@@ -159,8 +160,7 @@ public class CSVReader implements Runnable {
                     }
                 }
             }
-            // set to value of [1] if not already but don't set if it is [2] - reserved for cases of ignoring csv overrides.
-            if( !thisFields[1].equals(thisnode.getStringValue(thisFields[0])) && !thisFields[2].equals(thisnode.getStringValue(thisFields[0]))      ) {
+            if(!thisFields[1].equals(thisnode.getStringValue(thisFields[0]))) {
               thisnode.setValue(thisFields[0],thisFields[1]);
               thisnode.commit();
               nodesMarked++;
@@ -174,16 +174,13 @@ public class CSVReader implements Runnable {
         // deletes all nodes relations for employees and departments, which are inactive
         log.info("deleteNodesAndRelations " + thisType);
         NodeManager relatedNodeNM = cloud.getNodeManager(thisType);
-        NodeList thisnodesList = relatedNodeNM.getList("importstatus not like '%" + IGNORE_BEAUFORT + "%'",null,null);
+        NodeList thisnodesList = relatedNodeNM.getList(null,null,null);
         RelationList relations = null;
         Node thisnode = null;
         int i = 0;
         int nodesDeleted = 0;
         while(i<thisnodesList.size()) {
             thisnode = thisnodesList.getNode(i);
-            if (log.isDebugEnabled()) {
-               log.debug("trying to access node " + thisnode.getValue(thisFields[0]).toString());
-            }
             if((thisnode.getValue(thisFields[0]).toString()).equals(thisFields[1])) {
                 thisnode.delete(true);
                 nodesDeleted++;
@@ -192,9 +189,6 @@ public class CSVReader implements Runnable {
                     relations = thisnode.getRelations(thisRelations[t],thisRelations[t+1]);
                     for(int r=0; r<relations.size(); r++) {
                         Relation relation = relations.getRelation(r);
-                        if (log.isDebugEnabled()) {
-                           log.debug("trying to access relation " + relation.getValue("readmore2"));
-                        }
                         if(relation.getValue("readmore2").equals("inactive")) {
                             relation.delete(true);
                         }
@@ -359,30 +353,24 @@ public class CSVReader implements Runnable {
 
             }
         }
-        
-        // if null means not in db - new medewerker. set to active to prevent NullPE. also being in beaufort means it is an active medewerker
-        if ((personsNode.getValue("importstatus") == null) || (!personsNode.getValue("importstatus").equals(IGNORE_BEAUFORT))) {        
-        
-            personsNode.setValue("externid", thisPerson.get("SOFI_NR"));
-            String alias = (String) personsNode.getValue("account");
-            if(alias==null||alias.equals("")) { // no alias found, use the created one
-               personsNode.setValue("account", thisPerson.get("ALIAS"));
-            }
-            personsNode.setValue("prefix", thisPerson.get("E_TITUL"));
-            personsNode.setValue("firstname", thisPerson.get("E_ROEPNAAM"));
-            personsNode.setValue("initials", thisPerson.get("E_VRLT"));
-            if(thisPerson.get("GBRK_OMS").equals("Partnernaam-geboortenaam")) {
-               personsNode.setValue("suffix", thisPerson.get("P_VRVG"));
-               personsNode.setValue("lastname", thisPerson.get("P_NAAM") + " - " + thisPerson.get("E_VRVG") + " " + thisPerson.get("E_NAAM"));
-            } else {
-               personsNode.setValue("suffix", thisPerson.get("E_VRVG"));
-               personsNode.setValue("lastname", thisPerson.get("E_NAAM"));
-            }
-            personsNode.setValue("gender",getGender((String) thisPerson.get("GENDER")));
-
-            personsNode.setValue("importstatus","active");
-            personsNode.commit();
+        personsNode.setValue("externid", thisPerson.get("SOFI_NR"));
+        String alias = (String) personsNode.getValue("account");
+        if(alias==null||alias.equals("")) { // no alias found, use the created one
+            personsNode.setValue("account", thisPerson.get("ALIAS"));
         }
+        personsNode.setValue("prefix", thisPerson.get("E_TITUL"));
+        personsNode.setValue("firstname", thisPerson.get("E_ROEPNAAM"));
+        personsNode.setValue("initials", thisPerson.get("E_VRLT"));
+        if(thisPerson.get("GBRK_OMS").equals("Partnernaam-geboortenaam")) {
+            personsNode.setValue("suffix", thisPerson.get("P_VRVG"));
+            personsNode.setValue("lastname", thisPerson.get("P_NAAM") + " - " + thisPerson.get("E_VRVG") + " " + thisPerson.get("E_NAAM"));
+        } else {
+            personsNode.setValue("suffix", thisPerson.get("E_VRVG"));
+            personsNode.setValue("lastname", thisPerson.get("E_NAAM"));
+        }
+        personsNode.setValue("gender",getGender((String) thisPerson.get("GENDER")));
+        personsNode.setValue("importstatus","active");
+        personsNode.commit();
         return personsNode;
     }
 
@@ -447,25 +435,18 @@ public class CSVReader implements Runnable {
     private TreeMap getEmails(String emailFile){
       log.info("getEmails " + emailFile);
       TreeMap emails = new TreeMap();
-      String separator = ";";
-      
+      String [] emailEndTag = { "%X400:", "%CCMAIL:", "\"" };
       try {
         BufferedReader dataFileReader = getBufferedReader(emailFile);
         String nextLine = dataFileReader.readLine();
 
         while(nextLine!=null) {
-        	String alias = "";
-        	String email = "";
-        	String[] tokens = nextLine.split(separator);
-        	if (tokens.length < 4) {
-        		log.warn("email file row contains less then expected tokens.");
-        	} else {
-        		alias = tokens[0];
-        		if (tokens[2].indexOf("@") != -1) {
-        			email = tokens[2];
-        		}
-        	}
-        	
+          nextLine += "\"";
+          String alias = getValue(nextLine,"Mailbox,",",");
+          String email = "";
+          for(int i=0; i<emailEndTag.length && email.equals(""); i++) {
+            email = getValue(nextLine,"SMTP:",emailEndTag[i]);
+          }
           if(!alias.equals("")&&!email.equals("")) { // use uppercase on alias for searching
             if(email.length()>64) {
               log.warn("email address " + email + " for alias " + alias + " is longer than 255 characters, therefore it will be truncated.");
@@ -585,7 +566,6 @@ public class CSVReader implements Runnable {
               Node destination = relatedNodes(cloud, thisPerson, personsNode, "afdelingen", "naam", "readmore", "readmore", "FUNC_OMS", logPerson);
               // this department is in use, so set to active
               destination.setValue("importstatus", "active");
-              destination.setValue("omschrijving", thisPerson.get("K_S_WAARDE")); 
               destination.commit();
           } else { // locatie, column KOSTEN equals E00375
               thisPerson.put("locations",thisPerson.get("K_S_WAARDE"));
@@ -719,64 +699,17 @@ public class CSVReader implements Runnable {
     return logMessage;
    }
 
-   
-   
-   
-   
-   /**
-    * Returns all addresses that match the specified zip code from the specified map.
-    * 
-    * @param zipCodeMap The map to retrieve the addresses from
-    * @param zipCode The zip code to retrieve the addresses for
-    * 
-    * @return The retrieved addresses in an arraylist or null if none could be found
-    */
-   public static ArrayList getAddresses(TreeMap zipCodeMap, String zipCode) {
-	   if(zipCodeMap != null && zipCode != null)
-		   return (ArrayList)zipCodeMap.get(zipCode);
-	   return null;
-   }
-   
    public static String getAddress(TreeMap zipCodeMap, String zipCode) {
       String address = null;
-      
-      // map contains arraylists now
-      ArrayList addresses = getAddresses(zipCodeMap, zipCode);
-      if(addresses != null)
-         address = (String)addresses.get(0);
+      if(zipCodeMap!=null&&zipCode!=null&&!zipCode.equals("")) {
+         address = (String) zipCodeMap.get(zipCode);
+      }
       return address;
    }
 
-   /**
-    * Returns all street names for the specified zip code from the specified map.
-    * 
-    * @param zipCodeMap The map to retrieve the addresses from
-    * @param zipCode The zip code to retrieve the addresses for
-    * @param street The value to return if the specified zip code could not be found in the map
-    * 
-    * @return The retrieved street names or the value of the parameter specified, if no street could be found
-    */
-   public static ArrayList getStreets(TreeMap zipCodeMap, String zipCode, String street) {
-      ArrayList addresses = getAddresses(zipCodeMap, zipCode);
-      if(addresses == null) {
-    	  addresses = new ArrayList();
-        if (street != null) addresses.add(street);
-    	  return addresses;
-      }
-      ArrayList returner = new ArrayList();
-      for(int i=0, j=addresses.size();i<j;i++) {
-    	  String address = (String)addresses.get(i);
-    	  if(address != null && address.indexOf(";") > 0)
-    		  returner.add(address.substring(0, address.indexOf(";")));
-      }
-      
-      return returner;
-   }
-
    public static String getStreet(TreeMap zipCodeMap, String zipCode, String street) {
-      ArrayList streets = getStreets(zipCodeMap, zipCode, street);
-      
-      return (String)streets.get(0);
+      String address = getAddress(zipCodeMap,zipCode);
+      return (address!=null ? address.substring(0,address.indexOf(";")) : street );
    }
 
    public static String getCity(TreeMap zipCodeMap, String zipCode, String city) {
@@ -784,21 +717,9 @@ public class CSVReader implements Runnable {
       return (address!=null ? address.substring(address.lastIndexOf(";")+1) : city );
    }
 
-   /**
-    * This checks whether the specified house number is within the valid range on the streets of the specified zip code.
-    *  
-    * @param zipCodeMap The map to extract the streets from
-    * @param zipCode The zip code to check against
-    * @param iHouseNumber The house number to verify
-    * 
-    * @return True if one of the addresses is within the valid range, false otherwise
-    */
    public static boolean isInRange(TreeMap zipCodeMap, String zipCode, int iHouseNumber) {
-      ArrayList addresses = getAddresses(zipCodeMap,zipCode);
-
-      boolean isInRange = false;
-      for(int i=0, j=addresses.size();i<j;i++) {
-	      String address = (String)addresses.get(i);
+      String address = getAddress(zipCodeMap,zipCode);
+      boolean isInRange = true;
       if(address!=null) {
          int p1 = address.indexOf(";");
          int p2 = address.indexOf("_");
@@ -816,9 +737,6 @@ public class CSVReader implements Runnable {
             } else { // B = both
             }
          }
-      }
-	      if(isInRange)
-	    	  break;
       }
       return isInRange;
    }
@@ -887,17 +805,7 @@ public class CSVReader implements Runnable {
                  sbAddress.append(sCode);
                  sbAddress.append(';');
                  sbAddress.append(sCity);
-                 
-                 // we might have multiple entries for one zip code
-                 // (e.g. left and right side of street different names)
-                 // thus we will use an arraylist of strings
-                 ArrayList streets = (ArrayList)zipCodeMap.get(sZipCode);
-                 if(streets == null) {
-                	 streets = new ArrayList();
-                	 zipCodeMap.put(sZipCode, streets);
-                 }
-                 streets.add(sbAddress.toString());
-                 
+                 zipCodeMap.put(sZipCode, sbAddress.toString());
                  zipcodes++;
               }
               nextLine = dataFileReader.readLine();
@@ -1096,11 +1004,10 @@ public class CSVReader implements Runnable {
                
                 // start with marking all relations as inactive
                 String [] employeeRelations = {"readmore","afdelingen","readmore","locations"};
-                  //setting to value of [1] unless it is equal to [2] when we don't change
-                String [] employeeFields = {"importstatus","inactive",IGNORE_BEAUFORT};
+                String [] employeeFields = {"importstatus","inactive"};
                 String [] departmentRelations = {"posrel","afdelingen"};
                 // the importstatus field of afdelingen can be 'inactive', 'active' or a comma seperated list of descendants
-                String [] departmentFields = {"importstatus","inactive",""};
+                String [] departmentFields = {"importstatus","inactive"};
                 nodesMarked = markNodesAndRelations(cloud,"medewerkers",employeeRelations,employeeFields);
                 nodesMarked += markNodesAndRelations(cloud,"afdelingen",departmentRelations,departmentFields);
                 

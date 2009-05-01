@@ -15,7 +15,7 @@ p {
 }
 input {
     font-size: 11px;
-    font-family: arial, sans-serif;
+    font-family: arial, sans-serif
     text-align: left;
 }
 textarea {
@@ -63,9 +63,6 @@ td.transperant {
 }
 .black {
     color: #000000
-}
-.white {
-    color: #fff;
 }
 .pageheader {
     font-weight: bold;

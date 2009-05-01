@@ -1,5 +1,6 @@
-<%@page language="java" contentType="text/html;charset=UTF-8"
-%><%@page import="java.text.*,java.io.*,org.mmbase.bridge.*" %>
+<%@page language="java" contentType="text/html;charset=UTF-8"%>
+<base href="<%= javax.servlet.http.HttpUtils.getRequestURL(request) %>" />
+<%@page import="java.text.*,java.io.*,org.mmbase.bridge.*" %>
 <mm:import jspvar="ID" externid="id">-1</mm:import>
 <mm:import jspvar="rubriekId" externid="r">-1</mm:import>
 <mm:import jspvar="paginaID" externid="p">-1</mm:import>
@@ -42,8 +43,7 @@ int iRubriekLayout = NMIntraConfig.PARENT_LAYOUT;
 
 String styleSheet = "hoofdsite/themas/default.css"; 
 
-// *** determine the rubriek specific setting: style & rubriek image
-String rbLogoID = "-1";
+// *** determine the rubriek specific setting: style
 for(int r=0; r<breadcrumbs.size(); r++) {
 	%><mm:node number="<%= (String) breadcrumbs.get(r) %>" jspvar="thisRubriek"><%
 
@@ -56,14 +56,8 @@ for(int r=0; r<breadcrumbs.size(); r++) {
 			for(int s = 0; s< NMIntraConfig.style1.length; s++) {
 				if(styleSheet.indexOf(NMIntraConfig.style1[s])>-1) { iRubriekStyle = s; } 
 			}
-		} %>
-      <mm:related path="contentrel,images" max="1"
-          ><mm:field name="images.number" jspvar="images_number" vartype="String" write="false"><%
-              rbLogoID = images_number;
-          %></mm:field
-       ></mm:related>
-  
-	</mm:node><%
+		} 
+	%></mm:node><%
 }
 
 if(iRubriekLayout==NMIntraConfig.PARENT_LAYOUT) { iRubriekLayout = NMIntraConfig.DEFAULT_LAYOUT; }

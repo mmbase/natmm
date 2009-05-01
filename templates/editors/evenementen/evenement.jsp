@@ -119,43 +119,15 @@
             }
             return false;
         }
-        
 	     var cancelClick = false;
-        function doDelete(thisObject,prompt) {
+        function doDelete(prompt) {
       		var conf;
       		if (prompt && prompt!="") {
       			conf = confirm(prompt);
       		} else conf=true;
       		cancelClick=true;
-            
-            if (conf) showMessage(thisObject,'Verwijder selectie');
       		return conf;
-        }
-        
-        function selectAllDates(field) {
-            for (i = 0; i < field.length; i++) {
-               if (field[i].checked) { 
-                  field[i].checked = false;
-               } else {
-                  field[i].checked = true;
-               }
-            }
-        } 
-                  
-      var clickedButton = '';
-      function showMessage(obj,fAction){
-         string = 'theTarget = document.getElementById("message");';
-         eval(string);
-         if(theTarget != null){
-            theTarget.innerHTML = 'Een moment geduld a.u.b.';
-         }
-         clickedButton=obj;
-         clickedButton.disabled=true;
-
-         document.getElementById("formAction").value= fAction;
-         document.forms[0].submit();
-      }                  
-          
+         }            
     </script>
 </head>
 <%
@@ -171,12 +143,9 @@ String evenementId = "";
 // the focus="name" works together with the onkeypress for the name field, to make sure the form is only posted once on [ENTER]-key
 %>
 <html:form action="/editors/evenementen/EvenementAction" scope="session" focus="name">
-
 <html:hidden property="userId" value="<%= cloud.getUser().getIdentifier() %>" />
 <html:hidden property="node" />
 <html:hidden property="selectedEvent" />
-<input type="hidden" id="formAction" name="action" value="" />
-
 <body style="overflow:auto;" onload="javascript:setSelected(<bean:write name="EvenementForm" property="selectedEvent" />);javascript:resizeBlocks();"  onResize="javascript:resizeBlocks();">
 <logic:equal name="EvenementForm" property="node" value="">
     <h1>Nieuwe activiteit</h1>   
@@ -187,12 +156,6 @@ String evenementId = "";
     <h1>Activiteit wijzigen</h1>
 </logic:notEqual>
 <table class="formcontent">
-<tr>
-   <td colspan="2" class="fieldname" style="color:red;font-weight:bold;" id="message"></td>
-</tr>
-<tr>
-   <td colspan="2">&nbsp;</td>
-</tr> 
 <tr><td class="fieldname" style="width:90px;">Naam</td>
     <td><html:text property="name" style="width:349px;" tabindex="1" onkeypress="return event.keyCode!=13" />
         <span class="notvalid"><br><html:errors bundle="LEOCMS" property="naam" /></span></td></tr>       
@@ -225,9 +188,9 @@ String evenementId = "";
         -<html:text property="endYear" maxlength="4" style="<%= dateStyle %>" tabindex="11"/>
         <a href="javascript:popUpCalendar('end')" ><img src='../../calendar/show-calendar-on-button.gif' width='24' height='24' align='absmiddle' border='0' alt='Selecteer einddatum'></a>
         <span class="notvalid"><html:errors bundle="LEOCMS" property="eindtijd"/></span><br>
-		  <input type="button" name="action" value="Voeg toe" style="<%= buttonStyle %>" onclick="javascript:showMessage(this,'Voeg toe');"/>&nbsp;
-        <input type="button" name="action" value="Wijzig" style="<%= buttonStyle %>" onclick="javascript:showMessage(this,'Wijzig');"/>&nbsp;
-        <input type="button" name="action" value="Wis" style="<%= buttonStyle %>" onclick="javascript:showMessage(this,'Wis');"/>&nbsp;
+		  <html:submit property="action" value="Voeg toe" style="<%= buttonStyle %>"/>&nbsp;
+        <html:submit property="action" value="Wijzig" style="<%= buttonStyle %>"/>&nbsp;
+        <html:submit property="action" value="Wis" style="<%= buttonStyle %>"/>&nbsp;
     </td></tr>
 <tr><td class="fieldname" style="width:90px;height:20px">
       <% boolean bShowPastDates = false;
@@ -307,14 +270,13 @@ String evenementId = "";
      </mm:present>
      </div>
      <span class="notvalid"><html:errors bundle="LEOCMS" property="lijst" /></span><br>
-     <input type="button" value="Alles (de)selecteren" style="<%= buttonStyle %>" onclick="selectAllDates(document.forms[0].selectedDates);"/>
-     <input type="button" name="action" value="Activeer selectie" style="<%= buttonStyle %>" onclick="javascript:showMessage(this,'Activeer selectie');"/>
-     <input type="button" name="action" value="Annuleer selectie" style="<%= buttonStyle %>" onclick="javascript:showMessage(this,'Annuleer selectie');"/>
+     <html:submit property="action" value="Activeer selectie" style="<%= buttonStyle %>"/>
+     <html:submit property="action" value="Annuleer selectie" style="<%= buttonStyle %>"/>
      <mm:present referid="multidayfound">
-         <input type="button" name="action" value="Periode -> data" style="<%= buttonStyle %>" onclick="javascript:showMessage(this,'Periode -> data');"/>
+         <html:submit property="action" value="Periode -> data" style="<%= buttonStyle %>"/>
      </mm:present>
      <mm:present referid="childeventfound">
-         <input type="button" name="action" value="Verwijder selectie" onclick="return doDelete(this,'Weet u zeker dat u de geselecteerde data wilt verwijderen?');" style="<%= buttonStyle %>" />
+         <html:submit property="action" value="Verwijder selectie" onclick="return doDelete('Weet u zeker dat u de geselecteerde data wilt verwijderen?');" style="<%= buttonStyle %>" />
      </mm:present>
      </td></tr>
    <tr><td class="fieldname" style="width:90px;">Overige onderdelen</td>
@@ -334,9 +296,9 @@ String evenementId = "";
    <tr>
       <td>
          <span class="notvalid"><html:errors bundle="LEOCMS" property="opslaan"/></span>
-         <html:cancel value="Annuleren" style="<%= buttonStyle %>" />&nbsp;
-         <input type="button" name="action" value="Opslaan & be&euml;indigen" style="<%= buttonStyle %>" onclick="javascript:showMessage(this,'Opslaan en beeindingen');"/>&nbsp;
-         <input type="button" name="action" value="Opslaan" style="<%= buttonStyle %>" onclick="javascript:showMessage(this,'Opslaan');"/>
+         <html:cancel value="Annuleren" style="<%= buttonStyle %>"/>&nbsp;
+         <html:submit property="action" value="Opslaan & be&euml;indigen" style="<%= buttonStyle %>"/>&nbsp;
+         <html:submit property="action" value="Opslaan" style="<%= buttonStyle %>"/>
       </td>
    </tr>
 </table>

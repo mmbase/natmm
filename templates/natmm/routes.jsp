@@ -99,17 +99,9 @@
                   fields="artikel.titel,artikel.number,artikel.type"
                   constraints="<%= searchConVar %>"
                   orderby="artikel.status">
-                  <tr>
-                     <td style="vertical-align:top;white-space: nowrap;">
-                        <mm:field name="artikel.status"/>&nbsp;|
-                        <mm:field name="artikel.titel_eng" jspvar="weidegang" vartype="String">
-                           <% if (weidegang != null && weidegang.equals("1")) { %>
-                              <img src="media/logos/weidemelk.jpg" width="40px" style="vertical-align:top;"/>
-                           <% }  %>
-                        </mm:field>
-                      </td> 
+                  <tr><td style="vertical-align:top;"><mm:field name="artikel.status"/>&nbsp;|</td> 
                       <td style="vertical-align:top;">
-                        <a class="maincolor_link" href="javascript:void(0);" onclick="javascript:launchCenter('/natmm-internet/natmm/route_pop.jsp?a=<mm:field name="artikel.number"
+                        <a class="maincolor_link" href="javascript:void(0);" onclick="javascript:launchCenter('/route_pop.jsp?a=<mm:field name="artikel.number"
                            />&rs=<%=styleSheet%>', 'route', 600, 800,'location=no,directories=no,status=no,toolbars=no,scrollbars=yes,resizable=yes');setTimeout('newwin.focus();',250);">
                            <mm:field name="artikel.titel"/></a></td>
                       <td style="vertical-align:top;">|&nbsp;<mm:field name="artikel.type" /></td></tr>
@@ -134,9 +126,9 @@
          <input type="hidden" name="p" value="<%=paginaID%>">
          <input type="hidden" name="actie" value="zoek">
          <span class="colortitle">Soort route</span><br>
-            &nbsp;<input type="checkbox" name="rt_Wandelroute" value="Wandelroute" <% if((!actie.equals("zoek")) || (rt_w != null)){%>checked<% } %>> Wandelroute <br>
-            &nbsp;<input type="checkbox" name="rt_Fietsroute" value="Fietsroute" <% if((!actie.equals("zoek")) || (rt_f != null)){%>checked<% } %>> Fietsroute <br>
-            &nbsp;<input type="checkbox" name="rt_Kanoroute" value="Kanoroute" <% if((!actie.equals("zoek")) || (rt_k != null)){%>checked<% } %>> Kanoroute <br>
+            &nbsp;<input type="checkbox" name="rt_Wandelroute" value="Wandelroute" <% if((!actie.equals("zoek")) || (rt_w != null)){%>checked<% } %>> Wandelen <br>
+            &nbsp;<input type="checkbox" name="rt_Fietsroute" value="Fietsroute" <% if((!actie.equals("zoek")) || (rt_f != null)){%>checked<% } %>> Fietsen <br>
+            &nbsp;<input type="checkbox" name="rt_Kanoroute" value="Kanoroute" <% if((!actie.equals("zoek")) || (rt_k != null)){%>checked<% } %>> Kanoeen <br>
          <br>
          <span class="colortitle">Afstand in kilometers</span><br>
             &nbsp;<input type="checkbox" name="rl_1" value="1" <% if((!actie.equals("zoek")) || (rl_1 != null)){%>checked<% } %>> 0-5 <br>

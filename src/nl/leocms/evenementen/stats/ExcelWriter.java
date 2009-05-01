@@ -28,7 +28,7 @@ public class ExcelWriter {
 
       DoubleDateNode ddn = new DoubleDateNode(cloud.getNode(sEvenementNumber));
       String fileName = "aanmeldingen_voor_activiteit_" + sEvenementNumber + " " + ".xls";
-      WritableWorkbook workbook = Workbook.createWorkbook(new File(NatMMConfig.getTempDir() + fileName));
+      WritableWorkbook workbook = Workbook.createWorkbook(new File(NatMMConfig.tempDir + fileName));
 
       Evenement ev = new Evenement();
       String sParentEvent = Evenement.findParentNumber(sEvenementNumber);
@@ -47,7 +47,7 @@ public class ExcelWriter {
       Evenement ev = new Evenement();
       String sParentEvent = Evenement.findParentNumber(sEvenementNumber);
       String fileName = "alle_data_voor_activiteit_" + sParentEvent + ".xls";
-      WritableWorkbook workbook = Workbook.createWorkbook(new File(NatMMConfig.getTempDir() + fileName));
+      WritableWorkbook workbook = Workbook.createWorkbook(new File(NatMMConfig.tempDir + fileName));
 
       HtmlCleaner hc = new HtmlCleaner();
       Node nParentNode = cloud.getNode(sParentEvent);
@@ -73,15 +73,14 @@ public class ExcelWriter {
       DoubleDateNode ddnParent = new DoubleDateNode(nParentNode);
 
       String fileName = "alle_data_met_aanmeldingen_voor_activiteit_" + sParentEvent + ".xls";
-      WritableWorkbook workbook = Workbook.createWorkbook(new File(NatMMConfig.getTempDir() + fileName));
+      WritableWorkbook workbook = Workbook.createWorkbook(new File(NatMMConfig.tempDir + fileName));
 
       NodeList nl = ev.getSortedList(cloud, sParentEvent);
-//     ** Don't use very database intensive code that is not needed, if-statement will always be executed.
-//      NodeList nls = cloud.getList(sParentEvent,"evenement,partrel,evenement1,posrel,inschrijvingen","evenement1.number,evenement1.begindatum",null,"evenement1.begindatum","UP",null,true);
-//      boolean bOneDateWithoutSubscriptions = (nl.size()!= nls.size());
+      NodeList nls = cloud.getList(sParentEvent,"evenement,partrel,evenement1,posrel,inschrijvingen","evenement1.number,evenement1.begindatum",null,"evenement1.begindatum","UP",null,true);
+      boolean bOneDateWithoutSubscriptions = (nl.size()!= nls.size());
       int j = 0;
-//      if(bOneDateWithoutSubscriptions) {
-//         String sThisEvenementNumber = (String)nl.getNode(0).getStringValue("evenement1.number");
+      if(bOneDateWithoutSubscriptions) {
+         String sThisEvenementNumber = (String)nl.getNode(0).getStringValue("evenement1.number");
          HtmlCleaner hc = new HtmlCleaner();
          String sSheetTitle = HtmlCleaner.stripText(nParentNode.getStringValue("titel"));
          if (sSheetTitle.length()>28) {
@@ -89,7 +88,7 @@ public class ExcelWriter {
          }
          createEventDatesSheet(cloud,hc,nParentNode,workbook,j,sSheetTitle, null);
          j++;
-//      } ** //End of database intensive code.
+      }
       for (int i = 0; i < nl.size(); i++){
          Node event = cloud.getNode(nl.getNode(i).getStringValue("evenement.number"));
          if(event.getRelatedNodes("inschrijvingen").size()!=0) {
@@ -138,7 +137,7 @@ public class ExcelWriter {
       sDate += iSecond;
 
       String fileName = "alle_geselecteerde_activiteiten_" + sDate + ".xls";
-      WritableWorkbook workbook = Workbook.createWorkbook(new File(NatMMConfig.getTempDir() + fileName));
+      WritableWorkbook workbook = Workbook.createWorkbook(new File(NatMMConfig.tempDir + fileName));
 
       // create flyersheet
       WritableSheet sheetFlyer = workbook.createSheet("flyer", 9999);
@@ -416,13 +415,8 @@ public class ExcelWriter {
             eventFlyerList.add(new EventData(sParentNumber, nParentNode.getStringValue("titel"), ddn));
          }
          
-         Node childEvent = cloud.getNode(nl7.getNode(i).getStringValue("evenement.number"));
-         int aanmeldingSize = childEvent.getRelatedNodes("inschrijvingen").size();
-         
-         if (aanmeldingSize==0) {
+         if (nParentNode.getRelatedNodes("inschrijvingen").size()==0){
             llXlsData.add(new Label(3,counter,"geen aanmeldingen"));
-         } else {
-        	llXlsData.add(new Label(3,counter,String.valueOf(aanmeldingSize)));
          }
          counter++;
       }
@@ -617,7 +611,7 @@ public class ExcelWriter {
 
    public String createAttachmentNode(Cloud cloud, String fileName, String sTitle) {
       String sAttachmentId = "";
-      String sFile = NatMMConfig.getTempDir() + fileName;
+      String sFile = NatMMConfig.tempDir + fileName;
       File f = new File(sFile);
       int fsize = (int)f.length();
       byte[] thedata = new byte[fsize];

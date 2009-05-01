@@ -20,7 +20,7 @@
    <mm:compare referid="i" value="-1" inverse="true">
    <mm:node number="$i" jspvar="thisSubscription">
    <%
-   RelationList relations = thisSubscription.getRelations("related",cloud.getNodeManager("inschrijvings_status"), "destination");
+   RelationList relations = thisSubscription.getRelations("related","inschrijvings_status");
    if(!relations.isEmpty()) {
       Relation  thisRelation = relations.getRelation(0);
       thisRelation.delete();

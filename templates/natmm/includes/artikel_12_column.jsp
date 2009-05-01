@@ -64,7 +64,7 @@ if(hasRightCell) {
    %><table width="539px;" border="0" cellspacing="0" cellpadding="0">
    <tr>
    	<td style="vertical-align:top;padding-right:10px;padding-bottom:10px;width:364px;">
-		<mm:compare referid="showpageintro" value="true">
+         <mm:compare referid="showpageintro" value="true">
             <%@include file="../includes/page_intro.jsp" %>
          </mm:compare>
          <% if(!artikelID.equals("-1")) { %>
@@ -93,21 +93,10 @@ if(hasRightCell) {
       	<% } %>
       </td>
    	<td style="vertical-align:top;padding-left:10px;width:175px;<jsp:include page="../includes/rightcolumn_bgimage.jsp"><jsp:param name="rnimageid" value="<%= rnImageID %>" /></jsp:include>">
-<% if (isNaardermeer.equals("true")) { %>			
-   		<img src="media/trans.gif" height="226" width="1">
-	  <% } %>
-	  <br/>
-	  <% // back to weblog link according to existence of a passed callingPageID parameter
-	  if ((callingPageID !=null) || (!callingPageID.equals("-1"))) { %>
-	         <jsp:include page="../includes/fun/webcam_backlink.jsp">
-            	<jsp:param name="cp" value="<%= callingPageID %>" />
-   	      </jsp:include>
-	<% } %>
 			<mm:compare referid="shownav" value="true">
 				<jsp:include page="../actie/includes/nav.jsp">
             	<jsp:param name="a" value="<%= artikelID %>" />
 	            <jsp:param name="p" value="<%= paginaID %>" />
-	            <jsp:param name="cp" value="<%= callingPageID %>" />
    	      </jsp:include>
 				<br/>
 			</mm:compare>
@@ -131,9 +120,7 @@ if(hasRightCell) {
             %>
             <table class="dotline"><tr><td height="3"></td></tr></table>
             <% 
-         }
-         if(!"-1".equals(artikelID)) {
-         %>
+         } %>
          <jsp:include page="../includes/shorty.jsp">
             <jsp:param name="s" value="<%= artikelID %>" />
             <jsp:param name="r" value="<%= rubriekID %>" />
@@ -141,7 +128,6 @@ if(hasRightCell) {
             <jsp:param name="sp" value="artikel,rolerel" />
             <jsp:param name="sr" value="2" />
          </jsp:include>
-         <% } %>
    	</td>
    </tr>
    </table><%
