@@ -3,8 +3,11 @@ package nl.natuurmonumenten.activiteiten;
 import java.io.Serializable;
 import java.util.Date;
 
-// detail gegevens parent event
 public class EventDetails implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private String id;
     private String titel;
     private String korteOmschrijving;
@@ -15,14 +18,14 @@ public class EventDetails implements Serializable {
     private String contactPersoon;
     private String[] eventTypeId;
     private String[] natuurgebiedId;
+    private int aantalPlaatsenBeschikbaar;
+    private boolean volgeboekt;
+    private boolean aanmeldingGesloten;
     private Kosten[] kosten;
     private String[] vertrekpuntId;
     private String[] extraInfo;
     private String typeAanmeldMogelijkheid;
-    // als een event eenmalig is dan heeft het geen childs, we zetten dan de parent info in EventData
-    private boolean eenmaligEvent;
-    // detail gegevens per child event
-    private EventData[] eventData;
+    private boolean geannuleerd;
     public String getId() {
         return id;
     }
@@ -83,6 +86,24 @@ public class EventDetails implements Serializable {
     public String[] getNatuurgebiedId() {
         return natuurgebiedId;
     }
+    public int getAantalPlaatsenBeschikbaar() {
+        return aantalPlaatsenBeschikbaar;
+    }
+    public void setAantalPlaatsenBeschikbaar(int aantalPlaatsenBeschikbaar) {
+        this.aantalPlaatsenBeschikbaar = aantalPlaatsenBeschikbaar;
+    }
+    public boolean isVolgeboekt() {
+        return volgeboekt;
+    }
+    public void setVolgeboekt(boolean volgeboekt) {
+        this.volgeboekt = volgeboekt;
+    }
+    public boolean isAanmeldingGesloten() {
+        return aanmeldingGesloten;
+    }
+    public void setAanmeldingGesloten(boolean aanmeldingGesloten) {
+        this.aanmeldingGesloten = aanmeldingGesloten;
+    }
     public void setKosten(Kosten[] kosten) {
         this.kosten = kosten;
     }
@@ -107,16 +128,11 @@ public class EventDetails implements Serializable {
     public String getTypeAanmeldMogelijkheid() {
         return typeAanmeldMogelijkheid;
     }
-    public void setEventData(EventData[] eventData) {
-        this.eventData = eventData;
+    public boolean isGeannuleerd() {
+        return geannuleerd;
     }
-    public EventData[] getEventData() {
-        return eventData;
+    public void setGeannuleerd(boolean geannuleerd) {
+        this.geannuleerd = geannuleerd;
     }
-    public void setEenmaligEvent(boolean eenmaligEvent) {
-        this.eenmaligEvent = eenmaligEvent;
-    }
-    public boolean isEenmaligEvent() {
-        return eenmaligEvent;
-    }
+    
 }
