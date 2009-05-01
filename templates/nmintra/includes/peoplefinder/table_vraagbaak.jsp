@@ -20,9 +20,7 @@
     <td rowspan="2" valign="top" style="padding-left:5px;">
     <mm:node number="<%= employeeId %>"
         ><table border="0" cellpadding="0" cellspacing="0">
-            <tr><td colspan="2" style="padding-bottom:3px;">
-            <mm:field name="prefix"><mm:isnotempty><mm:write/>&nbsp;</mm:isnotempty></mm:field>
-            <mm:field name="gender"><mm:compare value="0">mw. </mm:compare></mm:field
+            <tr><td colspan="2" style="padding-bottom:3px;"><mm:field name="gender"><mm:compare value="0">mw. </mm:compare></mm:field
                 ><mm:field name="firstname" jspvar="firstname" vartype="String" write="true">
                     <mm:field name="initials" jspvar="initials" vartype="String" write="false">
                        <mm:isnotempty>
@@ -90,9 +88,6 @@
            <tr><td style="padding-bottom:3px;"><%= specialDays %>:&nbsp;</td>
               <td style="padding-bottom:3px;vertical-align:bottom;"><mm:field name="omschrijving_fra" /></td>
            </tr>
-             <tr><td style="padding-bottom:3px;">Werkzaamheden:&nbsp;</td>
-              <td style="padding-bottom:3px;vertical-align:bottom;"><mm:field name="omschrijving_de" /></td>
-           </tr>         
            <%
            if(!sRubriekLayout.equals("" + NMIntraConfig.SUBSITE1_LAYOUT)) { 
               %>
@@ -121,7 +116,7 @@
             </mm:list><%
         }%><br><%
         if(!postingStr.equals("|action=print")) {
-            %><a target="_blank" href="smoelenboek_vraagbaak.jsp<%= 
+            %><a target="_blank" href="ipage.jsp<%= 
                 templateQueryString %>&department=<%= departmentId %>&program=<%= programId
                 %>&firstname=<%= firstnameId %>&lastname=<%= lastnameId %>&employee=<%= employeeId %>&pst=|action=print">print</a><%
         } 

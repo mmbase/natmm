@@ -1,5 +1,6 @@
 package nl.leocms.util.tools;
 
+import java.io.*;
 import java.util.*;
 
 import org.mmbase.bridge.*;
@@ -9,7 +10,6 @@ import org.mmbase.util.logging.Logging;
 
 import net.sf.mmapps.modules.lucenesearch.*;
 import net.sf.mmapps.modules.lucenesearch.util.*;
-
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.analysis.*;
 import org.apache.lucene.search.*;
@@ -25,7 +25,7 @@ import nl.leocms.util.tools.HtmlCleaner;
  * Utilities functions for the search pages
  *
  * @author H. Hangyi
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.19 $
  */
 public class SearchUtil {
 
@@ -310,8 +310,8 @@ public class SearchUtil {
         QueryParser qp = new QueryParser("indexed.text", analyzer);
         qp.setDefaultOperator(QueryParser.AND_OPERATOR);
         org.apache.lucene.search.Query result = null;
-        //SearchValidator sv = new SearchValidator();
-        String value = SearchValidator.validate(sQuery);
+        SearchValidator sv = new SearchValidator();
+        String value = sv.validate(sQuery);
         try {
           result = qp.parse(value);
         } catch (Exception e) {
@@ -386,8 +386,8 @@ public class SearchUtil {
         
         }
       } catch (Exception e) { 
-        log.error("lucene index " + index + " throws error on query " + sQuery + " - " + e); 
-        //Also log the specific error
+        log.error("lucene index " + index + " throws error on query " + sQuery); 
+        log.error(e); //Also log the specific error
       } 
       return hsetNodes;
    }
