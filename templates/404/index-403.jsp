@@ -16,7 +16,7 @@
 	</script>
 	<script type="text/javascript" src="<%=contextPath%>/404/menu-bovenkant.js"></script>
 	
-	<title>Natuurmonumenten - Sorry, deze methode is niet toegestaan</title>
+   <title>Natuurmonumenten - Sorry, deze link is niet voor iedereen toegankelijk</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/natmm/hoofdsite/themas/main.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/natmm/hoofdsite/themas/default.css" />
@@ -63,17 +63,14 @@
 <table width="744" border="0" cellspacing="0" cellpadding="0" align="center" valign="top">
 <tr>
    <td style="vertical-align:top;width:374px;padding:10px;padding-top:0px"><br/>
-<p style="font-size:14px;color:#1D1E94;margin:0px 0px 5px 0px; font-weight: bold;">Error 405: Sorry, deze methode is niet toegestaan</p>
+<p style="font-size:14px;color:#1D1E94;margin:0px 0px 5px 0px; font-weight: bold;">Error 403: Sorry, deze link is niet voor iedereen toegankelijk</p>
 &nbsp;<br />
 <p>Onze excuses voor het ongemak.</p>
 &nbsp;<br />
-Als je denkt dat het een fout betreft zouden we het erg op prijs stellen als je de oorzaak van deze melding mailt naar de <a href="mailto:webredactie@natuurmonumenten.nl?Subject=Error 405: Sorry, deze methode is niet toegestaan">webredactie@natuurmonumenten.nl</a>.<br />
+Als je denkt dat het een fout betreft zouden we het erg op prijs stellen als je de link die je probeerde te bereiken mailt naar
+<a href="mailto:webredactie@natuurmonumenten.nl?Subject=Error 403: Sorry, deze link is niet voor iedereen toegankelijk">webredactie@natuurmonumenten.nl</a>.<br />
 Alvast bedankt.<br />
-&nbsp;<br />
-&nbsp;<br />
-&nbsp;<br />
-&nbsp;<br />
-&nbsp;<br />
+&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />
 </div>      
 </table>
 </div>
@@ -114,7 +111,7 @@ Alvast bedankt.<br />
 </body>
 
 <!-- Begin Sitestat4 code -->
-<script type="text/javascript">
+<script language="JavaScript1.1">
 <!--
 function sitestat(ns_l){
    ns_l+="&ns__t="+new Date().getTime();ns_pixelUrl=ns_l;

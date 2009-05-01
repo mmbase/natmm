@@ -11,7 +11,16 @@
 // <option id="7">rechts groot</option>
 // <option id="8">links groot</option>
 
-%><mm:related path="posrel,images" orderby="images.title" constraints="posrel.pos!='9'" searchdir="destination"
+%>
+
+<mm:related path="posrel,images"
+   constraints="posrel.pos='9'" orderby="images.title" searchdir="destination"
+   ><br/><div align="center"><img src="<mm:node element="images"><mm:image template="s(535)" /></mm:node
+      >" alt="<mm:field name="images.title" />" border="0" ></div><br/>
+</mm:related>
+
+
+<mm:related path="posrel,images" orderby="images.title" constraints="posrel.pos!='9'" 
     ><mm:first
        ><mm:field name="posrel.pos" jspvar="dummy" vartype="Integer" write="false"><%
           int posrel_pos = dummy.intValue();  
@@ -26,11 +35,5 @@
      // ** give table small width otherwise description can push the table to large width **
      %><tr><td><div align="center"><img src="<mm:node element="images"><mm:image template="<%= imageTemplate %>" /></mm:node
                    >" alt="<mm:field name="images.title" />" border="0"></div></td></tr>
-         <mm:field name="images.description" 
-         ><mm:isnotempty
-             ><tr><td><div align="center"><mm:write /><div></td></tr>
-             <tr><td class="black"><img src="media/spacer.gif" width="1" height="1"></td></tr>
-             <tr><td><img src="media/spacer.gif" width="1" height="5"></td></tr></mm:isnotempty
-         ></mm:field
-     ><mm:last></table></mm:last>
+         <mm:last></table></mm:last>
 </mm:related>

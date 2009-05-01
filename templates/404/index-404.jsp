@@ -1,35 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@page language="java" contentType="text/html;charset=UTF-8"
-%><%@page isErrorPage="true"
-%><%@page import="java.io.*,java.text.*,java.util.*"
-%><%
-   String contextPath = request.getContextPath();
-   long ticket = System.currentTimeMillis();
-   StringWriter wr = new StringWriter();
-   PrintWriter pw = new PrintWriter(wr);
 
-   exception.printStackTrace(new PrintWriter(wr));
-   
-   String msg = "EXCEPTION:" + "\n";
-   msg += "   requesturl: " + request.getRequestURL() + "\n";
-   msg += "   querystring: " + request.getQueryString() + "\n";
-   msg += "   method: " + request.getMethod() + "\n";
-   msg += "   user: " + request.getRemoteUser()  + "\n";
-   msg += wr.toString();
-%>
-<%!
-   /** the date + time long format */
-   private static final SimpleDateFormat DATE_TIME_FORMAT =
-      new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-   
-   /**
-    * Creates String.from given long according to dd-MM-yyyy HH:mm:ss
-    * @param date the date to format
-    * @return Datestring
-    */
-   public static String getDateTimeString(long date) {
-      return DATE_TIME_FORMAT.format(new Date(date));
-   }
+<%
+   String contextPath = request.getContextPath(); 
 %>
 
 <html>
@@ -48,17 +20,6 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/natmm/hoofdsite/themas/main.css"/>
 	<link rel="stylesheet" type="text/css" href="<%=contextPath%>/natmm/hoofdsite/themas/default.css" />
-   <script type="text/javascript">
-      function showError() {
-         var errorDisplay = document.getElementById('errordiv').style.display;
-         if (errorDisplay =='none') {
-            document.getElementById('errordiv').style.display='block';
-         }
-         else {
-            document.getElementById('errordiv').style.display='none';
-         }
-      }
-</script>
 </head>
 <body style="margin:0;">
 <div style="position:relative; width:100%;">
@@ -103,32 +64,23 @@
 <tr>
    <td style="vertical-align:top;width:374px;padding:10px;padding-top:0px"><br/>
 
-<p style="font-size:14px;color:#1D1E94;margin:0px 0px 5px 0px; font-weight: bold;">Error 500: Sorry, er is iets mis gegaan</p>
+<p style="font-size:14px;color:#1D1E94;margin:0px 0px 5px 0px; font-weight: bold;">Error 404: Sorry, er is iets mis gegaan</p>
 &nbsp;<br />
-<p>Er is een serverfoutopgetreden bij het opvragen van uw pagina. Onze excuses voor het ongemak.</p>
+<p>We kunnen de pagina die u zoekt niet meer vinden. De pagina kan zijn verwijderd, van naam veranderd of tijdelijk niet beschikbaar zijn. Onze excuses voor het ongemak.</p>
 &nbsp;<br />
 Hier zijn een paar tips om de pagina alsnog te vinden:<br />
-&bull; Als u handmatig een domeinadres hebt ingevuld, kijk of deze wel helemaal klopt <br />
+&bull; Als je handmatig een domeinadres hebt ingevuld, kijk of deze wel helemaal klopt <br />
 &bull; Gebruik de terug knop van uw browser om terug te gaan naar de vorige pagina en probeer de link nog eens <br />
 &bull; Gebruik onze zoekfunctie onderaan de pagina door een paar kernwoorden in te vullen <br />
 &bull; Gebruik onze navigatiebalk om de pagina alsnog te vinden <br />
 &bull; Probeer het later nog eens, de pagina kan tijdelijk niet beschikbaar zijn <br />
 &nbsp;<br />
-Als bovenstaande tips niet helpen zouden wij het erg op prijs stellen als u de link die u probeerde te bereiken mailt naar <a href="mailto:webredactie@natuurmonumenten.nl?Subject=Error 500: Sorry, er is iets mis gegaan">webredactie@natuurmonumenten.nl</a>.<br />
+Als bovenstaande tips niet helpen zouden wij het erg op prijs stellen als u de link die u probeerde te bereiken mailt naar <a href="mailto:webredactie@natuurmonumenten.nl?Subject=Error 404: Sorry, er is iets mis gegaan">webredactie@natuurmonumenten.nl</a>.<br />
 Alvast bedankt. <br />
 
 &nbsp;<br />
 
-<p>
-   <a href="javascript:showError();"><b>Toon technische informatie</b></a><br/>
-</p>
-<div id="errordiv" style="display:none">
-<pre>
-<%= getDateTimeString(ticket) %>
-<%= msg %>
-</pre>
-
-</div>
+</div>      
 </table>
 </div>
 </td>
@@ -168,7 +120,7 @@ Alvast bedankt. <br />
 </body>
 
 <!-- Begin Sitestat4 code -->
-<script type="text/javascript">
+<script language="JavaScript1.1">
 <!--
 function sitestat(ns_l){
    ns_l+="&ns__t="+new Date().getTime();ns_pixelUrl=ns_l;
