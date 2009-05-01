@@ -9,7 +9,6 @@
    boolean viewCard = (sViewCard!=null) && (sViewCard.equals("true"));
    String sIsIE = request.getParameter("ie");
    boolean isIE = (sIsIE!=null) && (sIsIE.equals("true"));
-   String isNaardermeer = (String) request.getAttribute("isNaardermeer");
 %>
 <mm:import jspvar="toname" externid="toname">-</mm:import>
 <mm:import jspvar="toemail" externid="toemail">-</mm:import>
@@ -22,15 +21,10 @@
 <input type="hidden" name="actie" value="send">
 <input type="hidden" name="i" value="<%=imgID%>">
 
-<% if (isNaardermeer.equals("true")) { %>		
-   <table width="420" height="332" cellspacing="0" cellpadding="3" bordercolor="#<%= mainStyleColor %>" style="border: 1px solid">
-<% } else { %>
-   <table width="510" height="332" cellspacing="0" cellpadding="3" bordercolor="#<%= mainStyleColor %>" style="border: 1px solid">
-<% } %>
-
+<table width="500" height="332" cellspacing="0" cellpadding="3" bordercolor="#<%= mainStyleColor %>" style="border: 1px solid">
 <tr><td align="center" valign="top">
 
-<table width="95%" height="330" border="0" cellspacing="0" cellpadding="0">
+<table width="490" height="330" border="0" cellspacing="0" cellpadding="0">
    <tr>
       <td><img src="media/trans.gif" width="2" height="1" border="0" alt=""></td>
       <td width="240" valign="top">
@@ -40,11 +34,11 @@
          <% if(viewCard){%>
             <%=body.replaceAll("\n","<br>")%>
          <%}else {%>
-            <textarea cols="30" rows="16" name="body" style="background-color: #E7E7E7;border: 1px solid #E7E7E7; font: normal 11px arial; scrollbar-3dlight-color: # E7E7E7; scrollbar-arrow-color: #E7E7E7; scrollbar-base-color: #E7E7E7; scrollbar-darkshadow-color: #E7E7E7; scrollbar-face-color: #E7E7E7; scrollbar-highlight-color: #E7E7E7; scrollbar-shadow-color: #E7E7E7; scrollbar-track-color: #E7E7E7; width:200px; padding: 4px 4px 4px; height:300px;"></textarea>
+            <textarea cols="30" rows="16" name="body" style="background-color: #E7E7E7;border: 1px solid #E7E7E7; font: normal 11px arial; scrollbar-3dlight-color: # E7E7E7; scrollbar-arrow-color: #E7E7E7; scrollbar-base-color: #E7E7E7; scrollbar-darkshadow-color: #E7E7E7; scrollbar-face-color: #E7E7E7; scrollbar-highlight-color: #E7E7E7; scrollbar-shadow-color: #E7E7E7; scrollbar-track-color: #E7E7E7; width:220px; padding: 4px 4px 4px; height:300px;"></textarea>
          <% } %>
       </td>
       <td valign="top" align="center">
-         <img src="media/ecard_stamp.jpg" alt="Groeten van <%= NatMMConfig.getCompanyName() %>!!" width="91" height="92" border="0" align="right"><br clear="all"><br><br>
+         <img src="media/ecard_stamp.jpg" alt="Groeten van <%= NatMMConfig.companyName %>!!" width="91" height="92" border="0" align="right"><br clear="all"><br><br>
          <table border="0" cellspacing="0" cellpadding="0">
             <tr><td style="font-weight:bold;" colspan="2">AAN</td></tr>
             <tr>

@@ -1,9 +1,7 @@
-<%@page isELIgnored="false"%>
 <mm:node element="paragraaf">
 <table cellpadding="0" cellspacing="0" width="100%">
     <tr>
       <td>
-        <c:set var="imageNoDescription" value="true"/>
         <%@include file="../includes/relatedimage.jsp" %>
         <mm:field name="titel_zichtbaar"
 			   ><mm:compare value="0" inverse="true"
