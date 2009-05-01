@@ -24,15 +24,6 @@ try{
    int objectCount = 0; 
    int pagesCount = 0;
    %>
-   
-    <%
-    //Please check the navsettings.jsp for details. 2 constraints should be seperated by e.g. ' AND '.
-    if (objectConstraint!= null && objectConstraint.length()>0) { 
-      objectConstraint += " AND ";
-    }  
-    objectConstraint += (new SearchUtil()).articleConstraint(nowSec, quarterOfAnHour);
-    %>
-   
    <mm:relatednodes type="<%= objecttype %>" path="<%= "contentrel," + objecttype %>" constraints="<%= objectConstraint %>">
     <mm:first><mm:size jspvar="dummy" vartype="String" write="false">
       <% objectCount = Integer.parseInt(dummy); 
@@ -63,7 +54,6 @@ try{
        </mm:isnotempty>
        </mm:field>
        <mm:compare referid="show_links" value="true">
-
           <mm:relatednodes type="<%= objecttype %>" path="<%= "contentrel," + objecttype %>"
              offset="<%= "" + (thisOffset-1)*objectPerPage %>" max="<%= ""+ objectPerPage %>" 
              constraints="<%= objectConstraint %>" orderby="<%= objecttype + "." + objectdate %>" directions="DOWN">
@@ -117,10 +107,10 @@ try{
               In archief: <%= objectCount %> [<%= pagesCount %> pgn]
              <div style="padding-top:10px;">
                <% if (thisOffset == 1) { %>
-                    <img src="<%=request.getContextPath()%>/natmm/media/arrowleft_links.gif" border="0">
+                    <img src="../media/arrowleft_<%= NatMMConfig.style1[iRubriekStyle] %>.gif" border="0">
                <% } else { %>
                     <a href="<%= ph.createItemUrl(artikelID, paginaID,"offset="+(thisOffset-1),request.getContextPath()) %>"
-                      ><img src="<%=request.getContextPath()%>/natmm/media/arrowleft_links.gif" border="0"></a>
+                      ><img src="../media/arrowleft_<%= NatMMConfig.style1[iRubriekStyle] %>.gif" border="0"></a>
                     <a href="<%= ph.createItemUrl(artikelID, paginaID,"offset=1",request.getContextPath()) %>">1</a>
                <% } 
                   if (thisOffset > 3) { %>
@@ -137,11 +127,11 @@ try{
                     &hellip;                     
                <% } 
                   if (thisOffset == pagesCount) { %>
-                    <img src="<%=request.getContextPath()%>/natmm/media/arrowright_links.gif" border="0">
+                    <img src="../media/arrowright_<%= NatMMConfig.style1[iRubriekStyle] %>.gif" border="0">
                <% } else { %>
                     <a href="<%= ph.createItemUrl(artikelID, paginaID,"offset="+pagesCount,request.getContextPath()) %>"><%= pagesCount %></a>
                     <a href="<%= ph.createItemUrl(artikelID, paginaID,"offset="+(thisOffset+1),request.getContextPath()) %>"
-                      ><img src="<%=request.getContextPath()%>/natmm/media/arrowright_links.gif" border="0"></a>
+                      ><img src="../media/arrowright_<%= NatMMConfig.style1[iRubriekStyle] %>.gif" border="0"></a>
                <% } %>
              </div>
              <% if (pagesCount > 5) { %>

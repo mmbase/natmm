@@ -201,7 +201,6 @@
         <relation from="pagina" to="dossier" type="posrel" />
         <relation from="pagina" to="email" type="related" />
         <relation from="pagina" to="evenement_type" type="posrel" />
-        <relation from="pagina" to="evenement" type="contentrel" />
         <relation from="pagina" to="formulier" type="posrel" />
         <relation from="pagina" to="items" type="posrel"/>
         <relation from="pagina" to="linklijst" type="posrel" />
@@ -214,7 +213,6 @@
         <relation from="pagina" to="provincies" type="posrel" />
         <relation from="pagina" to="shorty" type="rolerel" />
         <relation from="pagina" to="teaser" type="rolerel" />
-        <relation from="pagina" to="attachments" type="contentrel" />
         <relation from="panno" to="contentelement" type="readmore" />
         <relation from="provincies" to="natuurgebieden" type="posrel" />
         <relation from="questions" to="answers" type="posrel" />

@@ -255,31 +255,4 @@ public class NatMMConfig {
          return false;
       }
    }
-
-   public static String getAllowedIP() {
-      try {
-         InitialContext context = new InitialContext();
-         Context env = (Context) context.lookup("java:comp/env");
-         String allowedIP = (String) env.lookup("natmmconfig.webservice.ip.allowed");
-         return allowedIP;
-      }
-      catch (NamingException ne) {
-         log.info("Context not found: " + ne.toString());
-         return null;
-      }
-   }   
-
-   public static boolean isIPFilterEnabled() {
-      try {
-         InitialContext context = new InitialContext();
-         Context env = (Context) context.lookup("java:comp/env");
-         boolean isProductionApplication = "true".equals((String) env.lookup("natmmconfig.is.ipfilter.enabled")) ? true : false;
-         return isProductionApplication;
-      }
-      catch (NamingException ne) {
-         log.debug("Context not found: " + ne.toString());
-         return false;
-      }
-   }   
-   
 }
