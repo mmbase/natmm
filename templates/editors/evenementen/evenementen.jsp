@@ -1,10 +1,9 @@
-<%@page language="java" contentType="text/html;charset=UTF-8"
-%><%@page import="nl.leocms.util.DoubleDateNode,nl.leocms.evenementen.Evenement,java.util.*" 
-%><%@include file="/taglibs.jsp" 
-%><mm:content type="text/html" escaper="none">
+<%@page language="java" contentType="text/html;charset=UTF-8"%>
+<%@page import="nl.leocms.util.DoubleDateNode,nl.leocms.evenementen.Evenement,java.util.*" %>
+<%@include file="/taglibs.jsp" %>
 <mm:cloud method="http" rank="basic user" jspvar="cloud">
+<!-- ******************************* IMPORT PARAMETERS ******************************** -->
 <%
-//******************************* IMPORT PARAMETERS ********************************
 Calendar cal = Calendar.getInstance();
 cal.setTime(new Date());
 int maxAge = 60 * 60 * 24 * 365;
@@ -149,9 +148,9 @@ thisCookie = new Cookie("soortIdFC", soortId ); thisCookie.setMaxAge(maxAge); re
 thisCookie = new Cookie("titelIdFC", titelId ); thisCookie.setMaxAge(maxAge); response.addCookie(thisCookie);
 thisCookie = new Cookie("natuurgebiedenIdFC",natuurgebiedenId ); thisCookie.setMaxAge(maxAge); response.addCookie(thisCookie);
 
-// thisCookie = new Cookie("aanmelderNaamIdFC", aanmelderNaamId ); thisCookie.setMaxAge(maxAge); response.addCookie(thisCookie);
-// thisCookie = new Cookie("aanmelderPostcodeIdFC", aanmelderPostcodeId ); thisCookie.setMaxAge(maxAge); response.addCookie(thisCookie);
-// thisCookie = new Cookie("aanmelderNummerIdFC", aanmelderNummerId ); thisCookie.setMaxAge(maxAge); response.addCookie(thisCookie);
+thisCookie = new Cookie("aanmelderNaamIdFC", aanmelderNaamId ); thisCookie.setMaxAge(maxAge); response.addCookie(thisCookie);
+thisCookie = new Cookie("aanmelderPostcodeIdFC", aanmelderPostcodeId ); thisCookie.setMaxAge(maxAge); response.addCookie(thisCookie);
+thisCookie = new Cookie("aanmelderNummerIdFC", aanmelderNummerId ); thisCookie.setMaxAge(maxAge); response.addCookie(thisCookie);
 
 thisCookie = new Cookie("beginDyIdFC", beginDyId ); thisCookie.setMaxAge(maxAge); response.addCookie(thisCookie);
 thisCookie = new Cookie("beginMnthIdFC", beginMnthId ); thisCookie.setMaxAge(maxAge); response.addCookie(thisCookie);
@@ -348,7 +347,7 @@ if(!provincieId.equals("")) {
    // the search query much check for participant constraints
    if(isValidEvent && (!aanmelderNaamId.equals("")||!aanmelderPostcodeId.equals("")||!aanmelderNummerId.equals(""))) {
         isValidEvent = false;
-        %><mm:listcontainer nodes="<%= event_number %>"  path="evenement,posrel,inschrijvingen,posrel,deelnemers"><%
+        %><mm:listcontainer nodes="<%= parent_number %>"  path="evenement,posrel,inschrijvingen,posrel,deelnemers"><%
           if(!aanmelderNaamId.equals("")) {
             %><mm:constraint field="deelnemers.lastname" operator="LIKE" value="<%= "%" + aanmelderNaamId + "%" %>" /><%
           }
@@ -437,17 +436,6 @@ if(!provincieId.equals("")) {
       clickedButton=obj;
       document.EvenementForm.command.value = clickedButton.value;
    }
-   
-   function disableExtraSearch() {
-      document.EvenementForm.aanmelder_naam.disabled=true;
-      document.EvenementForm.aanmelder_postcode.disabled=true;
-      document.EvenementForm.aanmelder_nummer.disabled=true;
-      
-      document.EvenementForm.aanmelder_naam.style.backgroundColor="#cccccc";
-      document.EvenementForm.aanmelder_postcode.style.backgroundColor="#cccccc";
-      document.EvenementForm.aanmelder_nummer.style.backgroundColor="#cccccc";  
-   }
-   
 
 </script>
 <% if(actionId.indexOf("print")>-1) { %>
@@ -635,14 +623,14 @@ if(actionId.indexOf("print")==-1) {
    <!--1--><td style="padding-top:3px;"><input type="text" name="titel" tabindex="1" value="<%= titelId %>" style="width:130px;" onkeypress="return event.keyCode!=13"></td>
    <!--2--><td style="padding-top:3px;"><input type="text" name="natuurgebieden" tabindex="2" value="<%= natuurgebiedenId %>" style="width:130px;"></td>
    <!--3--><td colspan="4"><input type=hidden name="_hiddenDate" >
-       <input type="text" name="beginDy" maxlength="2" tabindex="3" value="<%= beginDyId %>" style="width:40px;text-align:right;">
-       -<input type="text" name="beginMnth" maxlength="2" tabindex="4" value="<%= beginMnthId %>" style="width:40px;text-align:right;">
-       -<input type="text" name="beginYr" maxlength="4" tabindex="5" value="<%= beginYrId %>" style="width:40px;text-align:right;">
-       <a tabindex="6" href="javascript:popUpCalendar('begin')" ><img src='../../calendar/show-calendar-on-button.gif' width='24' height='24' align='absmiddle' border='0' alt='Selecteer begindatum'></a>
-       <input type="text" name="endDy" maxlength="2" tabindex="7" value="<%= endDyId %>" style="width:40px;text-align:right;">
-        -<input type="text" name="endMnth" maxlength="2" tabindex="8" value="<%= endMnthId %>" style="width:40px;text-align:right;">
-        -<input type="text" name="endYr" maxlength="4" tabindex="9" value="<%= endYrId %>" style="width:40px;text-align:right;">
-       <a tabindex="10" href="javascript:popUpCalendar('end')" ><img src='../../calendar/show-calendar-on-button.gif' width='24' height='24' align='absmiddle' border='0' alt='Selecteer einddatum'></a></td>
+       <input type="text" name="beginDy" maxlength="2" tabindex="6" value="<%= beginDyId %>" style="width:40px;text-align:right;">
+       -<input type="text" name="beginMnth" maxlength="2" tabindex="7" value="<%= beginMnthId %>" style="width:40px;text-align:right;">
+       -<input type="text" name="beginYr" maxlength="4" tabindex="8" value="<%= beginYrId %>" style="width:40px;text-align:right;">
+       <a href="javascript:popUpCalendar('begin')" ><img src='../../calendar/show-calendar-on-button.gif' width='24' height='24' align='absmiddle' border='0' alt='Selecteer begindatum'></a>
+       <input type="text" name="endDy" maxlength="2" tabindex="9" value="<%= endDyId %>" style="width:40px;text-align:right;">
+        -<input type="text" name="endMnth" maxlength="2" tabindex="10" value="<%= endMnthId %>" style="width:40px;text-align:right;">
+        -<input type="text" name="endYr" maxlength="4" tabindex="11" value="<%= endYrId %>" style="width:40px;text-align:right;">
+       <a href="javascript:popUpCalendar('end')" ><img src='../../calendar/show-calendar-on-button.gif' width='24' height='24' align='absmiddle' border='0' alt='Selecteer einddatum'></a></td>
    </tr>
 
    <tr>
@@ -658,17 +646,14 @@ if(actionId.indexOf("print")==-1) {
    <tr>
          <td></td>
    <!-- Aanmelder -->
-         <td style="padding-top:3px;"><input type="text" name="aanmelder_naam" tabindex=11" value="<%= aanmelderNaamId %>" style="width:130px;"></td>
+         <td style="padding-top:3px;"><input type="text" name="aanmelder_naam" tabindex="3" value="<%= aanmelderNaamId %>" style="width:130px;"></td>
    <!-- Postcode aanmelder -->
-         <td style="padding-top:3px;"><input type="text" name="aanmelder_postcode" tabindex="12" value="<%= aanmelderPostcodeId %>" style="width:100px;" MAXLENGTH="6"></td>
+         <td style="padding-top:3px;"><input type="text" name="aanmelder_postcode" tabindex="4" value="<%= aanmelderPostcodeId %>" style="width:100px;" MAXLENGTH="6"></td>
    <!-- Aanmeldingsnummer -->
-         <td colspan="4"style="padding-top:3px;"><input type="text" name="aanmelder_nummer" tabindex=13" value="<%= aanmelderNummerId %>" style="width:100px;"></td>
-   
-   <% if(soortId.equals("activiteiten")) out.print("<script>disableExtraSearch();</script>"); %>
-
+         <td colspan="4"style="padding-top:3px;"><input type="text" name="aanmelder_nummer" tabindex="5" value="<%= aanmelderNummerId %>" style="width:100px;"></td>
    </tr>
-   <tr>
          <td colspan="7">&nbsp;</td>
+   <tr>
    </tr>
 
 <% } else { %>
@@ -902,14 +887,15 @@ if(iEventCtr==0) {
 </table>
 </form>
 <script type="text/javascript" language="JavaScript">
+  <!--
   // works together with the the onkeypress for the titel field, to make sure the form is only posted once on [ENTER]-key
   var focusControl = document.forms["EvenementForm"].elements["titel"];
   if (focusControl.type != "hidden") {
      focusControl.focus();
   }
+  // -->
 </script>
 <br/><br/>
 </body>
 </html>
 </mm:cloud>
-</mm:content>

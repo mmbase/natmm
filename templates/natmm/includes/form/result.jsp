@@ -84,11 +84,6 @@ if(referer!=null) {
             if(!thisForm.getStringValue("titel_eng").equals("")) {
                formMessageHrefCustom = thisForm.getStringValue("titel_eng");
             }
-
-            String omschrijving_eng = thisForm.getStringValue("omschrijving_eng");
-            if(omschrijving_eng!=null&&!HtmlCleaner.cleanText(omschrijving_eng,"<",">","").trim().equals("")) { 
-               okLink = omschrijving_eng;
-            }    
             
             String responseText = "<b>" + responseTextDefault + pages_title + "</b><br>"
                   + "<br><br>" + thisForm.getStringValue("titel").toUpperCase()+ "<br>"
@@ -302,6 +297,11 @@ if(isValidAnswer)
    String formMessage = "<b>" + warningTitle + "</b><ul>" + warningMessage + "</ul>";
    String formMessageHref = "javascript:history.go(-1)";
    String formMessageLinktext = warningLink;
+
+   //Override the href is a custom href is set in the title_eng variable
+   if (!formMessageHrefCustom.equals("")) {
+      formMessageHref = formMessageHrefCustom;
+   }
    
    %><%@include file="message.jsp" %><%
 }

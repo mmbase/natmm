@@ -1,8 +1,10 @@
 package nl.leocms.util.tools;
 
 import java.io.*;
+import java.util.*;
 
 import jxl.*;
+import jxl.write.*;
 
 import org.mmbase.bridge.*;
 
@@ -13,7 +15,7 @@ import org.mmbase.util.logging.Logging;
  * Convert a Excel file to LeoCMS navigation structure
  *
  * @author Alexey Zemskov
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.4 $
  */
 public class Excel2Menu {
 
