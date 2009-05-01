@@ -4,6 +4,7 @@
 ><mm:field name="images.number" write="false" jspvar="images_number" vartype="String"><% 
 
 
+
 if(javax.servlet.http.HttpUtils.getRequestURL(request).indexOf("weblog.jsp")>0) {
 
 	// images have different position for weblog articles, compare the two option_lists
@@ -103,8 +104,8 @@ if(isShortyOrTeaserImage || fitToThirdColumn || imagePartOfColumn) {
 			} %><%-- role=<%= shortyRol %>,iForm=<%=imgFormat %>,iFloat=<%=imgFloat %>,iPar=<%= imgParams %>,rmUrl=<%= (validLink ? readmoreURL : "" ) %> --%>
 			<table style="width:1%;<%= imgFloat %>" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td style="padding:0 0 0 0;margin:0px;text-align:right;">
-					<%
+					<td style="padding:0px;margin:0px;text-align:right;">
+					<% 
 						if(validLink){
 							if(readmoreURL.indexOf("javascript:")>-1) { 
 								%>

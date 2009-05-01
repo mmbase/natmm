@@ -1,5 +1,4 @@
 <%@include file="/taglibs.jsp" %>
-<mm:content type="text/html" escaper="none">
 <%@page import="nl.leocms.util.PropertiesUtil,nl.leocms.util.ApplicationHelper,org.mmbase.bridge.*,java.net.*" %>
 <% 
 // make sure website_user is not used as editor account
@@ -184,7 +183,7 @@ String sNatuurinNumber = "";
     <% String webmasterMail = ""; %>
     <mm:listnodescontainer type="users"
        ><mm:constraint field="rank" operator="=" value="administrator" 
-       /><mm:listnodes searchdirs="destination"
+       /><mm:listnodes
           ><mm:first inverse="true"><% webmasterMail += ";"; %></mm:first
           ><mm:field name="emailadres" jspvar="dummy" vartype="String" write="false"
              ><% webmasterMail += dummy; 
@@ -201,4 +200,3 @@ String sNatuurinNumber = "";
 </html>
 </cache:cache>
 </mm:cloud>
-</mm:content>
