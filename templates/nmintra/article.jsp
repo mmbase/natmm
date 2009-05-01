@@ -1,4 +1,5 @@
-<%@include file="/taglibs.jsp" %><mm:content type="text/html" escaper="none">
+<%@include file="/taglibs.jsp" %>
+<mm:content type="text/html" escaper="none">
 <mm:cloud jspvar="cloud">
 <%@include file="includes/templateheader.jsp" %>
 <%@include file="includes/cacheparams.jsp" %>
