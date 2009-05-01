@@ -36,7 +36,7 @@ public class EventNotifier implements Runnable {
 
    public int sendEventNotification(Cloud cloud, Node thisEvent, String eventType, String eventMessage) {
       
-      String fromEmailAddress = NatMMConfig.getFromCADAddress();
+      String fromEmailAddress = NatMMConfig.fromCADAddress;
       String emailSubject = eventType + " " + thisEvent.getStringValue("titel") + ", " + (new DoubleDateNode(thisEvent)).getReadableValue();
       int nEmailSend = 0;
 
@@ -246,16 +246,16 @@ public class EventNotifier implements Runnable {
       if(type.equals("plain")) { newline = "\n"; }
       return "Dit bericht is verstuurd in het kader van de driemaandelijkse controle op de in de website gebruikte emailaddressen." + newline
          + "Stuur alstublieft ter controle een reply op deze email naar" + newline + newline
-         + "Email:" + NatMMConfig.getToEmailAddress() + newline + newline
+         + "Email:" + NatMMConfig.toEmailAddress + newline + newline
          + "Bij voorbaat dank, de webmasters." + newline + newline;
    }
    
    public String checkEmailAccounts(Cloud cloud) {
       
       TreeSet emailAccounts = new TreeSet();
-      emailAccounts.add(NatMMConfig.getFromEmailAddress());
-      emailAccounts.add(NatMMConfig.getFromCADAddress());
-      emailAccounts.add(NatMMConfig.getToSubscribeAddress());
+      emailAccounts.add(NatMMConfig.fromEmailAddress);
+      emailAccounts.add(NatMMConfig.fromCADAddress);
+      emailAccounts.add(NatMMConfig.toSubscribeAddress);
       NodeList nlFormulieren = cloud.getNodeManager("formulier").getList("emailadressen != ''",null,null);
       for(int n=0; n<nlFormulieren.size(); n++) {
          String thisEmailAddres =  nlFormulieren.getNode(n).getStringValue("emailadressen") + ";";
@@ -268,8 +268,8 @@ public class EventNotifier implements Runnable {
          }
       }
       Node emailNode = cloud.getNodeManager("email").createNode();
-      emailNode.setValue("from", NatMMConfig.getToEmailAddress());
-      emailNode.setValue("replyto", NatMMConfig.getToEmailAddress());
+      emailNode.setValue("from", NatMMConfig.toEmailAddress);
+      emailNode.setValue("replyto", NatMMConfig.toEmailAddress);
       emailNode.setValue("body",
              "<multipart id=\"plaintext\" type=\"text/plain\" encoding=\"UTF-8\">"
                 + getCheckAccountMessage("plain")
@@ -301,52 +301,42 @@ public class EventNotifier implements Runnable {
    }
 
    public String groupEventConfirmationPeriodExpired(Cloud cloud) { 
+      
       String logMessage = "";
-      
-      // groupevent confirmationperiod expired notifications are only sent on monday
-      Calendar rightNow = Calendar.getInstance();
-      int day = rightNow.get(Calendar.DAY_OF_WEEK);
-      
-      if (day == Calendar.MONDAY) {
-         int nEmailSend = 0;
+      int nEmailSend = 0;
+      try {   
+         // list all the group subscription:
+         // - not confirmed
+         // - confirmation period expired
+         long now = (new Date().getTime())/1000;
+         long one_day = 24*60*60;
+         long two_weeks = 14*one_day;
          
-         try {   
-            // list all the group subscription:
-            // - not confirmed
-            // - confirmation period expired
-            long now = (new Date().getTime())/1000;
-            long one_day = 24*60*60;
-            long two_weeks = 14*one_day;
-            
-            NodeIterator iNodes= cloud.getList(null
-               , "evenement,posrel,inschrijvingen,related,inschrijvings_status"
-               , "inschrijvingen.number, evenement.number"
-               , "inschrijvingen.datum_inschrijving < '" + (now - two_weeks) + "'"
-                 + " AND evenement.begindatum > '" + now + "'"       
-                 + " AND (inschrijvings_status.naam = 'aangemeld' OR"
-                 + " (inschrijvings_status.naam = 'website-aanmelding')"
-                 + " AND evenement.iscanceled='false'"
-               , null, null, null, false).nodeIterator();
-            
-            while(iNodes.hasNext()) {
-                Node nextNode = iNodes.nextNode();
-                String thisSubscription = nextNode.getStringValue("inschrijvingen.number");
-                String thisEvent= nextNode.getStringValue("evenement.number");
-                
-                // send notification if this event or its parent event is a group excursion
-                if (Evenement.isGroupExcursion(cloud, Evenement.findParentNumber(thisEvent))) {
-                   SubscribeAction.sendConfirmationPeriodExpired(cloud, thisSubscription);
-                   nEmailSend++;
-                } 
-            }   
-         } catch(Exception e) {
-            log.info(e);
-         }
-         logMessage += "\n<br>Number of groupevent confirmationperiod expired send " + nEmailSend;         
+         NodeIterator iNodes= cloud.getList(null
+            , "evenement,posrel,inschrijvingen,related,inschrijvings_status"
+            , "inschrijvingen.number, evenement.number"
+            , "inschrijvingen.datum_inschrijving < '" + (now - two_weeks) + "'"
+              + " AND evenement.begindatum > '" + now + "'"       
+              + " AND (inschrijvings_status.naam = 'aangemeld' OR"
+              + " (inschrijvings_status.naam = 'website-aanmelding')"
+              + " AND evenement.iscanceled='false'"
+            , null, null, null, false).nodeIterator();
+         
+         while(iNodes.hasNext()) {
+             Node nextNode = iNodes.nextNode();
+             String thisSubscription = nextNode.getStringValue("inschrijvingen.number");
+             String thisEvent= nextNode.getStringValue("evenement.number");
+             
+             // check if event is a group excursion
+             if (Evenement.isGroupExcursion(cloud, thisEvent)) {
+                SubscribeAction.sendConfirmationPeriodExpired(cloud, thisSubscription);
+                nEmailSend++;
+             }
+         }   
+      } catch(Exception e) {
+         log.info(e);
       }
-      else {
-         logMessage += "\n<br>Groupevent confirmationperiod expired notifications are only send on monday";        
-      }      
+      logMessage += "\n<br>Number of groupevent confirmationperiod expired send " + nEmailSend;
       return logMessage;
    }   
    
@@ -359,30 +349,31 @@ public class EventNotifier implements Runnable {
 
       String emailSubject = "Notificatie van " + requestUrl;
 
-      String toEmailAddress = NatMMConfig.getToEmailAddress();
-      String fromEmailAddress = NatMMConfig.getFromEmailAddress(); 
+      String toEmailAddress = NatMMConfig.toEmailAddress;
+      String fromEmailAddress = NatMMConfig.fromEmailAddress; 
 
       log.info("Started updateEventDB");
       String logMessage =  "\n<br>Started updateEventDB " + new Date();
 
-      boolean isProduction = NatMMConfig.isProductionApplication();
-      
+      // use liveUrl to make sure that notifications are only send from live server
+      boolean isProduction = false;
+      String liveUrls = "";
+      for(int i=0; i<NatMMConfig.liveUrl.length; i++) {
+         isProduction = isProduction || (requestUrl.indexOf(NatMMConfig.liveUrl[i])>-1);
+         if(!liveUrls.equals("")) { liveUrls += ", "; }
+         liveUrls += "'" + NatMMConfig.liveUrl[i] + "'";
+      }
       if(isProduction) {
-         logMessage += "\n<br>Site is production; reminder emails are send";
-         log.info("Site is production; reminder emails are send");            
-         
          logMessage += notifyParticipants(cloud);
          logMessage += lessThanMin(cloud);
          logMessage += isFullyBooked(cloud);
-         if(false && isFirstDayOfNewQuarter()) {
-            // this check does not work in practice (a) people only react first time they receive this email
-            // and (b) the backoffice application at Natuurmonumenten can only handle fixed format email
+         if(isFirstDayOfNewQuarter()) {
             logMessage += checkEmailAccounts(cloud);
          }
          logMessage += groupEventConfirmationPeriodExpired(cloud);
       } else {
-         logMessage += "\n<br>Site is no production, therefore no reminder emails send";
-         log.info("Site is no production, therefore no reminder emails send");
+         logMessage += "\n<br>'" + requestUrl + "' does not match with " + liveUrls + " therefore no reminder emails send";
+         log.info("'" + requestUrl + "' does not match with " + liveUrls + " therefore no reminder emails send");
       }
 
       updateAppAttributes(cloud);

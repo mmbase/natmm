@@ -21,7 +21,7 @@ if(referrer.indexOf("paginamanagement")>-1) {
 <style>
 input { width: 100px;}
 </style>
-<script type="text/javascript">
+<script language="JavaScript1.1">
       function refreshParentFrameAndClose() {
          opener.top.bottompane.location = "<%= parentFrame %>";
          window.close();
@@ -56,21 +56,6 @@ if ((remove != null) && (remove.equals("ja"))) {
       if (rubriekHelper.isRubriekRemovable(rubriekNode)) {
          %>
          <p>Deze rubriek kan niet verwijderd worden, aangezien er nog steeds verwijzingen zijn naar pagina's en/of contentelementen.</p>
-         <%
-         NodeList contentElements = rubriekHelper.getContentElements(rubriekNode);
-         if (contentElements != null) {
-         out.println("<b>Contentelementen</b><br/>");
-            for(Iterator it = contentElements.iterator(); it.hasNext();){
-            	Node node = (Node) it.next();
-               	String objecttype = cloud.getNode(node.getNumber()).getNodeManager().getName();
-               	%>
-              	<%= node.getStringValue((new ContentHelper(cloud)).getTitleField(objecttype))%>
-              	&nbsp;(<%= objecttype %>)
-               <br/>
-               <%
-            }
-         }
-         %><br/>
          <input type="button" value="Annuleren" onclick="window.close()"/>
          <%
       } else { 

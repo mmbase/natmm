@@ -145,7 +145,6 @@
 			            	}
 			            	case 3: {
 			            		String userSelectedStreet = (String)pageContext.getAttribute("selectedStreet");
-                           if (userSelectedStreet == null) userSelectedStreet = "leeg";
 								// maybe nothing has been entered or we have only one street
 			            		if(allStreets == null || allStreets.size() == 0) {
 			            		%>
@@ -155,8 +154,8 @@
 			            		%>
 								<input type="text" name="street" value="<%= allStreets.get(0) %>" style="width:100%;border:0;" tabindex="<%= "" + ti %>"/>
 								<%
-                        } else {
-                           %>
+			            		} else {
+								%>
 			            		<select name="street" style="width:100%;border:0;" tabindex="<%= "" + ti %>">
 				            		<logic:iterate id="currentStreet" property="streets" name="MembershipForm" type="java.lang.String">
 				            			<logic:equal name="currentStreet" value="<%= userSelectedStreet %>">

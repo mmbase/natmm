@@ -1,4 +1,4 @@
-<%@include file="/taglibs.jsp" %><mm:content type="text/html" escaper="none">
+<%@include file="/taglibs.jsp" %>
 <mm:cloud jspvar="cloud">
 <%@include file="includes/templateheader.jsp" %>
 <%@include file="includes/cacheparams.jsp" %>
@@ -19,11 +19,6 @@ if(twoColumns) {
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <tr><td style="padding:10px;padding-top:18px;">
     <%@include file="includes/back_print.jsp" %>
-    
-    <div align="right">
-       <mm:node number="<%= rbLogoID %>" notfound="skipbody"><img src="<mm:image template='s(120x80)'/>" border="0" alt=""></mm:node>
-    </div>
-    
     <% 
       if(!"false".equals(request.getParameter("showteaser"))) { 
          %>
@@ -34,44 +29,27 @@ if(twoColumns) {
       String articlePath = "artikel";
       String articleOrderby = "";
       if(articleId.equals("-1")) { 
-         startnodeId = paginaID;
-         articlePath = "pagina,contentrel,artikel";
-         articleOrderby = "contentrel.pos";
+      startnodeId = paginaID;
+      articlePath = "pagina,contentrel,artikel";
+      articleOrderby = "contentrel.pos";
       }
-      %><mm:list nodes="<%= startnodeId %>"  path="<%= articlePath %>" orderby="<%= articleOrderby %>" searchdir="destination">
-          <%@include file="includes/relatedarticle.jsp"%>
-        </mm:list>
+      %><mm:list nodes="<%= startnodeId %>"  path="<%= articlePath %>" orderby="<%= articleOrderby %>"
+         ><%@include file="includes/relatedarticle.jsp" 
+      %></mm:list>
       <mm:node number="<%= paginaID %>">
          <%@include file="includes/relatedcompetencies.jsp" %>
       </mm:node>
-      <%@include file="includes/pageowner.jsp"%>
-   </td>
+      <%@include file="includes/pageowner.jsp" 
+    %></td>
 </tr>
 </table>
 </div>
 </td>
-
-
-
 <% 
 if(twoColumns) { 
    // *********************************** right bar *******************************
-   String styleClass = "white";
-   String styleClassDark = "white";
-         
-   %><td style="padding-left:10px;">
-   <div class="rightcolumn" id="rightcolumn">
-   <mm:list nodes="<%= paginaID %>" path="pagina,readmore,contentblocks" orderby="readmore.pos">
-      <mm:node element="contentblocks">
-         <%@include file="includes/contentblockdetails.jsp" %>
-      </mm:node>
-      <br/>
-   </mm:list>
-   </div>
-   </td><%
+   %><td><img src="media/spacer.gif" width="10" height="1"></td><%
 } %>
-
 <%@include file="includes/footer.jsp" %>
 </cache:cache>
 </mm:cloud>
-</mm:content>

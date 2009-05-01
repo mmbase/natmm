@@ -4,8 +4,7 @@
 	nl.leocms.util.tools.SearchUtil" %>
 <%@include file="/taglibs.jsp" %>
 <%@include file="includes/getactiveaccount.jsp" %>
-<mm:content type="text/html" escaper="none">
-<mm:cloud logon="<%= account %>" pwd="<%= password %>" jspvar="cloud" method="sessionlogon">
+<mm:cloud logon="<%= account %>" pwd="<%= password %>" jspvar="cloud">
 <%@include file="includes/templateheader.jsp" %>
 <%@include file="includes/calendar.jsp" %>
 <%@include file="includes/cacheparams.jsp" %>
@@ -33,14 +32,13 @@ if(!articleId.equals("-1")) {
 
       int objectPerPage = 9;
       int thisOffset = 1;
-      
       try{
           if(!offsetId.equals("")){
               thisOffset = Integer.parseInt(offsetId);
               offsetId ="";
           }
       } catch(Exception e) {} 
-        
+      
       String thisPool = "-1";
       if(!poolId.equals("")){ 
           thisPool = poolId; 
@@ -55,10 +53,7 @@ if(!articleId.equals("-1")) {
       int toDay = (int) period[5]; int toMonth = (int) period[6]; int toYear = (int) period[7];
       int thisYear = (int) period[10];
       int startYear = (int) period[11];
-      
-      if(toTime==0 || toTime > nowSec) { // do not show articles under embargo
-         toTime = nowSec;
-      }
+      boolean checkOnPeriod = (fromTime<toTime);
       
       String rightBarTitle = "";
       %><mm:node number="<%= paginaID %>" jspvar="thisPage">
@@ -96,7 +91,7 @@ if(!articleId.equals("-1")) {
                 net.sf.mmapps.modules.lucenesearch.SearchConfig cf = lm.getConfig();
                 hsetArticles = su.addPages(cloud,cf,qStr,0,"artikel,contentrel,pagina","",sPool,nowSec,fromTime,toTime,isArchive,hsetPages);
               } else {
-              	 hsetArticles = su.addPages(cloud, "artikel,contentrel,pagina", "", sPool, nowSec, fromTime, toTime, isArchive, hsetPages);
+              	hsetArticles = su.addPages(cloud, "artikel,contentrel,pagina", "", sPool, nowSec, fromTime, toTime, isArchive, hsetPages);
               }
               for (Iterator it = hsetArticles.iterator(); it.hasNext(); ) {
                 String article = (String) it.next();
@@ -121,7 +116,7 @@ if(!articleId.equals("-1")) {
               }
               if(listSize>0) {
                 for(int i= 0; i< listSize && i < (thisOffset-1)*objectPerPage; i++) {
-                  tmapArticles.remove(tmapArticles.lastKey());
+                  tmapArticles.remove(tmapArticles.firstKey());
                 }
                 listSize = tmapArticles.size(); 
                 for(int i= 0; i< listSize && i < objectPerPage; i++) {
@@ -182,4 +177,3 @@ if(!articleId.equals("-1")) {
 } 
 %>
 </mm:cloud>
-</mm:content>
