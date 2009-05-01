@@ -23,7 +23,7 @@
       %>
       <%@include file="selectprovider.jsp"%>
       <% // @include file="includes/eduselectcompetencetypes.jsp" %>
-      <%-- <%@include file="selectcompetencies.jsp"%> --%> 
+      <%@include file="selectcompetencies.jsp"%>
 		<br/>
       <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
       	<tr>
@@ -45,7 +45,8 @@
 </tr>
 </table>
 <%@include file="../whiteline.jsp" %>
-<script type="text/javascript">
+<script language="JavaScript" type="text/javascript">
+<%= "<!--" %>
 function MM_goToURL() { //v3.0
   var i, args=MM_goToURL.arguments; document.MM_returnValue = false;
   for (i=0; i<(args.length-1); i+=2) eval(args[i]+".location='"+args[i+1]+"'");
@@ -77,4 +78,11 @@ function postIt() {
 	document.location = href;
    return false;
 }
+<%= "//-->" %>
 </script>
+
+
+
+
+
+
