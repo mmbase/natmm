@@ -53,6 +53,10 @@
     <logger name="org.mmbase.PAGE.LOGTAG" >
         <level class="&mmlevel;" value="service" />
     </logger>
+    
+    <logger name="nl.leocms.servlets.IPFilter" >
+        <level class="&mmlevel;" value="debug" />
+    </logger>    
 
    <!-- SQL logging -->
 <!--  
