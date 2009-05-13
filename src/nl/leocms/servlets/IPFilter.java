@@ -1,20 +1,15 @@
 package nl.leocms.servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import nl.leocms.applications.NatMMConfig;
 
+import org.apache.commons.lang.StringUtils;
 import org.mmbase.util.logging.Logger;
 import org.mmbase.util.logging.Logging;
 
@@ -25,13 +20,12 @@ import org.mmbase.util.logging.Logging;
  * @author Jurn de Ruijter
  */
 public class IPFilter implements Filter {
-
-   private FilterConfig config;
    
    private List allowedIPList; 
    private boolean IPFilterEnabled;
-   
-   private static Logger log;
+
+   /** MMbase logging system */
+   private static final Logger log = Logging.getLoggerInstance(IPFilter.class.getName());
 
    /**
     * The initialisation method of the filter, called on startup.
@@ -40,18 +34,20 @@ public class IPFilter implements Filter {
     * @throws ServletException thrown when an exception occurs in the web.xml
     */
    public void init(FilterConfig filterConfig) throws ServletException {
-      this.config = filterConfig;
       this.allowedIPList = new ArrayList();
       this.IPFilterEnabled = NatMMConfig.isIPFilterEnabled();
       
       String allowedIPProperty = NatMMConfig.getAllowedIP();
-      StringTokenizer token = new StringTokenizer(allowedIPProperty, ",");
-
-      while (token.hasMoreTokens()) {
-         allowedIPList.add(token.nextToken());
-      }      
-
-      log = Logging.getLoggerInstance(IPFilter.class.getName());
+      if (StringUtils.isNotBlank(allowedIPProperty)) {
+         StringTokenizer token = new StringTokenizer(allowedIPProperty, ",");
+   
+         while (token.hasMoreTokens()) {
+            allowedIPList.add(token.nextToken().trim());
+         }      
+      }
+      else {
+         log.error("IPFilter will deny ALL addresses");
+      }
       log.debug("IPFilter initialized");
    }
 
@@ -72,22 +68,39 @@ public class IPFilter implements Filter {
          log.debug("Ip filtering disabled.");
          chain.doFilter(request, response);
          
-      } else {     
-         String ip = request.getRemoteAddr();
-         log.debug("Incoming ip, ip = " + ip);
+      } else {
+         List ips = new ArrayList();
+         ips.add(request.getRemoteAddr());
          
-         HttpServletResponse httpResp = null;
-         
-         if (response instanceof HttpServletResponse) {
-            httpResp = (HttpServletResponse) response;         
+         String ip = ((HttpServletRequest) request).getHeader("X-Forwarded-For");
+         if (StringUtils.isBlank(ip)) {
+            // not behind a proxy or mod_proxy
+            log.debug("Incoming ip, remote address = " + request.getRemoteAddr());
+         }
+         else {
+            log.debug("Incoming ip, remote address = " + request.getRemoteAddr() + " X-Forwarded-For =" + ip);
+            StringTokenizer token = new StringTokenizer(ip, ",");
+            while(token.hasMoreTokens()) {
+               ips.add(token.nextToken().trim());
+            }
          }
    
-         if (allowedIPList.contains(ip)) {
-            log.debug("Ip " + ip + " allowed.");
-            chain.doFilter(request, response);
-         } else {
-            log.debug("Ip " + ip + " not allowed.");
+         for (Iterator iterator = ips.iterator(); iterator.hasNext();) {
+            String addr = (String) iterator.next();
+            if (allowedIPList.contains(addr)) {
+               log.debug("Ip " + addr + " allowed.");
+               chain.doFilter(request, response);
+               return;
+            }
+         }
+      
+         log.debug("Ip " + ips.toArray() + " not allowed.");
+         if (response instanceof HttpServletResponse) {
+            HttpServletResponse httpResp = (HttpServletResponse) response;         
             httpResp.sendError(HttpServletResponse.SC_FORBIDDEN, "That means goodbye forever!");
+         }
+         else {
+            response.getWriter().write("FORBIDDEN: That means goodbye forever!");
          }
       }
    }
@@ -100,6 +113,5 @@ public class IPFilter implements Filter {
        * called before the Filter instance is removed from service by the web
        * container
        */
-      config = null;
    } 
 }
