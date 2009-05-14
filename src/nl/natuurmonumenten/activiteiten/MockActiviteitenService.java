@@ -25,6 +25,11 @@ public class MockActiviteitenService implements IActiviteitenService {
         return null;
     }
 
+    public ExtraInfo[] getExtraInfo() {
+       // TODO Auto-generated method stub
+       return null;
+   }    
+    
     public Natuurgebied[] getNatuurgebieden() {
         // TODO Auto-generated method stub
         return null;
