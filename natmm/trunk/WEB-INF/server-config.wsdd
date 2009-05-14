@@ -36,10 +36,11 @@
     <documentation>Deze webservice stelt de eventen van de Centrale Activiteiten Database (CAD) van Natuurmonumenten Nederland ter beschikking.</documentation>
     <parameter name="className" value="nl.natuurmonumenten.activiteiten.ActiviteitenService" />
     <!--  Geef hier de methoden die als webservice beschikbaar moeten worden gesteld (of * voor allen) -->
-    <parameter name="allowedMethods" value="getVersion getProvincies getEventTypes getMediaTypes getDeelnemersCategorieen getNatuurgebieden getEvents getEventDetails getVertrekpunten subscribeEvent" />
+    <parameter name="allowedMethods" value="getVersion getProvincies getEventTypes getMediaTypes getExtraInfo getDeelnemersCategorieen getNatuurgebieden getEvents getEventDetails getVertrekpunten subscribeEvent" />
     <beanMapping qname="myNS:Provincie" xmlns:myNS="urn:cad.natuurmonumenten.nl" languageSpecificType="java:nl.natuurmonumenten.activiteiten.Provincie"/>
     <beanMapping qname="myNS:EventType" xmlns:myNS="urn:cad.natuurmonumenten.nl" languageSpecificType="java:nl.natuurmonumenten.activiteiten.EventType"/>
     <beanMapping qname="myNS:MediaType" xmlns:myNS="urn:cad.natuurmonumenten.nl" languageSpecificType="java:nl.natuurmonumenten.activiteiten.MediaType"/>
+    <beanMapping qname="myNS:ExtraInfo" xmlns:myNS="urn:cad.natuurmonumenten.nl" languageSpecificType="java:nl.natuurmonumenten.activiteiten.ExtraInfo"/>
     <beanMapping qname="myNS:DeelnemersCategorie" xmlns:myNS="urn:cad.natuurmonumenten.nl" languageSpecificType="java:nl.natuurmonumenten.activiteiten.DeelnemersCategorie"/>
     <beanMapping qname="myNS:Natuurgebied" xmlns:myNS="urn:cad.natuurmonumenten.nl" languageSpecificType="java:nl.natuurmonumenten.activiteiten.Natuurgebied"/>
     <beanMapping qname="myNS:Event" xmlns:myNS="urn:cad.natuurmonumenten.nl" languageSpecificType="java:nl.natuurmonumenten.activiteiten.Event"/>

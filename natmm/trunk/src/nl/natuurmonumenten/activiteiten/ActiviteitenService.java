@@ -136,6 +136,26 @@ public class ActiviteitenService implements IActiviteitenService {
     /*
      * (non-Javadoc)
      * 
+     * @see
+     * nl.natuurmonumenten.activiteiten.ActiviteitenServiceInterf#getExtraInfo
+     * ()
+     */
+    public ExtraInfo[] getExtraInfo() {
+        logger.debug("getExtraInfo");
+        Cloud cloud = CloudProviderFactory.getCloudProvider().getCloud();
+        NodeManager manager = cloud.getNodeManager("extra_info");
+        NodeList list = manager.getList(null, null, null);
+        List beans = new ArrayList();
+        for (NodeIterator iter = list.nodeIterator(); iter.hasNext();) {
+            Node node = iter.nextNode();
+            beans.add(beanFactory.createExtraInfo(node));
+        }
+        return (ExtraInfo[]) beans.toArray(new ExtraInfo[beans.size()]);
+    }    
+    
+    /*
+     * (non-Javadoc)
+     * 
      * @seenl.natuurmonumenten.activiteiten.ActiviteitenServiceInterf#
      * getDeelnemersCategorieen()
      */

@@ -20,6 +20,8 @@ public interface IActiviteitenService {
 
     public abstract MediaType[] getMediaTypes();
 
+    public abstract ExtraInfo[] getExtraInfo();
+    
     public abstract DeelnemersCategorie[] getDeelnemersCategorieen();
 
     public abstract Natuurgebied[] getNatuurgebieden();

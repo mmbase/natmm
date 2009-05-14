@@ -59,6 +59,16 @@ class BeanFactory {
         return bean;
     }
 
+    public ExtraInfo createExtraInfo(Node node) {
+       ExtraInfo bean = new ExtraInfo();
+       bean.setId(node.getStringValue("number"));
+       String omschrijving = node.getStringValue("omschrijving");
+       if (!isEmpty(omschrijving)) {
+           bean.setOmschrijving(omschrijving);
+       }
+       return bean;
+   }    
+    
     public DeelnemersCategorie createDeelnemersCategorie(Node node) {
         DeelnemersCategorie bean = new DeelnemersCategorie();
         bean.setId(node.getStringValue("number"));
@@ -150,6 +160,7 @@ class BeanFactory {
             bean.setVolledigeOmschrijving(tekst);
         }
         
+        bean.setTypeAanmeldMogelijkheid(node.getStringValue("aanmelden_vooraf"));
         bean.setAanvangstijd(toDate(node.getLongValue("begindatum")));
         bean.setEindtijd(toDate(node.getLongValue("einddatum")));
         NodeList eventTypeNodeList = node.getRelatedNodes("evenement_type");
