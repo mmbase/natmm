@@ -42,7 +42,9 @@ public class IPFilter implements Filter {
          StringTokenizer token = new StringTokenizer(allowedIPProperty, ",");
    
          while (token.hasMoreTokens()) {
-            allowedIPList.add(token.nextToken().trim());
+            String nextIp = token.nextToken().trim();
+            allowedIPList.add(nextIp);
+            log.debug("Allowed ip = " + nextIp);
          }      
       }
       else {
@@ -94,7 +96,7 @@ public class IPFilter implements Filter {
             }
          }
       
-         log.debug("Ip " + ips.toArray() + " not allowed.");
+         log.debug("Ip " + ips.toString() + " not allowed.");
          if (response instanceof HttpServletResponse) {
             HttpServletResponse httpResp = (HttpServletResponse) response;         
             httpResp.sendError(HttpServletResponse.SC_FORBIDDEN, "That means goodbye forever!");
