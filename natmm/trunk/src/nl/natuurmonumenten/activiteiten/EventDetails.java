@@ -23,6 +23,8 @@ public class EventDetails implements Serializable {
     private boolean eenmaligEvent;
     // detail gegevens per child event
     private EventData[] eventData;
+    private String wanneer;
+    
     public String getId() {
         return id;
     }
@@ -119,4 +121,10 @@ public class EventDetails implements Serializable {
     public boolean isEenmaligEvent() {
         return eenmaligEvent;
     }
+   public String getWanneer() {
+      return wanneer;
+   }
+   public void setWanneer(String wanneer) {
+      this.wanneer = wanneer;
+   }
 }

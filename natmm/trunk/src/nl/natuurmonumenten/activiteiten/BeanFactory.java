@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import nl.leocms.util.DoubleDateNode;
+
 import org.apache.log4j.Logger;
 import org.mmbase.bridge.Cloud;
 import org.mmbase.bridge.Node;
@@ -208,6 +210,18 @@ class BeanFactory {
             bean.setEenmaligEvent(false);
         }
         bean.setEventData((EventData[])data.toArray(new EventData[data.size()]));
+
+        String dagomschrijving = node.getStringValue("dagomschrijving");
+        DoubleDateNode ddn = new DoubleDateNode(node);
+        StringBuffer sbWanneer = new StringBuffer();
+        sbWanneer.append(ddn.getReadableDate(", "));
+        
+        if (!"".equals(dagomschrijving)) {
+           sbWanneer.append(" op " + dagomschrijving);
+        }
+        sbWanneer.append(" om " + ddn.getReadableTime());
+        bean.setWanneer(sbWanneer.toString());
+        
         return bean;
     }
     
