@@ -12,6 +12,8 @@ public class EventData implements Serializable {
     private boolean volgeboekt;
     private boolean aanmeldingGesloten;
     private boolean geannuleerd;
+    private String wanneer;
+    
     public String getId() {
         return id;
     }
@@ -54,5 +56,10 @@ public class EventData implements Serializable {
     public void setGeannuleerd(boolean geannuleerd) {
         this.geannuleerd = geannuleerd;
     }
-    
+    public String getWanneer() {
+       return wanneer;
+    }
+    public void setWanneer(String wanneer) {
+       this.wanneer = wanneer;
+    }    
 }

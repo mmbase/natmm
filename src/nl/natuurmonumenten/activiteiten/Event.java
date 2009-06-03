@@ -12,6 +12,7 @@ public class Event implements Serializable {
     private boolean aanmeldingGesloten;
     private Date aanvangstijd;
     private Date eindtijd;
+    private String wanneer;    
 
     public String getId() {
         return id;
@@ -76,4 +77,10 @@ public class Event implements Serializable {
     public Date getEindtijd() {
         return eindtijd;
     }
+    public String getWanneer() {
+       return wanneer;
+    }
+    public void setWanneer(String wanneer) {
+       this.wanneer = wanneer;
+    }    
 }

@@ -137,6 +137,18 @@ class BeanFactory {
         boolean aanmeldingGesloten = nl.leocms.evenementen.Evenement.subscriptionClosed(parentEvent, node);
         bean.setVolgeboekt(volgeboekt);
         bean.setAanmeldingGesloten(aanmeldingGesloten);
+        
+        String dagomschrijving = node.getStringValue("dagomschrijving");
+        DoubleDateNode ddn = new DoubleDateNode(node);
+        StringBuffer sbWanneer = new StringBuffer();
+        sbWanneer.append(ddn.getReadableDate(", "));
+        
+        if (!"".equals(dagomschrijving)) {
+           sbWanneer.append(" op " + dagomschrijving);
+        }
+        sbWanneer.append(" om " + ddn.getReadableTime());
+        bean.setWanneer(sbWanneer.toString());        
+        
         return bean;
     }
     
@@ -239,6 +251,18 @@ class BeanFactory {
         bean.setEindtijd(toDate(childNode.getLongValue("einddatum")));
         boolean canceled = childNode.getBooleanValue("iscanceled");
         bean.setGeannuleerd(canceled);
+
+        String dagomschrijving = childNode.getStringValue("dagomschrijving");
+        DoubleDateNode ddn = new DoubleDateNode(childNode);
+        StringBuffer sbWanneer = new StringBuffer();
+        sbWanneer.append(ddn.getReadableDate(", "));
+        
+        if (!"".equals(dagomschrijving)) {
+           sbWanneer.append(" op " + dagomschrijving);
+        }
+        sbWanneer.append(" om " + ddn.getReadableTime());
+        bean.setWanneer(sbWanneer.toString());        
+        
         return bean;
     }
     
