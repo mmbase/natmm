@@ -213,27 +213,17 @@ class BeanFactory {
             EventData eventData = createEventData(node, node);
             data.add(eventData);
         } else {
+            EventData eventData = createEventData(node, node);
+            data.add(eventData);
             for (Iterator iter = childEvents.iterator(); iter.hasNext();) {
                 String childNumber = (String) iter.next();
                 Node childNode = cloud.getNode(childNumber); 
-                EventData eventData = createEventData(node, childNode);
+                eventData = createEventData(node, childNode);
                 data.add(eventData);
             }
             bean.setEenmaligEvent(false);
         }
-        bean.setEventData((EventData[])data.toArray(new EventData[data.size()]));
-
-        String dagomschrijving = node.getStringValue("dagomschrijving");
-        DoubleDateNode ddn = new DoubleDateNode(node);
-        StringBuffer sbWanneer = new StringBuffer();
-        sbWanneer.append(ddn.getReadableDate(", "));
-        
-        if (!"".equals(dagomschrijving)) {
-           sbWanneer.append(" op " + dagomschrijving);
-        }
-        sbWanneer.append(" om " + ddn.getReadableTime());
-        bean.setWanneer(sbWanneer.toString());
-        
+        bean.setEventData((EventData[])data.toArray(new EventData[data.size()]));       
         return bean;
     }
     
