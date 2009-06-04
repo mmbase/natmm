@@ -274,7 +274,7 @@ for (int i=0; i < results.size(); i++) {
 //		 	 String sUrlView = "<a href=\"" + nl.leocms.applications.NMIntraConfig.getSCorporateWebsite() + "?vacature=" + item.getIntValue("number") 
 //          + "&preview=on\" title=\"" + sViewTitle + "\"><img src='"+pathPrefix+"/img/preview.gif' border='0' alt='" + sViewTitle + "'/></a>";
 //			 addField(obj, "", sUrlView, "string");
-		 }
+//		 }
     }
 
     if (listConfig.multilevel) {
