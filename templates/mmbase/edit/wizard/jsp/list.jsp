@@ -269,11 +269,11 @@ for (int i=0; i < results.size(); i++) {
          + "\"><img src='"+pathPrefix+"/img/new.gif' border='0' alt='" + sPublishTitle + "'/></a>";
          addField(obj, "", sUrlPublish, "string");
        }
-		 if (lPublishDate<nowSec){
-          String sViewTitle = "Klik hier om deze vacature op de landelijke website te bekijken.";
-		 	 String sUrlView = "<a href=\"" + nl.leocms.applications.NMIntraConfig.getSCorporateWebsite() + "vacatures.jsp?p=vacatures&v=" + item.getIntValue("number") 
-               + "&preview=on\" title=\"" + sViewTitle + "\"><img src='"+pathPrefix+"/img/preview.gif' border='0' alt='" + sViewTitle + "'/></a>";
-			 addField(obj, "", sUrlView, "string");
+//		 if (lPublishDate<nowSec){
+//        String sViewTitle = "Klik hier om deze vacature op de landelijke website te bekijken.";
+//		 	 String sUrlView = "<a href=\"" + nl.leocms.applications.NMIntraConfig.getSCorporateWebsite() + "?vacature=" + item.getIntValue("number") 
+//          + "&preview=on\" title=\"" + sViewTitle + "\"><img src='"+pathPrefix+"/img/preview.gif' border='0' alt='" + sViewTitle + "'/></a>";
+//			 addField(obj, "", sUrlView, "string");
 		 }
     }
 
