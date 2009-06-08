@@ -4,12 +4,8 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForm;
-import org.mmbase.bridge.Cloud;
-import org.mmbase.bridge.Node;
 import org.mmbase.util.logging.Logging;
 import org.mmbase.util.logging.Logger;
-
-import com.finalist.mmbase.util.CloudFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

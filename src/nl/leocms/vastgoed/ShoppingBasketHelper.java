@@ -1,7 +1,6 @@
 package nl.leocms.vastgoed;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 
 public class ShoppingBasketHelper {
    
