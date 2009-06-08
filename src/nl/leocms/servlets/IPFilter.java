@@ -28,7 +28,7 @@ public class IPFilter implements Filter {
    private static final Logger log = Logging.getLoggerInstance(IPFilter.class.getName());
 
    /**
-    * The initialisation method of the filter, called on startup.
+    * The initialization method of the filter, called on startup.
     * 
     * @param config object containing init parameters specified
     * @throws ServletException thrown when an exception occurs in the web.xml
@@ -48,7 +48,7 @@ public class IPFilter implements Filter {
          }      
       }
       else {
-         log.error("IPFilter will deny ALL addresses");
+         log.info("IPFilter on /services/ will deny ALL addresses");
       }
       log.debug("IPFilter initialized");
    }
