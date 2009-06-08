@@ -20,9 +20,6 @@
  */
 package nl.leocms.emailservice;
 
-import org.mmbase.util.logging.Logging;
-import org.mmbase.util.logging.Logger;
-
 import org.mmbase.bridge.Cloud;
 import org.mmbase.bridge.Node;
 
@@ -34,9 +31,6 @@ import com.finalist.mmbase.util.CloudFactory;
  * 
  */
 public class EmailServiceUtil {
-
-   /** Logger instance. */
-   private static Logger log = Logging.getLoggerInstance(EmailServiceUtil.class.getName());
 
    /**
     * Removes the maillijst item

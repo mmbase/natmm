@@ -1,7 +1,5 @@
 package nl.leocms.vastgoed;
 
-import nl.leocms.util.DoubleDateNode;
-
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -16,7 +14,6 @@ import org.mmbase.bridge.Relation;
 import org.mmbase.util.logging.Logging;
 import org.mmbase.util.logging.Logger;
 
-import com.finalist.mmbase.util.CloudFactory;
 import nl.leocms.applications.NMIntraConfig;
 
 import java.util.ArrayList;

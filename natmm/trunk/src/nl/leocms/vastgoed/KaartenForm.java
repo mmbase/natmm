@@ -1,8 +1,6 @@
 package nl.leocms.vastgoed;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -11,8 +9,6 @@ import java.util.TreeMap;
 import org.apache.struts.action.ActionForm;
 import org.mmbase.util.logging.Logging;
 import org.mmbase.util.logging.Logger;
-
-import com.sun.xml.bind.RIElement;
 
 /**
  * @author
@@ -62,7 +58,6 @@ public class KaartenForm extends ActionForm{
       //
       resetMaps();
    }
-   
    
    
    //this is to use private values to set booleans in maps. making ready for jsp

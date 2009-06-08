@@ -46,12 +46,8 @@ import nl.leocms.util.PaginaHelper;
 import org.apache.axis.client.Service;
 import org.apache.axis.client.Call;
 import org.apache.axis.Constants;
-import javax.mail.MessagingException;
 import javax.xml.rpc.ParameterMode;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.net.ConnectException;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 
 /**
