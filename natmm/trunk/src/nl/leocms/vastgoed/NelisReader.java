@@ -21,7 +21,7 @@ import nl.leocms.util.ApplicationHelper;
 public class NelisReader
 { 
     // ASSUMES A 2 COLUMN FORMAT (EENHEID/GEBIED)
-    // seperator and nelis file are configured in readData() method
+    // Separator and nelis file are configured in readData() method
     private Map natGebMap;
     private Map gebiedMap;
     private long timeStamp;
@@ -57,7 +57,7 @@ public Map getGebiedMap() {
     return copyMaps(gebiedMap);
 }
 
-// For proper multi-user behaviour, we copy references of objects inside these Map of Maps
+// For proper multi-user behavior, we copy references of objects inside these Map of Maps
 private Map copyMaps(Map map) {
     Map copyMap = new TreeMap();
     
@@ -78,7 +78,7 @@ private Map copyMaps(Map map) {
     return copyMap;
 }
 
-// procides access to the list of eenheids to beused directly in forms
+// procides access to the list of eenheids to be used directly in forms
 public Set getEenheidList() {
     // calling map getter for a refresh
     Map temp = getNatGebMap();
@@ -92,11 +92,11 @@ public Set getEenheidList() {
     return copySet;
  }
 
-//procides access to the list of eenheids to be used directly in forms
+//Provides access to the list of eenheids to be used directly in forms
 public Set getEenheidListWithDepartments() {
     // calling map getter for a refresh
     Set temp = getEenheidList();
-    // Centraal kanttor and Regio kanttors are also requested to appear on the list
+    // Centraal kantoor and Regio kantoren are also requested to appear on the list
     temp.add("Centraal kantoor");
     Map regios = (Map) gebiedMap.get("Regio");
     Iterator mapIterator = regios.keySet().iterator();
@@ -160,26 +160,27 @@ public void readData() {
                  
      // Provincies & regios are constant and hardcoded unlike other values that come from Nelis file.  
     Map dummy = new TreeMap();
-    dummy.put("Groningen", new Boolean(false));
-    dummy.put("Friesland", new Boolean(false));
-    dummy.put("Drenthe", new Boolean(false));
-    dummy.put("Overijssel", new Boolean(false));
-    dummy.put("Flevoland", new Boolean(false));
-    dummy.put("Gelderland", new Boolean(false));
-    dummy.put("Utrecht", new Boolean(false));
-    dummy.put("Noord-Holland", new Boolean(false));
-    dummy.put("Zuid-Holland", new Boolean(false));
-    dummy.put("Zeeland", new Boolean(false));
-    dummy.put("Noord-Brabant", new Boolean(false));
+    dummy.put("Groningen", Boolean.valueOf(false));
+    dummy.put("Friesland", Boolean.valueOf(false));
+    dummy.put("Drenthe", Boolean.valueOf(false));
+    dummy.put("Overijssel", Boolean.valueOf(false));
+    dummy.put("Flevoland", Boolean.valueOf(false));
+    dummy.put("Gelderland", Boolean.valueOf(false));
+    dummy.put("Utrecht", Boolean.valueOf(false));
+    dummy.put("Noord-Holland", Boolean.valueOf(false));
+    dummy.put("Zuid-Holland", Boolean.valueOf(false));
+    dummy.put("Zeeland", Boolean.valueOf(false));
+    dummy.put("Noord-Brabant", Boolean.valueOf(false));
+    dummy.put("Limburg", Boolean.valueOf(false));
     gebiedMap.put("Provincie", dummy);   
     
     dummy = new TreeMap();
-    dummy.put("Gelderland", new Boolean(false));
-    dummy.put("Groningen, Friesland en Drenthe", new Boolean(false));
-    dummy.put("Noord-Brabant en Limburg", new Boolean(false));
-    dummy.put("Noord-Holland en Utrecht", new Boolean(false));
-    dummy.put("Overijssel en Flevoland", new Boolean(false));
-    dummy.put("Zuid-Holland en Zeeland", new Boolean(false));
+    dummy.put("Gelderland", Boolean.valueOf(false));
+    dummy.put("Groningen, Friesland en Drenthe", Boolean.valueOf(false));
+    dummy.put("Noord-Brabant en Limburg", Boolean.valueOf(false));
+    dummy.put("Noord-Holland en Utrecht", Boolean.valueOf(false));
+    dummy.put("Overijssel en Flevoland", Boolean.valueOf(false));
+    dummy.put("Zuid-Holland en Zeeland", Boolean.valueOf(false));
     gebiedMap.put("Regio", dummy);
 }
 
@@ -193,11 +194,11 @@ private void insertKeyToSubMap(Map topMap, String topKey, String subKey) {
     Map subMap = (Map) topMap.get(topKey);
     if (subMap == null) {
         TreeMap temp = new TreeMap();
-        temp.put(subKey, new Boolean(false));
+        temp.put(subKey, Boolean.valueOf(false));
         topMap.put(topKey, temp);
         
     } else {
-        subMap.put(subKey, new Boolean(false));
+        subMap.put(subKey, Boolean.valueOf(false));
     }
     
 }
