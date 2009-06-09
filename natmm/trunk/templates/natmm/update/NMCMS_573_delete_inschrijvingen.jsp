@@ -11,7 +11,9 @@
       
       <mm:listnodes path="inschrijvingen" constraints="inschrijvingen.datum_inschrijving < 1199190481">
       
-         <p><mm:field name="number"/></p>
+         <mm:field name="number" jspvar="inschrijfNumber" vartype="String" write="false">
+         <% System.out.print("Inschrijving verwijderd: " + inschrijfNumber); %>
+         </mm:field>
          
          <mm:relatednodes path="email">
             <mm:deletenode deleterelations="true"/> 
