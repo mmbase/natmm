@@ -55,7 +55,7 @@
     </logger>
     
     <logger name="nl.leocms.servlets.IPFilter" >
-        <level class="&mmlevel;" value="debug" />
+        <level class="&mmlevel;" value="info" />
     </logger>    
 
    <!-- SQL logging -->
