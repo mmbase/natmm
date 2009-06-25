@@ -44,8 +44,8 @@ public class IPFilter implements Filter {
          while (token.hasMoreTokens()) {
             String nextIp = token.nextToken().trim();
             allowedIPList.add(nextIp);
-            log.debug("Allowed ip = " + nextIp);
-         }      
+            log.info("Allowed ip = " + nextIp + ".");
+         }
       }
       else {
          log.info("IPFilter on /services/ will deny ALL addresses");
