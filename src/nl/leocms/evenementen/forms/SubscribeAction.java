@@ -547,7 +547,7 @@ public class SubscribeAction extends Action {
             log.debug(confirmUrl);
             Node emailNode = cloud.getNodeManager("email").createNode();
 
-            // set mail reciever
+            // set mail receiver
             if(confirmUrl.equals("confirmation-period-expired")) {
                emailNode.setValue("to", toEmailAddress + "," + NatMMConfig.getFromCADAddress());
             } else {
@@ -600,18 +600,17 @@ public class SubscribeAction extends Action {
       Node thisParent = null;
       Node thisParticipant = null;
       NodeList thisNodeList = thisSubscription.getRelatedNodes("evenement");
+      
       if(thisNodeList.size()>0) {
          thisEvent = thisNodeList.getNode(0);
-      }
-      thisParent = cloud.getNode(Evenement.findParentNumber(thisEvent.getStringValue("number")));
-      if(thisNodeList.size()>0) {
+         thisParent = cloud.getNode(Evenement.findParentNumber(thisEvent.getStringValue("number")));
          thisParticipant = thisNodeList.getNode(0);
       }
       thisNodeList = thisSubscription.getRelatedNodes("deelnemers");
       if(thisNodeList.size()>0) {
          thisParticipant = thisNodeList.getNode(0);
       }
-      if(thisEvent!=null&&thisParent!=null&&thisParticipant!=null) {
+      if(thisParent != null && thisParticipant != null) {
          sendConfirmEmail(cloud, thisEvent, thisParent, thisSubscription, thisParticipant, confirmUrl, "");
       } else {
          log.info("Could not send confirmation email for subscription " + subscriptionNumber);
