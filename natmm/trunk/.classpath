@@ -20,10 +20,26 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/lucene-core-1.9-final.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/lucene-misc-1.9-final.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/lucenemodule-1.7.9.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/mmbase-crontab.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/mmbase-email.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/mmbase-functions.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/mmbase-mmbob.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/mmbase-crontab.jar">
+      <attributes>
+         <attribute name="javadoc_location" value="http://www.mmbase.org/development/api/1.7/"/>
+      </attributes>
+   </classpathentry>
+	<classpathentry kind="lib" path="WEB-INF/lib/mmbase-email.jar">
+      <attributes>
+         <attribute name="javadoc_location" value="http://www.mmbase.org/development/api/1.7/"/>
+      </attributes>
+   </classpathentry>
+	<classpathentry kind="lib" path="WEB-INF/lib/mmbase-functions.jar">
+         <attributes>
+         <attribute name="javadoc_location" value="http://www.mmbase.org/development/api/1.7/"/>
+      </attributes>
+   </classpathentry>
+	<classpathentry kind="lib" path="WEB-INF/lib/mmbase-mmbob.jar">
+         <attributes>
+         <attribute name="javadoc_location" value="http://www.mmbase.org/development/api/1.7/"/>
+      </attributes>
+   </classpathentry>
 	<classpathentry kind="lib" path="WEB-INF/lib/mmbase-thememanager.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/mysql-connector-java-5.0.5-bin.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/namespace.jar"/>
@@ -40,12 +56,32 @@
 	<classpathentry kind="lib" path="C:/projects/subversion/natmm/mmbase/mmbase-20060716/mmbase-webapp/WEB-INF/lib/jai_core.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/log4j-1.2.8.jar"/>
 	<classpathentry kind="lib" path="addlib/mail.jar"/>
-	<classpathentry kind="lib" path="addlib/mmbase.jar"/>
-	<classpathentry kind="lib" path="C:/projects/subversion/natmm/mmbase/mmbase-20060716/mmbase-webapp/WEB-INF/lib/mmbase-community.jar"/>
-	<classpathentry kind="lib" path="C:/projects/subversion/natmm/mmbase/mmbase-20060716/mmbase-webapp/WEB-INF/lib/mmbase-dove.jar"/>
-	<classpathentry kind="lib" path="addlib/mmbase-editwizard.jar"/>
+	<classpathentry kind="lib" path="addlib/mmbase.jar">
+      <attributes>
+         <attribute name="javadoc_location" value="http://www.mmbase.org/development/api/1.7/"/>
+      </attributes>
+   </classpathentry>
+	<classpathentry kind="lib" path="C:/projects/subversion/natmm/mmbase/mmbase-20060716/mmbase-webapp/WEB-INF/lib/mmbase-community.jar">
+      <attributes>
+         <attribute name="javadoc_location" value="http://www.mmbase.org/development/api/1.7/"/>
+      </attributes>
+   </classpathentry>
+	<classpathentry kind="lib" path="C:/projects/subversion/natmm/mmbase/mmbase-20060716/mmbase-webapp/WEB-INF/lib/mmbase-dove.jar">
+         <attributes>
+         <attribute name="javadoc_location" value="http://www.mmbase.org/development/api/1.7/"/>
+      </attributes>
+   </classpathentry>
+	<classpathentry kind="lib" path="addlib/mmbase-editwizard.jar">
+         <attributes>
+         <attribute name="javadoc_location" value="http://www.mmbase.org/development/api/1.7/"/>
+      </attributes>
+   </classpathentry>
 	<classpathentry kind="lib" path="C:/projects/subversion/natmm/mmbase/mmbase-20060716/mmbase-webapp/WEB-INF/lib/mmbase-rmmci-server.jar"/>
-	<classpathentry kind="lib" path="C:/projects/subversion/natmm/mmbase/mmbase-20060716/mmbase-webapp/WEB-INF/lib/mmbase-taglib.jar"/>
+	<classpathentry kind="lib" path="C:/projects/subversion/natmm/mmbase/mmbase-20060716/mmbase-webapp/WEB-INF/lib/mmbase-taglib.jar">
+         <attributes>
+         <attribute name="javadoc_location" value="http://www.mmbase.org/development/api/1.7/"/>
+      </attributes>
+   </classpathentry>
 	<classpathentry kind="lib" path="C:/projects/subversion/natmm/mmbase/mmbase-20060716/mmbase-webapp/WEB-INF/lib/mmbase-xmlimporter.jar"/>
 	<classpathentry kind="lib" path="addlib/servlet.jar"/>
 	<classpathentry kind="lib" path="addlib/jaxrpc.jar"/>
