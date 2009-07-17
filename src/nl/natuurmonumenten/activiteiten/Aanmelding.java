@@ -3,8 +3,11 @@ package nl.natuurmonumenten.activiteiten;
 import java.io.Serializable;
 
 public class Aanmelding implements Serializable {
+   
     private String deelnemersCategorieId;
+    
     private int aantal;
+    
     public String getDeelnemersCategorieId() {
         return deelnemersCategorieId;
     }
