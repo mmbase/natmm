@@ -21,6 +21,7 @@ import org.mmbase.bridge.RelationList;
 
 public class ActiviteitenHelper {
     private static Logger logger = Logger.getLogger(ActiviteitenHelper.class);
+    public static int MAX_GETEVENTSIZE = 500;
     
     public static Set findParentEvents(Cloud cloud, Date start, Date eind, String[] eventTypeIds, String provincieId, String natuurgebiedenId) {
         // Deze code komt uit searchresults.jsp, omdat ik er geen touw aan vast kan knopen heb ik geprobeerd deze letterlijk over te zetten vanuit de jsp code
@@ -49,15 +50,20 @@ public class ActiviteitenHelper {
         }
         return parentEvents;
     }
+    
     public static Set getChildEvents(Cloud cloud, String parentNumber) {
         HashSet childEvents = new HashSet();
-        NodeList childList = cloud.getList(parentNumber, "evenement1,partrel,evenement", "evenement.number", "evenement.isoninternet='true' and evenement.soort='child'", null, null, "destination", true);
+        NodeList childList = cloud.getList(parentNumber, "evenement1,partrel,evenement", 
+              "evenement.number", "evenement.isoninternet='true' and evenement.soort='child'", 
+              null, null, "destination", true);
+        
         for (NodeIterator iter = childList.nodeIterator(); iter.hasNext();) {
             Node event = iter.nextNode();
             childEvents.add(event.getStringValue("evenement.number"));
         }
         return childEvents;
     }
+    
     public static Map getChildEvents(Cloud cloud, long lDateSearchFrom, long lDateSearchTill, Set parentEvents) {
         logger.debug("parentEvents: " + parentEvents);
         StringBuffer sb = new StringBuffer();
@@ -134,7 +140,7 @@ public class ActiviteitenHelper {
     
     /* Overgenomen uit SubscribeForm. Aangepast aan de webservice omgeving, o.a. het versturen van emails verwijderd.
      */  
-    public static Node createParticipant(Cloud cloud, Node thisEvent, Node thisSubscription, String thisCategory, int thisNumber, Subscription subscription) {
+    public static Node createParticipant(Cloud cloud, Node event, Node thisSubscription, String category, int number, Subscription subscription) {
 
         Node thisParticipant = null;
         thisParticipant = cloud.getNodeManager("deelnemers").createNode();
@@ -153,20 +159,18 @@ public class ActiviteitenHelper {
         thisParticipant.setStringValue("lidnummer", subscription.getLidnummer());
         thisParticipant.commit();
 
-        Relation thisRel = null;
-        if(thisRel==null) {
-           thisRel = thisSubscription.createRelation(thisParticipant,cloud.getRelationManager("posrel"));
-        }
+        Relation thisRel = thisSubscription.createRelation(thisParticipant,cloud.getRelationManager("posrel"));
 
         // set the price for this participant
         int costs = 9999;
-        String sParent = Evenement.findParentNumber(thisEvent.getStringValue("number"));
+        String sParent = Evenement.findParentNumber(event);
         if(!Evenement.isGroupBooking(cloud,thisParticipant.getStringValue("number"))) {
            // this is a regular excursion
            NodeList dcl = cloud.getList( sParent
                                          ,"evenement,posrel,deelnemers_categorie"
                                          ,"posrel.pos"
-                                         ,"deelnemers_categorie.number='"+ thisCategory+ "'",null,null,null,false);
+                                         ,"deelnemers_categorie.number='"+ category+ "'",null,null,null,false);
+           //"destination"
            if(dcl.size()>0) {
               costs = dcl.getNode(0).getIntValue("posrel.pos");
               logger.debug("costs1: " + costs);
@@ -177,7 +181,7 @@ public class ActiviteitenHelper {
               }
               logger.debug("costs2: " + costs);
            }
-           costs = costs * thisNumber;
+           costs = costs * number;
            logger.debug("costs3: " + costs);
         } else {
            // this is the subscription for group excursion
@@ -191,19 +195,19 @@ public class ActiviteitenHelper {
         // *** update deelnemers,related,deelnemers_categorie
         if(!Evenement.isGroupBooking(cloud,thisParticipant.getStringValue("number"))) {
 
-           thisParticipant.setStringValue("bron", String.valueOf(thisNumber));
+           thisParticipant.setStringValue("bron", String.valueOf(number));
            thisParticipant.commit();
            RelationList relations = thisParticipant.getRelations("related","deelnemers_categorie");
            for(int r=0; r<relations.size(); r++) { relations.getRelation(r).delete(true); }
-           if(!thisCategory.equals("-1")) {
+           if(!category.equals("-1")) {
 
-             Node thisCategoryNode = cloud.getNode(thisCategory);
+             Node thisCategoryNode = cloud.getNode(category);
              thisParticipant.createRelation(thisCategoryNode,cloud.getRelationManager("related")).commit();
 
            }
         }
 
-        thisEvent.commit(); // *** save to update cur_aantal_deelnemers
+        event.commit(); // *** save to update cur_aantal_deelnemers
 
         return thisParticipant;
      }
@@ -295,12 +299,14 @@ public class ActiviteitenHelper {
         // all parent events that contain a date in the period
         // [lDateSearchFrom,lDateSearchTill]
         HashSet events = new HashSet();
-        String constraint = getEventsConstraint(lDateSearchFrom, lDateSearchTill);
+//        String constraint = getEventsConstraint(lDateSearchFrom, lDateSearchTill); //Old-style
+        String constraint = getEventsConstraintEmbargo(lDateSearchFrom, lDateSearchTill);
         if (provincieConstraint != null) {
             constraint += provincieConstraint;
         }
+        logger.debug("getEvents from:" + lDateSearchFrom + " until:" + lDateSearchTill + ". Constraint: " + constraint);
         NodeList el = cloud.getList("", "evenement", "evenement.number", constraint, null, null, null, true);
-        for (int e = 0; e < el.size(); e++) {
+        for (int e = 0; e < el.size() && e < MAX_GETEVENTSIZE; e++) {
             String eventNumber = el.getNode(e).getStringValue("evenement.number");
             if (!events.contains(eventNumber)) {
                 if (eventNumber != null && eventNumber.trim().length() > 0) {
@@ -311,7 +317,7 @@ public class ActiviteitenHelper {
         return events;
     }
 
-    private static String getEventsConstraint(long lDateSearchFrom, long lDateSearchTill) {
+/*    private static String getEventsConstraint(long lDateSearchFrom, long lDateSearchTill) {
         String sEventConstraint =
            " (" +
            "   ( " +
@@ -327,7 +333,26 @@ public class ActiviteitenHelper {
            " AND evenement.isspare='false' AND evenement.isoninternet='true' " +
            " AND soort='parent'";
         return sEventConstraint;
-     }
+     }*/
+    
+    private static String getEventsConstraintEmbargo(long fromDate, long untilDate) {
+//     Based on JSP code from evenementen.jsp
+//     <mm:constraint field="verloopdatum" operator=">=" value="<%= "" + begintime %>" />
+//     <mm:constraint field="embargo" operator="<=" value="<%= "" + endtime %>" />
+       String sEventConstraint =
+          " (" +
+          "   ( " +
+          "       evenement.verloopdatum >= " + fromDate +
+          "   ) " +
+          "   AND " + 
+          "   (" +
+          "       evenement.embargo <= " + untilDate +
+          "   ) " +
+          " ) " +
+          " AND evenement.isspare='false' AND evenement.isoninternet='true' " +
+          " AND soort='parent'";
+       return sEventConstraint;
+    }
 
     private static boolean isEmpty(String str) {
         return str == null || str.trim().length() == 0;
@@ -344,6 +369,5 @@ public class ActiviteitenHelper {
         }
         return true;
     }
-    
-
+   
 }
