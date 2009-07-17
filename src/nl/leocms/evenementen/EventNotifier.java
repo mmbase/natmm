@@ -215,7 +215,7 @@ public class EventNotifier implements Runnable {
          while(eNodes.hasNext()) {
              Node childEvent = eNodes.nextNode();
              String sChild = childEvent.getStringValue("number");
-             String sParent = Evenement.findParentNumber(sChild);
+             String sParent = Evenement.findParentNumber(childEvent);
              Node parentEvent = cloud.getNode(sParent);
              if(Evenement.isFullyBooked(parentEvent, childEvent)) {
                if(cloud.getList(sChild

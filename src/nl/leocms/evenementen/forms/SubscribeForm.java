@@ -421,7 +421,7 @@ public class SubscribeForm extends ActionForm {
 
       // set the price for this participant
       int costs = SubscribeAction.DEFAULT_COSTS;
-      String sParent = Evenement.findParentNumber(thisEvent.getStringValue("number"));
+      String sParent = Evenement.findParentNumber(thisEvent);
       if(!Evenement.isGroupBooking(cloud,thisParticipant.getStringValue("number"))) {
          // this is a regular excursion
          NodeList dcl = cloud.getList( sParent

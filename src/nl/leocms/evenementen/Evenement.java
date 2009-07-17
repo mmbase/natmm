@@ -551,6 +551,24 @@ public class Evenement extends DoubleDateNode {
    public static String findParentNumber(String sEvent) {
       Cloud cloud = CloudFactory.getCloud();
       Node thisEvent = cloud.getNode(sEvent);
+      String parentNumber = findParentNumber(thisEvent);
+      return parentNumber;
+   }
+   
+   /**
+    * Find parent for child, if there is a parent.
+    *
+    * @param sEvent int
+    * @return String
+    */
+   public static String findParentNumber(int sEvent) {
+      Cloud cloud = CloudFactory.getCloud();
+      Node thisEvent = cloud.getNode(sEvent);
+      String parentNumber = findParentNumber(thisEvent);
+      return parentNumber;
+   }
+
+   public static String findParentNumber(Node thisEvent) {
       String parentNumber = thisEvent.getStringValue("number");
       if (thisEvent.getStringValue("soort").equals("child")) {
          RelationList parentRelations = thisEvent.getRelations("partrel", "evenement");
@@ -564,6 +582,7 @@ public class Evenement extends DoubleDateNode {
       }
       return parentNumber;
    }
+
 
    /**
     * Can the user book this event?
