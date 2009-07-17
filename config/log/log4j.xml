@@ -58,6 +58,14 @@
         <level class="&mmlevel;" value="info" />
     </logger>    
 
+   <logger name="nl.leocms.evenementen.SubscribeAction">
+      <level class="&mmlevel;" value="info" />
+   </logger>
+   
+   <logger name="nl.natuurmonumenten.activiteiten.ActiviteitenHelper">
+      <level class="&mmlevel;" value="info" />
+   </logger>
+   
    <!-- SQL logging -->
 <!--  
    <logger name="org.mmbase.module.database.MultiConnection" additivity="false">
