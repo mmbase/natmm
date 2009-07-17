@@ -40,7 +40,6 @@ import com.finalist.mmbase.util.CloudFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.*;
 
 import nl.leocms.connectors.UISconnector.UISconfig;
@@ -65,7 +64,7 @@ public class SubscribeAction extends Action {
          return cloud.getNode("site_subscription").getStringValue("number");
    }
 
-   private void removeObsoleteFormBean(ActionMapping mapping, HttpServletRequest request) {
+/*   private void removeObsoleteFormBean(ActionMapping mapping, HttpServletRequest request) {
       // *** Remove the obsolete form bean ***
       if (mapping.getAttribute() != null) {
          if ("request".equals(mapping.getScope())) {
@@ -75,7 +74,7 @@ public class SubscribeAction extends Action {
             session.removeAttribute(mapping.getAttribute());
          }
       }
-   }
+   }*/
 
    public static String price(int iPrice) {
       String sResult = iPrice/100 + ",";
@@ -391,14 +390,16 @@ public class SubscribeAction extends Action {
    }
    
    public static String getMessage(Node thisEvent, Node thisParent, Node thisSubscription, Node thisParticipant, String confirmUrl, String type, String confirmText) {
-
+      
+      if (thisParticipant == null) return null;
+      
       boolean isGroupExcursion = Evenement.isGroupExcursion(thisParent);
 
       String newline = "<br/>";
       if(type.equals("plain")) { newline = "\n"; }
       String [] phoneAndEmail = getPhoneAndEmail(thisParent, newline);
 
-      String thisParticipantName =  thisParticipant.getStringValue("firstname")
+      String thisParticipantName = thisParticipant.getStringValue("firstname")
          + (thisParticipant.getStringValue("initials").equals("") ? "" : " " +  thisParticipant.getStringValue("initials"))
          + (thisParticipant.getStringValue("suffix").equals("") ? "" : " " +  thisParticipant.getStringValue("suffix"))
          + (thisParticipant.getStringValue("lastname").equals("") ? "" : " " +  thisParticipant.getStringValue("lastname"));
@@ -481,55 +482,57 @@ public class SubscribeAction extends Action {
       return message;
    }
 
-   private static void sendDescriptionToBackOffice(Cloud cloud, Node thisEvent, Node thisParent, Node thisSubscription, Node thisParticipant) {
+   public static boolean sendDescriptionToBackOffice(Cloud cloud, Node event, Node parent, Node subscription, Node participant) {
 
-      if(thisEvent!=null && thisSubscription !=null && thisParticipant!=null) {
+      if(event==null || subscription == null || participant == null) {
+         return false;
+      }
          
-         String thisParticipantName =  thisParticipant.getStringValue("firstname")
-         + (thisParticipant.getStringValue("initials").equals("") ? "" : " " +  thisParticipant.getStringValue("initials"))
-         + (thisParticipant.getStringValue("suffix").equals("") ? "" : " " +  thisParticipant.getStringValue("suffix"))
-         + (thisParticipant.getStringValue("lastname").equals("") ? "" : " " +  thisParticipant.getStringValue("lastname"));         
-         
-         // compose email message
-         StringBuffer emailMsg = new StringBuffer();
+      String thisParticipantName =  participant.getStringValue("firstname")
+      + (participant.getStringValue("initials").equals("") ? "" : " " +  participant.getStringValue("initials"))
+      + (participant.getStringValue("suffix").equals("") ? "" : " " +  participant.getStringValue("suffix"))
+      + (participant.getStringValue("lastname").equals("") ? "" : " " +  participant.getStringValue("lastname"));         
+      
+      // compose email message
+      StringBuffer emailMsg = new StringBuffer();
 
-         emailMsg.append("\nBetreft: \n");
-         emailMsg.append("Aanmelding " + thisEvent.getStringValue("titel") + ", " + (new DoubleDateNode(thisEvent)).getReadableValue() + "\n");
-         
-         emailMsg.append("\nActiviteitnummer: " + thisEvent.getStringValue("number") + "\n");
-         emailMsg.append("Aanmeldingsnummer: " + thisSubscription.getStringValue("number") + "\n");
-         
-         emailMsg.append("\nAanmelder: \n");
-         emailMsg.append(thisParticipantName + "\n");
-         emailMsg.append(thisParticipant.getStringValue("email") + "\n");         
-         emailMsg.append(thisParticipant.getStringValue("privatephone") + "\n");
+      emailMsg.append("\nBetreft: \n");
+      emailMsg.append("Aanmelding " + event.getStringValue("titel") + ", " + (new DoubleDateNode(event)).getReadableValue() + "\n");
+      
+      emailMsg.append("\nActiviteitnummer: " + event.getStringValue("number") + "\n");
+      emailMsg.append("Aanmeldingsnummer: " + subscription.getStringValue("number") + "\n");
+      
+      emailMsg.append("\nAanmelder: \n");
+      emailMsg.append(thisParticipantName + "\n");
+      emailMsg.append(participant.getStringValue("email") + "\n");         
+      emailMsg.append(participant.getStringValue("privatephone") + "\n");
 
-         emailMsg.append("\nBijzonderheden: \n");
-         emailMsg.append(thisSubscription.getStringValue("description") + "\n");
+      emailMsg.append("\nBijzonderheden: \n");
+      emailMsg.append(subscription.getStringValue("description") + "\n");
  
          emailMsg.append("\nA.u.b. contact opnemen met " + thisParticipantName);
-         
-         Node emailNode = cloud.getNodeManager("email").createNode();
-         emailNode.setValue("to", NatMMConfig.getFromCADAddress());
-         emailNode.setValue("from", NatMMConfig.getFromCADAddress());
-         emailNode.setValue("subject", "Internet aanmelding ontvangen met bijzonderheden");
-         emailNode.setValue("replyto", NatMMConfig.getFromCADAddress());
-         emailNode.setValue("body", emailMsg.toString());
-         emailNode.commit();
-         emailNode.getValue("mail(oneshotkeep)");         
-         
-      }
+      
+      Node emailNode = cloud.getNodeManager("email").createNode();
+      emailNode.setValue("to", NatMMConfig.getFromCADAddress());
+      emailNode.setValue("from", NatMMConfig.getFromCADAddress());
+      emailNode.setValue("subject", "Internet aanmelding ontvangen met bijzonderheden");
+      emailNode.setValue("replyto", NatMMConfig.getFromCADAddress());
+      emailNode.setValue("body", emailMsg.toString());
+      emailNode.commit();
+      emailNode.getValue("mail(oneshotkeep)");
+      
+      return true;
    }
    
    
-   private static String sendConfirmEmail(Cloud cloud, Node thisEvent, Node thisParent, Node thisSubscription, Node thisParticipant, String confirmUrl, String extraText) {
+   public static String sendConfirmEmail(Cloud cloud, Node event, Node parent, Node subscription, Node participant, String confirmUrl, String extraText) {
 
       String fromEmailAddress = NatMMConfig.getFromCADAddress();
       String emailSubject = "";
 
-      if(thisEvent!=null && thisSubscription !=null && thisParticipant!=null) {
+      if(event != null && subscription != null && participant != null) {
 
-         String toEmailAddress = thisParticipant.getStringValue("email");
+         String toEmailAddress = participant.getStringValue("email");
 
          if(!toEmailAddress.equals("")) { // ** email field might be empty
 
@@ -543,7 +546,9 @@ public class SubscribeAction extends Action {
                emailSubject += "Aanmelding";
             }
             
-            emailSubject += " " + thisEvent.getStringValue("titel") + ", " + (new DoubleDateNode(thisEvent)).getReadableValue();
+            log.info("SendConfirmEmail:" + emailSubject + ", event:" + event.getStringValue("number") + ", subscription:" + subscription.getStringValue("number"));
+            
+            emailSubject += " " + event.getStringValue("titel") + ", " + (new DoubleDateNode(event)).getReadableValue();
             log.debug(confirmUrl);
             Node emailNode = cloud.getNodeManager("email").createNode();
 
@@ -559,21 +564,21 @@ public class SubscribeAction extends Action {
             emailNode.setValue("replyto", fromEmailAddress);
             emailNode.setValue("body",
                             "<multipart id=\"plaintext\" type=\"text/plain\" encoding=\"UTF-8\">"
-                               + getMessage(thisEvent,thisParent,thisSubscription,thisParticipant,confirmUrl,"plain", extraText)
+                               + getMessage(event,parent,subscription,participant,confirmUrl,"plain", extraText)
                             + "</multipart>"
                             + "<multipart id=\"htmltext\" alt=\"plaintext\" type=\"text/html\" encoding=\"UTF-8\">"
                             + "<html>"
-                              + getMessage(thisEvent,thisParent,thisSubscription,thisParticipant,confirmUrl,"html", extraText) + "</html>"
+                              + getMessage(event,parent,subscription,participant,confirmUrl,"html", extraText) + "</html>"
                             + "</multipart>");
             emailNode.commit();
             emailNode.getValue("mail(oneshotkeep)");
 
-            thisSubscription.createRelation(emailNode,cloud.getRelationManager("related")).commit();
+            subscription.createRelation(emailNode,cloud.getRelationManager("related")).commit();
 
             // *** update inschrijvingen,related,inschrijvings_status if present status is aangemeld
             // this means the inschrijving is made by the backoffice
             // for website bookings the status is set to confirmed in includes/events_doconfirm.jsp
-            RelationList relations = thisSubscription.getRelations("related","inschrijvings_status");
+            RelationList relations = subscription.getRelations("related","inschrijvings_status");
             
             if(!relations.isEmpty() && !confirmUrl.equals("confirmation-period-expired")) {
                Relation  thisRelation = relations.getRelation(0);
@@ -583,7 +588,7 @@ public class SubscribeAction extends Action {
                   Node thisStatus = cloud.getNode("confirmed");
                   
                   if(thisStatus!=null) {
-                     thisSubscription.createRelation(thisStatus,cloud.getRelationManager("related")).commit();
+                     subscription.createRelation(thisStatus,cloud.getRelationManager("related")).commit();
                   }
                }
             }
@@ -591,7 +596,8 @@ public class SubscribeAction extends Action {
       }
       
       //return the html emailmessage
-      return getMessage(thisEvent,thisParent,thisSubscription,thisParticipant,confirmUrl,"html", extraText);
+      String message = getMessage(event, parent, subscription, participant, confirmUrl, "html", extraText);
+      return message;
    }
 
    public static void sendConfirmEmail(Cloud cloud, String subscriptionNumber, String confirmUrl) {
@@ -603,7 +609,7 @@ public class SubscribeAction extends Action {
       
       if(thisNodeList.size()>0) {
          thisEvent = thisNodeList.getNode(0);
-         thisParent = cloud.getNode(Evenement.findParentNumber(thisEvent.getStringValue("number")));
+         thisParent = cloud.getNode(Evenement.findParentNumber(thisEvent));
          thisParticipant = thisNodeList.getNode(0);
       }
       thisNodeList = thisSubscription.getRelatedNodes("deelnemers");
@@ -653,18 +659,18 @@ public class SubscribeAction extends Action {
         Cloud cloud = CloudFactory.getCloud();
 
         if (subscribeForm.getButtons().getGoBack().pressed()
-            ||(action.indexOf(subscribeForm.CANCEL_ACTION)>-1)
-            ||(action.indexOf(subscribeForm.TO_AGENDA_ACTION)>-1)
-            ||(action.indexOf(subscribeForm.OTHER_DATES_ACTION)>-1)
-            ||(action.indexOf(subscribeForm.FIX_DATE_ACTION)>-1)) {                          // *** GoBack, Cancel
+            ||(action.indexOf(SubscribeForm.CANCEL_ACTION)>-1)
+            ||(action.indexOf(SubscribeForm.TO_AGENDA_ACTION)>-1)
+            ||(action.indexOf(SubscribeForm.OTHER_DATES_ACTION)>-1)
+            ||(action.indexOf(SubscribeForm.FIX_DATE_ACTION)>-1)) {                          // *** GoBack, Cancel
 
            // removeObsoleteFormBean(mapping, request);
            subscribeForm.resetNumbers();
 
-           if(action.indexOf(subscribeForm.OTHER_DATES_ACTION)>-1) {
-               subscribeForm.setAction(subscribeForm.SELECT_DATE_ACTION);
-           } else if(!(action.indexOf(subscribeForm.FIX_DATE_ACTION)>-1)) {                  // *** leave fix_date unchanged
-               subscribeForm.setAction(subscribeForm.CANCELED);
+           if(action.indexOf(SubscribeForm.OTHER_DATES_ACTION)>-1) {
+               subscribeForm.setAction(SubscribeForm.SELECT_DATE_ACTION);
+           } else if(!(action.indexOf(SubscribeForm.FIX_DATE_ACTION)>-1)) {                  // *** leave fix_date unchanged
+               subscribeForm.setAction(SubscribeForm.CANCELED);
            }
            forwardAction = mapping.findForward("success");
 
@@ -699,7 +705,7 @@ public class SubscribeAction extends Action {
 
            forwardAction = mapping.findForward("continue");
 
-        } else if(action.equals(subscribeForm.NEW_SUBSCRIPTION_ACTION)) {                     // *** Nieuwe aanmelding
+        } else if(action.equals(SubscribeForm.NEW_SUBSCRIPTION_ACTION)) {                     // *** Nieuwe aanmelding
 
            subscribeForm.resetBean();
            forwardAction = mapping.findForward("continue");
@@ -714,7 +720,7 @@ public class SubscribeAction extends Action {
 
            forwardAction = mapping.findForward("continue");
 
-       } else if(action.equals(subscribeForm.ADDRESS_ACTION)) {                                 // *** Address
+       } else if(action.equals(SubscribeForm.ADDRESS_ACTION)) {                                 // *** Address
 
            if(subscribeForm.getShowAddress().equals("true")) {
                subscribeForm.setShowAddress("false");
@@ -724,15 +730,15 @@ public class SubscribeAction extends Action {
 
            forwardAction = mapping.findForward("continue");
 
-        } else if(action.equals(subscribeForm.SUBSCRIBE_ACTION)
-                  ||action.equals(subscribeForm.CHANGE_ACTION)
+        } else if(action.equals(SubscribeForm.SUBSCRIBE_ACTION)
+                  ||action.equals(SubscribeForm.CHANGE_ACTION)
                   ||subscribeForm.getButtons().getAddParticipant().pressed()) {                 // *** Meld aan / Wijzig / AddParticipant
 
             log.info(subscribeForm.getTimePassed("start subscription"));
             Node thisEvent = cloud.getNode(subscribeForm.getNode());
 
             Node thisSubscription = null;
-            if(!action.equals(subscribeForm.SUBSCRIBE_ACTION)) {
+            if(!action.equals(SubscribeForm.SUBSCRIBE_ACTION)) {
                try {
                   thisSubscription = cloud.getNode(subscribeForm.getSubscriptionNumber());
                } catch (Exception e) {
@@ -753,7 +759,7 @@ public class SubscribeAction extends Action {
             thisSubscription.setStringValue("bank_of_gironummer", subscribeForm.getBankaccount());
             thisSubscription.commit();
 
-            if(action.equals(subscribeForm.SUBSCRIBE_ACTION)) { // *** create inschrijvingen,posrel,evenementen
+            if(action.equals(SubscribeForm.SUBSCRIBE_ACTION)) { // *** create inschrijvingen,posrel,evenementen
                thisEvent.createRelation(thisSubscription,cloud.getRelationManager("posrel")).commit();
                // *** create inschrijvingen,schrijver,users
                NodeList userList = cloud.getNodeManager("users").getList("account='"+subscribeForm.getUserId()+"'",null,null);
@@ -859,7 +865,7 @@ public class SubscribeAction extends Action {
                    sendDescriptionToBackOffice(cloud, thisEvent, thisParent, thisSubscription, thisParticipant);
                }
                
-               subscribeForm.setAction(subscribeForm.PROMPT_FOR_CONFIRMATION);
+               subscribeForm.setAction(SubscribeForm.PROMPT_FOR_CONFIRMATION);
             }
             
             if(UISconfig.isUISconnected()) {
@@ -873,7 +879,7 @@ public class SubscribeAction extends Action {
            forwardAction = mapping.findForward("continue");
 
        } else if( (subscribeForm.getButtons().getConfirmSubscription().pressed())
-                 || (action.indexOf(subscribeForm.CONFIRM_ACTION)>-1) ) {               // *** Confirm
+                 || (action.indexOf(SubscribeForm.CONFIRM_ACTION)>-1) ) {               // *** Confirm
 
          Node thisEvent = cloud.getNode(subscribeForm.getNode());
          Node thisParent = cloud.getNode(subscribeForm.getParent());
@@ -881,8 +887,8 @@ public class SubscribeAction extends Action {
          Node thisParticipant = cloud.getNode(subscribeForm.getSelectedParticipant());
          
          // store html email message in the form
-         subscribeForm.setLastSentMessage( 
-            sendConfirmEmail(cloud, thisEvent, thisParent, thisSubscription, thisParticipant, "", subscribeForm.getExtraText()+""));
+         subscribeForm.setLastSentMessage(
+               sendConfirmEmail(cloud, thisEvent, thisParent, thisSubscription, thisParticipant, "", subscribeForm.getExtraText()+""));
          
          forwardAction = mapping.findForward("confirmed");
 

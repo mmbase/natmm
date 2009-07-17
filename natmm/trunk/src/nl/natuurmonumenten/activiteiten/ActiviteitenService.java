@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.mmapps.modules.cloudprovider.CloudProviderFactory;
+import nl.leocms.applications.NatMMConfig;
+import nl.leocms.evenementen.Evenement;
+import nl.leocms.evenementen.forms.SubscribeAction;
 
 import org.apache.log4j.Logger;
 import org.mmbase.bridge.Cloud;
@@ -35,7 +38,7 @@ public class ActiviteitenService implements IActiviteitenService {
      * nl.natuurmonumenten.activiteiten.ActiviteitenServiceInterf#getVersion()
      */
     public String getVersion() {
-        return "2.0";
+        return "2.1";
     }
 
     /*
@@ -67,9 +70,8 @@ public class ActiviteitenService implements IActiviteitenService {
      * java.lang.String)
      */
     public Event[] getEvents(Date start, Date eind, String[] eventTypeIds, String provincieId, String natuurgebiedenId) {
-        logger.debug("getEvents() - eventTypeIds: " + eventTypeIds);
         if (eventTypeIds != null) {
-            logger.debug("eventTypeIds: " + Arrays.asList(eventTypeIds));
+           logger.debug("getEvents() - eventTypeIds: " + Arrays.asList(eventTypeIds));
         }
         if (start == null || eind == null) {
             throw new IllegalArgumentException("Start en/of einddatum ontbreekt");
@@ -83,10 +85,10 @@ public class ActiviteitenService implements IActiviteitenService {
             String eventNumber = (String) iter.next();
             logger.debug("getting node for: " + eventNumber);
             Node event = cloud.getNode(eventNumber);
-            beans.add(beanFactory.createEvent(event));
+            beans.add(beanFactory.createEvent(event, cloud));
         }
         logger.debug("beans: " + beans);
-        logger.debug("beans.size(): " + beans.size());
+        logger.info("beans.size(): " + beans.size());
         Event[] events = (Event[]) beans.toArray(new Event[beans.size()]);
         logger.debug("events: " + Arrays.asList(events));
         return events;
@@ -192,29 +194,29 @@ public class ActiviteitenService implements IActiviteitenService {
         return (Natuurgebied[]) beans.toArray(new Natuurgebied[beans.size()]);
     }
 
-    public EventDetails getEventDetails(String id) {
+    public EventDetails getEventDetails(String eventId) {
         logger.debug("getEventDetails");
         Cloud cloud = CloudProviderFactory.getCloudProvider().getCloud();
-        Node node;
+        Node event;
         try {
-            node = cloud.getNode(id);
+            event = cloud.getNode(eventId);
         } catch (NotFoundException ex) {
-            logger.debug("Node niet gevonden: " + id);
+            logger.debug("Node niet gevonden: " + eventId);
             return null;
         }
         // alleen evenementen mogen worden opgevraagd
-        if (!"evenement".equals(node.getNodeManager().getName())) {
-            logger.debug("Geen evenement: " + id);
+        if (!"evenement".equals(event.getNodeManager().getName())) {
+            logger.debug("Geen evenement: " + eventId);
             return null;
         }
         // always return the parent node, childs details are in EventData[]
-        String parentNumber = nl.leocms.evenementen.Evenement.findParentNumber(id);
+        String parentNumber = nl.leocms.evenementen.Evenement.findParentNumber(event);
         if (parentNumber == null) {
-            logger.debug("Geen parent gevonden: " + id);
+            logger.debug("Geen parent gevonden: " + eventId);
             return null;
         }
         Node parent = cloud.getNode(parentNumber);
-        return beanFactory.createEventDetails(parent);
+        return beanFactory.createEventDetails(parent, cloud);
     }
 
     public Vertrekpunt[] getVertrekpunten() {
@@ -262,18 +264,38 @@ public class ActiviteitenService implements IActiviteitenService {
         } else {
             logger.error("inschrijvings_status with number " + thisStatus + " does not exist.");
         }
+        
         Aanmelding[] aanmeldingen = subscription.getAanmeldingen();
+        Node participant = null;
         if (aanmeldingen != null) {
             for (int i = 0; i < aanmeldingen.length; i++) {
                 if (aanmeldingen[i].getAantal() > 0) {
                     logger.debug("aanmelding-deelnemerscatid:" + aanmeldingen[i].getDeelnemersCategorieId());
                     logger.debug("aanmelding-aantal:" + aanmeldingen[i].getAantal());
-                    ActiviteitenHelper.createParticipant(cloud, eventNode, subscriptionNode, aanmeldingen[i]
+                    participant = ActiviteitenHelper.createParticipant(cloud, eventNode, subscriptionNode, aanmeldingen[i]
                             .getDeelnemersCategorieId(), aanmeldingen[i].getAantal(), subscription);
                 }
             }
         }
-        // emails worden niet verstuurd zoals in het origineel, dit hoeft niet
-        return  "Aanmelding ontvangen";
+        
+        //Participant is needed for sending an email
+        if (participant == null) return "Error: participant not found in database."; 
+        
+        String confirmUrl = NatMMConfig.getLiveUrl() + "events.jsp";
+        confirmUrl += "?action=confirm&s=" + subscriptionNode.getStringValue("datum_inschrijving") + "_" + subscriptionNode.getStringValue("number");
+        
+        Node parent = cloud.getNode(Evenement.findParentNumber(eventNode));
+        logger.info("send mail: " + eventNode.getNumber() + "; " + parent.getNumber() + "; " + subscriptionNode.getNumber() + "; " + participant.getNumber() + ".");
+        SubscribeAction.sendConfirmEmail(cloud, eventNode, parent, subscriptionNode, participant, confirmUrl, "");
+        
+        // if a participant added extra information during the subscription,
+        // this information should be mailed to the backoffice employees
+        if ( (subscriptionNode.getStringValue("description") != null)
+             && (!"".equals(subscriptionNode.getStringValue("description"))) ) {
+            boolean sent = SubscribeAction.sendDescriptionToBackOffice(cloud, eventNode, parent, subscriptionNode, participant);
+            if (sent) logger.info("BackofficeEmail is sent for participant:" + participant.getNumber() + ", with subscription:" + subscriptionNode.getNumber());
+        }
+        
+        return "Aanmelding ontvangen";
     }
 }
