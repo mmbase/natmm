@@ -368,9 +368,9 @@ public class SearchUtil {
                   }
                 }
             } else { // *** no path implies an Evenement ***
-                Node e = cloud.getNode(docNumber);
-               String sParent =  Evenement.findParentNumber(docNumber);
-                if(!includedEvents.contains(sParent) && Evenement.isOnInternet(e,nowSec)) {
+               Node event = cloud.getNode(docNumber);
+               String sParent =  Evenement.findParentNumber(event);
+                if(!includedEvents.contains(sParent) && Evenement.isOnInternet(event,nowSec)) {
                   String paginaNumber = cloud.getNode("agenda").getStringValue("number");
                    if(PaginaHelper.getSubsiteRubriek(cloud,paginaNumber).equals(rootRubriek)) {
                      hsetNodes.add(docNumber);

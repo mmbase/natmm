@@ -29,8 +29,6 @@ import org.mmbase.util.logging.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.*;
-
 public class SubscribeInitAction extends Action {
    private static final Logger log = Logging.getLoggerInstance(EvenementInitAction.class);
 
