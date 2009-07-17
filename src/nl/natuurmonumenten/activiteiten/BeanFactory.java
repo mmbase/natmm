@@ -115,31 +115,31 @@ class BeanFactory {
         return bean;
     }
 
-    public Event createEvent(Node node) {
+    public Event createEvent(Node event, Cloud cloud) {
         Event bean = new Event();
-        String eventNumber = node.getStringValue("number");
+        String eventNumber = event.getStringValue("number");
         bean.setId(eventNumber);
-        bean.setTitel(node.getStringValue("titel"));
-        bean.setAanvangstijd(toDate(node.getLongValue("begindatum")));
-        bean.setEindtijd(toDate(node.getLongValue("einddatum")));
-        String omschrijving = node.getStringValue("omschrijving");
+        bean.setTitel(event.getStringValue("titel"));
+        bean.setAanvangstijd(toDate(event.getLongValue("begindatum")));
+        bean.setEindtijd(toDate(event.getLongValue("einddatum")));
+        String omschrijving = event.getStringValue("omschrijving");
         if (!isEmpty(omschrijving)) {
             bean.setOmschrijving(omschrijving);
         }
-        Cloud cloud = node.getCloud();
-        String parentNumber = nl.leocms.evenementen.Evenement.findParentNumber(eventNumber);
-        Node imageNode = ActiviteitenHelper.getFoto(cloud, parentNumber);
+        String parentNumber = nl.leocms.evenementen.Evenement.findParentNumber(event);
+
+/*        Node imageNode = ActiviteitenHelper.getFoto(cloud, parentNumber);
         if (imageNode != null) {
             bean.setFoto(createFoto(imageNode));
         }
-        Node parentEvent = cloud.getNode(parentNumber);
-        boolean volgeboekt = nl.leocms.evenementen.Evenement.isFullyBooked(parentEvent, node);
-        boolean aanmeldingGesloten = nl.leocms.evenementen.Evenement.subscriptionClosed(parentEvent, node);
+*/        Node parentEvent = cloud.getNode(parentNumber);
+        boolean volgeboekt = nl.leocms.evenementen.Evenement.isFullyBooked(parentEvent, event);
+        boolean aanmeldingGesloten = nl.leocms.evenementen.Evenement.subscriptionClosed(parentEvent, event);
         bean.setVolgeboekt(volgeboekt);
         bean.setAanmeldingGesloten(aanmeldingGesloten);
         
-        String dagomschrijving = node.getStringValue("dagomschrijving");
-        DoubleDateNode ddn = new DoubleDateNode(node);
+        String dagomschrijving = event.getStringValue("dagomschrijving");
+        DoubleDateNode ddn = new DoubleDateNode(event);
         StringBuffer sbWanneer = new StringBuffer();
         sbWanneer.append(ddn.getReadableDate(", "));
         
@@ -161,7 +161,7 @@ class BeanFactory {
         return foto;
     }
 
-    public EventDetails createEventDetails(Node node) {
+    public EventDetails createEventDetails(Node node, Cloud cloud) {
         EventDetails bean = new EventDetails();
         bean.setId(node.getStringValue("number"));
         bean.setTitel(node.getStringValue("titel"));
@@ -189,7 +189,6 @@ class BeanFactory {
         NodeList deelnemersCategorieNodeList = node.getRelatedNodes("deelnemers_categorie", "posrel", "both"); // posrel
         bean.setKosten(createKosten(node, deelnemersCategorieNodeList));
         
-        Cloud cloud = node.getCloud();
         String eventNumber = node.getStringValue("number");
         
         NodeList medewerkerList = cloud.getList(eventNumber, "evenement,readmore,medewerkers", "medewerkers.email", null, null, null, "destination", true);
@@ -213,13 +212,23 @@ class BeanFactory {
             EventData eventData = createEventData(node, node);
             data.add(eventData);
         } else {
+           Date d = new Date();
+           long currentTimestamp = d.getTime() / 1000; //get milliseconds and divide it by 1000.
+
             EventData eventData = createEventData(node, node);
-            data.add(eventData);
+            //Only add the parent if it is new too.
+            if (node.getIntValue("begindatum") > currentTimestamp) {
+               data.add(eventData);
+            }
             for (Iterator iter = childEvents.iterator(); iter.hasNext();) {
                 String childNumber = (String) iter.next();
-                Node childNode = cloud.getNode(childNumber); 
-                eventData = createEventData(node, childNode);
-                data.add(eventData);
+                Node childNode = cloud.getNode(childNumber);
+                
+                //Filter on child events that are in the future
+                if (childNode.getIntValue("begindatum") > currentTimestamp) {
+                   eventData = createEventData(node, childNode);
+                   data.add(eventData);
+                }
             }
             bean.setEenmaligEvent(false);
         }
