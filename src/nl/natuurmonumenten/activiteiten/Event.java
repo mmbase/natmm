@@ -7,7 +7,7 @@ public class Event implements Serializable {
     private String id;
     private String titel;
     private String omschrijving;
-    private Foto foto;
+//    private Foto foto;
     private boolean volgeboekt;
     private boolean aanmeldingGesloten;
     private Date aanvangstijd;
@@ -38,13 +38,13 @@ public class Event implements Serializable {
         this.omschrijving = omschrijving;
     }
 
-    public Foto getFoto() {
+/*    public Foto getFoto() {
         return foto;
     }
 
     public void setFoto(Foto foto) {
         this.foto = foto;
-    }
+    }*/
 
     public boolean isVolgeboekt() {
         return volgeboekt;
