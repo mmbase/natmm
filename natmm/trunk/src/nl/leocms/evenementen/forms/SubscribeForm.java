@@ -340,11 +340,14 @@ public class SubscribeForm extends ActionForm {
       this.validateCounter = 0;
       this.skipValidation = "N";
 
-      Node thisEvent = CloudFactory.getCloud().getNode(this.getNode());
+      Node thisEvent = null;
+      if (this.getNode() != null) {
+         thisEvent = CloudFactory.getCloud().getNode(this.getNode());
+      }
       
       this.showAddress = "true";
 
-      if(thisEvent.getLongValue("embargo") < (new Date()).getTime()/1000) {
+      if(thisEvent != null && thisEvent.getLongValue("embargo") < (new Date()).getTime()/1000) {
          this.showPastDates = "false";
       } else {
          this.showPastDates = "";
@@ -365,10 +368,10 @@ public class SubscribeForm extends ActionForm {
 
       this.lastSentMessage = "";
       this.extraText = "";      
-      
    }
 
    public String findParent() {
+      if (this.node == null) return null;
       return Evenement.findParentNumber(this.node);
    }
 
