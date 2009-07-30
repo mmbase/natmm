@@ -20,6 +20,7 @@
  */
 package nl.leocms.evenementen.forms;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -105,10 +106,12 @@ public class SubscribeAction extends Action {
 
    private static String dearSir(Node thisParticipant, String thisParticipantName, String newline) {
       String message = "";
-      if (thisParticipant.getStringValue("gender").equals("male")) {
+      if (thisParticipant.getStringValue("gender").equalsIgnoreCase("male")) {
          message += "Geachte heer ";
-      } else {
+      } else if (thisParticipant.getStringValue("gender").equalsIgnoreCase("female")){
          message += "Geachte mevrouw ";
+      } else {
+         message += "Geachte ";
       }
       message += thisParticipantName + "," + newline + newline;
       return message;
@@ -400,86 +403,87 @@ public class SubscribeAction extends Action {
       String [] phoneAndEmail = getPhoneAndEmail(thisParent, newline);
 
       String thisParticipantName = thisParticipant.getStringValue("firstname")
-         + (thisParticipant.getStringValue("initials").equals("") ? "" : " " +  thisParticipant.getStringValue("initials"))
-         + (thisParticipant.getStringValue("suffix").equals("") ? "" : " " +  thisParticipant.getStringValue("suffix"))
-         + (thisParticipant.getStringValue("lastname").equals("") ? "" : " " +  thisParticipant.getStringValue("lastname"));
+         + (StringUtils.isBlank(thisParticipant.getStringValue("initials")) ? "" : " (" +  thisParticipant.getStringValue("initials")) + ")"
+         + (StringUtils.isBlank(thisParticipant.getStringValue("suffix")) ? "" : " " +  thisParticipant.getStringValue("suffix"))
+         + (StringUtils.isBlank(thisParticipant.getStringValue("lastname")) ? "" : " " +  thisParticipant.getStringValue("lastname"));
 
-      String message = dearSir(thisParticipant, thisParticipantName, newline);
+      StringBuffer message = new StringBuffer(); 
+      message.append(dearSir(thisParticipant, thisParticipantName, newline));
 
       if (confirmUrl.equals("confirmation-period-expired")) {
-         message += "Met deze brief herinneren wij u aan uw boeking van een groepsexcursie";
+         message.append("Met deze brief herinneren wij u aan uw boeking van een groepsexcursie");
          
          NodeList nl = thisParent.getRelatedNodes("natuurgebieden","related",null);
          if(nl.size()!=0) {
-            message += " op het " + nl.getNode(0).getStringValue("naam");
+            message.append(" op het " + nl.getNode(0).getStringValue("naam"));
          }
          
          DoubleDateNode ddn = new DoubleDateNode();
          ddn.setBegin(new Date(thisEvent.getLongValue("begindatum")*1000));
          ddn.setEnd(new Date(thisEvent.getLongValue("einddatum")*1000));
 
-         message += ". U heeft voor uw groep " + thisEvent.getStringValue("titel") + " gereserveerd op " +  ddn.getReadableDate() + ". ";
-         message += "De bevestigingstermijn voor deze boeking is inmiddels verlopen." + newline + newline;
-         message += withKindRegards(thisParticipant, phoneAndEmail[1], newline);
+         message.append(". U heeft voor uw groep " + thisEvent.getStringValue("titel") + " gereserveerd op " +  ddn.getReadableDate() + ". ");
+         message.append("De bevestigingstermijn voor deze boeking is inmiddels verlopen." + newline + newline);
+         message.append(withKindRegards(thisParticipant, phoneAndEmail[1], newline));
  
       } else if(isGroupExcursion) {
-         message += withThisLetter(thisParent, thisEvent, confirmUrl, isGroupExcursion, newline) + newline;
-         message += youSubscribedAs(thisParticipant, thisSubscription, thisParticipantName, isGroupExcursion, newline);
+         message.append(withThisLetter(thisParent, thisEvent, confirmUrl, isGroupExcursion, newline) + newline);
+         message.append(youSubscribedAs(thisParticipant, thisSubscription, thisParticipantName, isGroupExcursion, newline));
 
          // add extra confirmation text to the email
          if ((confirmUrl.equals("")) && (confirmText != null) && (!"".equals(confirmText))) {
             
             if(!type.equals("plain")) {
-               message += newline + newline + confirmText.replaceAll("\n", "<br/>") + newline;
+               message.append(newline + newline + confirmText.replaceAll("\n", "<br/>") + newline);
             } 
             else {
-               message += newline + newline + confirmText + newline;
+               message.append(newline + newline + confirmText + newline);
             }
          }         
          
-         message += yourGroupExcursion(thisParent, thisEvent, thisSubscription, newline, type) + newline + newline;
-         message += withKindRegards(thisParticipant, phoneAndEmail[1], newline);
+         message.append(yourGroupExcursion(thisParent, thisEvent, thisSubscription, newline, type) + newline + newline);
+         message.append(withKindRegards(thisParticipant, phoneAndEmail[1], newline));
 
       } else {
 
          if(confirmUrl.equals("")||confirmUrl.equals("reminder")) { // *** after the visitor clicks the confirmation url
-            message += withThisLetter(thisParent, thisEvent, confirmUrl, isGroupExcursion, newline);
-            message += subscriptionStatus(thisEvent, confirmUrl, phoneAndEmail[0], newline);
+            message.append(withThisLetter(thisParent, thisEvent, confirmUrl, isGroupExcursion, newline));
+            message.append(subscriptionStatus(thisEvent, confirmUrl, phoneAndEmail[0], newline));
             
             // add extra confirmation text to the email
             if ((confirmUrl.equals("")) && (confirmText != null) && (!"".equals(confirmText))) {
                
                if(!type.equals("plain")) {
-                  message += newline + newline + confirmText.replaceAll("\n", "<br/>") + newline;
+                  message.append(newline + newline + confirmText.replaceAll("\n", "<br/>") + newline);
                } 
                else {
-                  message += newline + newline + confirmText + newline;
+                  message.append(newline + newline + confirmText + newline);
                }
             }
       
-            message += newline + newline;
-            message += necessaryInfo(thisParent, newline);
+            message.append(newline + newline);
+            message.append(necessaryInfo(thisParent, newline));
 
          } else { // *** the visitor booked on the website
-            message += "Gebruik de onderstaande link om uw aanmelding voor "  + thisEvent.getStringValue("titel") + ", " + (new DoubleDateNode(thisEvent)).getReadableValue() + " te bevestigen: " + newline + newline;
+            message.append("Gebruik de onderstaande link om uw aanmelding voor "  + thisEvent.getStringValue("titel") + ", " + (new DoubleDateNode(thisEvent)).getReadableValue() + " te bevestigen: " + newline + newline);
             if(type.equals("plain")) {
-               message += confirmUrl + newline + newline;
+               message.append(confirmUrl + newline + newline);
             } else {
-               message += "<b><a href=\"" + confirmUrl + "\">bevestig uw aanmelding </a></b>" + newline + newline;
+               message.append("<b><a href=\"" + confirmUrl + "\">bevestig uw aanmelding </a></b>" + newline + newline);
             }
          }
 
          if(!type.equals("plain")) {
-            message += youSubscribedWith(thisSubscription, newline);
+            message.append(youSubscribedWith(thisSubscription, newline));
 
             if(confirmUrl.equals("")) {
-               message += youSubscribedAs(thisParticipant, thisSubscription, thisParticipantName, isGroupExcursion, newline);
+               message.append(youSubscribedAs(thisParticipant, thisSubscription, thisParticipantName, isGroupExcursion, newline));
             }
-            message += withKindRegards(thisParticipant, phoneAndEmail[1], newline);
-            message += becomeMember(thisParticipant);
+            message.append(withKindRegards(thisParticipant, phoneAndEmail[1], newline));
+            message.append(becomeMember(thisParticipant));
          }
       }
-      return message;
+      return message.toString();
    }
 
    public static boolean sendDescriptionToBackOffice(Cloud cloud, Node event, Node parent, Node subscription, Node participant) {
