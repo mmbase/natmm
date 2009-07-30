@@ -18,10 +18,10 @@ if(paginaID.equals("-1") && session.getAttribute("pagina")!=null) {
 <%@include file="includes/top2_cacheparams.jsp" %>
 <mm:import jspvar="searchID" externid="search">show</mm:import>
 <!-- cache:cache key="<%= cacheKey %>" time="<%= expireTime %>" scope="application" -->
-<%@include file="includes/top3_nav.jsp" 
-%><%@include file="includes/top4_head.jsp" 
-%><%@include file="includes/top5_breadcrumbs_and_pano.jsp" 
-%>
+<%@include file="includes/top4_head.jsp"%>
+
+<div style="position:relative; width:100%;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" valign="top">
 
 <%-- Any template calling others need to pass isNaardermeer as PaginaHelper/mm:import fails--%>
 <%request.setAttribute("isNaardermeer", isNaardermeer);%>
@@ -55,14 +55,7 @@ SubscribeForm subscribeForm = (SubscribeForm) session.getAttribute("SubscribeFor
    <tr>
       <td style="vertical-align:top;padding:10px;padding-top:0px;width:185px;">
          <br/>
-         <%@include file="includes/navleft.jsp" %>
          <br>
-         <jsp:include page="includes/teaser.jsp">
-            <jsp:param name="s" value="<%= paginaID %>" />
-            <jsp:param name="r" value="<%= rubriekID %>" />
-            <jsp:param name="rs" value="<%= styleSheet %>" />
-            <jsp:param name="sr" value="0" />
-         </jsp:include>
       </td>
       <td width="<%= (subscribeForm==null ? "374" : "559") %>" valign="top" style="padding-left:10px;padding-right:10px;">
          <br/>
@@ -152,6 +145,10 @@ SubscribeForm subscribeForm = (SubscribeForm) session.getAttribute("SubscribeFor
    </tr>
 </table>
 <a name="bottom"></a>
-<%@include file="includes/footer.jsp" %>
+
+   </td>
+</tr>
+</table>
+</html>
 </mm:cloud>
 </mm:content>

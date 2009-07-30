@@ -34,8 +34,14 @@ if(confirmID!=null){
    <span class="colortitle">Bevestiging van uw aanmelding.</span><br/><br/>
    <% if(subscriptionConfirmed) { %>
       Uw aanmelding is bevestigd. U ontvangt hiervan een afschrift per email.
+      <script type="text/javascript">
+         window.location = "http://www.natuurmonumenten.nl/node/16557"
+      </script>
    <% } else { %>
       Deze link bevat geen geldig inschrijvingsnummer. Neem contact op met op met de ledenservice (035) 655 99 55 of desbetreffende bezoekerscentrum om uw aanmelding te bevestigen.
+      <script type="text/javascript">
+         window.location = "http://www.natuurmonumenten.nl/node/18679"
+      </script>
    <% } %>
 <br/>
 <br/>
