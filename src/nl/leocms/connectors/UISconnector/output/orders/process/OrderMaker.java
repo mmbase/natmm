@@ -22,7 +22,6 @@ import org.mmbase.util.logging.*;
 import com.finalist.mmbase.util.CloudFactory;
 import nl.leocms.connectors.UISconnector.output.orders.model.*;
 import java.util.*;
-import java.io.*;
 
 
 public class OrderMaker
