@@ -23,6 +23,7 @@ package nl.leocms.evenementen.forms;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.*;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
@@ -530,28 +531,22 @@ public class SubscribeForm extends ActionForm {
 
    public static String getPhoneMessage(String sPhone) {
       String phoneMessage = "";
-      if(!sPhone.equals(initPhone)) {
-         if(sPhone.indexOf("-")==-1) {
-             phoneMessage = "evenementen.phone.onedashrequired";
+      if (!sPhone.equals(initPhone)) {
+         sPhone = StringUtils.remove(sPhone, "-");
+         sPhone = StringUtils.remove(sPhone, " ");
+         if (sPhone.length() != 10 ) {
+            phoneMessage = "evenementen.phone.tendigits";
          } else {
-            int iDash = sPhone.indexOf("-");
-            sPhone = sPhone.substring(0,iDash) + sPhone.substring(iDash+1);
-            if(sPhone.indexOf("-")>-1) {
-               phoneMessage = "evenementen.phone.onedashrequired";
-            } else if(sPhone.length()!=10) {
-               phoneMessage = "evenementen.phone.tendigits";
-            } else {
-               try {
-                  int dummy = (new Integer(sPhone)).intValue();
-               } catch(Exception e) {
-                  phoneMessage = "evenementen.phone.nan";
-               }
+            try {
+               int dummy = (new Integer(sPhone)).intValue();
+            } catch (Exception e) {
+               phoneMessage = "evenementen.phone.nan";
             }
          }
       }
       return phoneMessage;
    }
-
+   
    public static String getEmailMessage(String sEmail, String requiredMessage) {
       String emailMessage = "";
       if(sEmail.equals("")) {
@@ -629,7 +624,6 @@ public class SubscribeForm extends ActionForm {
          errors.add("warning",new ActionError("evenementen.session.lostsession"));
       }
 
-      String action = this.getAction();
       if(this.getAction()==null){
 
          log.info("null action in SubscribeForm");

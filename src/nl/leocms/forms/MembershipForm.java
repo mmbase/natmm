@@ -30,10 +30,8 @@ import org.apache.struts.action.ActionError;
 import java.util.*;
 
 import org.mmbase.module.core.*;
-import org.mmbase.bridge.Cloud;
 import org.mmbase.bridge.*;
 import org.mmbase.util.logging.*;
-import com.finalist.mmbase.util.CloudFactory;
 import nl.leocms.evenementen.forms.SubscribeForm;
 import nl.leocms.evenementen.forms.SubscribeAction;
 import nl.leocms.evenementen.stats.OptionedStats;
@@ -395,8 +393,6 @@ public class MembershipForm extends ActionForm {
       Calendar cal = Calendar.getInstance();
       cal.setTime(new Date());
 
-      Cloud cloud = CloudFactory.getCloud();
-
       if(this.getAction()==null){  // *** browser lost session ***
 
          errors.add("warning",new ActionError("evenementen.session.lostsession"));
@@ -516,9 +512,9 @@ public class MembershipForm extends ActionForm {
                      try {
                         int day = (new Integer(this.getDayofbirthDate())).intValue();
                         cal.set(year,this.getDayofbirthMonth(),1);
-                        if(day<cal.getActualMinimum(cal.DAY_OF_MONTH)) {
+                        if(day<cal.getActualMinimum(Calendar.DAY_OF_MONTH)) {
                            errors.add("warning",new ActionError("membershipform.dayofbirthdate.smallerthanmin"));
-                        } else if(day>cal.getActualMaximum(cal.DAY_OF_MONTH)) {
+                        } else if(day>cal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
                            errors.add("warning",new ActionError("membershipform.dayofbirthdate.largerthanmax"));
                         } else {
                            cal.set(year,this.getDayofbirthMonth(),day);
@@ -567,9 +563,10 @@ public class MembershipForm extends ActionForm {
          String phoneMessage = SubscribeForm.getPhoneMessage(this.getPhone());
          if(!phoneMessage.equals("")) {  // *** check if the phonenumber is valid ***
             errors.add("warning",new ActionError(phoneMessage));
-         } else if(false&&this.getPhone().equals(SubscribeForm.initPhone)){ // *** phone is not required ***
-            errors.add("warning",new ActionError("membershipform.required.phone"));
-         }
+         } 
+//         else if(false&&this.getPhone().equals(SubscribeForm.initPhone)){ // *** phone is not required ***
+//            errors.add("warning",new ActionError("membershipform.required.phone"));
+//         }
 
       }
 
