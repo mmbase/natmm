@@ -8,7 +8,6 @@ import nl.leocms.evenementen.*;
 import nl.leocms.util.*;
 import nl.leocms.util.tools.SearchUtil;
 import java.util.*;
-import java.util.zip.*;
 import java.io.*;
 import java.net.*;
 import javax.servlet.*;
@@ -21,7 +20,6 @@ public class SiteMapGenerator implements Runnable{
    boolean SKIP_URL_CHECKING = true;
    
    public SiteMapGenerator(){
-
    }
 
    public void generateSiteMap(Cloud cloud) {
@@ -60,7 +58,6 @@ public class SiteMapGenerator implements Runnable{
 
       sAllContent += "</sitemapindex>";
       writingFile(sRootDir + "/sitemap_index.xml",sAllContent);
-
    }
 
    String rubriekRun (Cloud cloud, String subsiteID, RubriekHelper rh, PaginaHelper ph, ApplicationHelper ap){
@@ -73,7 +70,7 @@ public class SiteMapGenerator implements Runnable{
       nowSec = (nowSec/quarterOfAnHour)*quarterOfAnHour;    // help the query cache by rounding to quarter of an hour
 
       HashMap pathsFromPageToElements =  ap.pathsFromPageToElements();
-      String sRootDir = ap.getRootDir();
+//      String sRootDir = ap.getRootDir();
       String sSiteUrl = ap.getSiteUrl();
       SearchUtil su = new SearchUtil();
 
@@ -99,10 +96,10 @@ public class SiteMapGenerator implements Runnable{
             nodesAtLevel[depth].remove(firstKey);
             depth++;
 
-            nodesAtLevel[depth] = (TreeMap) rh.getSubObjects(lastSubObject);
+            nodesAtLevel[depth] = rh.getSubObjects(lastSubObject);
             TreeMap thisSubObjects = (TreeMap) nodesAtLevel[depth].clone();
 
-            log.info("adding rubriek " + cloud.getNode(lastSubObject).getStringValue("naam"));
+            log.debug("adding rubriek " + cloud.getNode(lastSubObject).getStringValue("naam"));
             
             while(!thisSubObjects.isEmpty()) {
                Integer thisKey = (Integer) thisSubObjects.firstKey();
@@ -167,7 +164,7 @@ public class SiteMapGenerator implements Runnable{
                         }
                      }
                   }
-                  log.info("added page " + cloud.getNode(sThisObject).getStringValue("titel") + " with " + numberOfItems + " items");
+                  log.debug("added page " + cloud.getNode(sThisObject).getStringValue("titel") + " with " + numberOfItems + " items");
                }
             }
          }
