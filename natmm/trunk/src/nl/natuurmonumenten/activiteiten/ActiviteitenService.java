@@ -247,9 +247,9 @@ public class ActiviteitenService implements IActiviteitenService {
         NodeManager manager = cloud.getNodeManager("inschrijvingen");
         Node subscriptionNode = manager.createNode();
         subscriptionNode.setLongValue("datum_inschrijving", (new Date()).getTime() / 1000);
-        subscriptionNode.setStringValue("source", subscription.getMediaTypeId());
+        subscriptionNode.setStringValue("source", ActiviteitenHelper.getMediaTypeText(cloud, subscription.getMediaTypeId()));
         subscriptionNode.setStringValue("description", subscription.getBijzonderheden());
-        subscriptionNode.setStringValue("ticket_office", "website");
+        subscriptionNode.setStringValue("ticket_office_source", "website");
         subscriptionNode.commit();
         eventNode.createRelation(subscriptionNode, cloud.getRelationManager("posrel")).commit();
         // *** update inschrijvingen,related,inschrijvings_status
