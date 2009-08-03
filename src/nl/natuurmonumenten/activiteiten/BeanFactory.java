@@ -8,6 +8,7 @@ import java.util.Set;
 
 import nl.leocms.util.DoubleDateNode;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.mmbase.bridge.Cloud;
 import org.mmbase.bridge.Node;
@@ -28,14 +29,14 @@ class BeanFactory {
         bean.setId(node.getStringValue("number"));
         // titel is verplicht in database maar naam wordt in de code gebruikt
         String naam = node.getStringValue("naam");
-        if (!isEmpty(naam)) {
+        if (StringUtils.isNotBlank(naam)) {
             bean.setNaam(naam);
         } else {
             String titel = node.getStringValue("titel");
             bean.setNaam(titel);
         }
         String omschrijving = node.getStringValue("omschrijving");
-        if (!isEmpty(omschrijving)) {
+        if (StringUtils.isNotBlank(omschrijving)) {
             bean.setOmschrijving(omschrijving);
         }
         return bean;
@@ -45,7 +46,7 @@ class BeanFactory {
         EventType bean = new EventType();
         bean.setId(node.getStringValue("number"));
         String naam = node.getStringValue("naam");
-        if (!isEmpty(naam)) {
+        if (StringUtils.isNotBlank(naam)) {
             bean.setNaam(naam);
         }
         return bean;
@@ -55,7 +56,7 @@ class BeanFactory {
         MediaType bean = new MediaType();
         bean.setId(node.getStringValue("number"));
         String naam = node.getStringValue("naam");
-        if (!isEmpty(naam)) {
+        if (StringUtils.isNotBlank(naam)) {
             bean.setNaam(naam);
         }
         return bean;
@@ -65,7 +66,7 @@ class BeanFactory {
        ExtraInfo bean = new ExtraInfo();
        bean.setId(node.getStringValue("number"));
        String omschrijving = node.getStringValue("omschrijving");
-       if (!isEmpty(omschrijving)) {
+       if (StringUtils.isNotBlank(omschrijving)) {
            bean.setOmschrijving(omschrijving);
        }
        return bean;
@@ -77,7 +78,7 @@ class BeanFactory {
         bean.setAantalPlaatsenPerDeelnemer(node.getIntValue("aantal_per_deelnemer"));
         bean.setGroepsExcursie(node.getBooleanValue("groepsactiviteit"));
         String naam = node.getStringValue("naam");
-        if (!isEmpty(naam)) {
+        if (StringUtils.isNotBlank(naam)) {
             bean.setNaam(naam);
         }
         return bean;
@@ -88,7 +89,7 @@ class BeanFactory {
         bean.setId(node.getStringValue("number"));
         // titel is verplicht in database maar naam wordt in de code gebruikt
         String naam = node.getStringValue("naam");
-        if (!isEmpty(naam)) {
+        if (StringUtils.isNotBlank(naam)) {
             bean.setNaam(naam);
         } else {
             String titel = node.getStringValue("titel");
@@ -101,15 +102,15 @@ class BeanFactory {
         Vertrekpunt bean = new Vertrekpunt();
         bean.setId(node.getStringValue("number"));
         String titel = node.getStringValue("titel");
-        if (!isEmpty(titel)) {
+        if (StringUtils.isNotBlank(titel)) {
             bean.setTitel(titel);
         }
         String intro = node.getStringValue("intro");
-        if (!isEmpty(intro)) {
+        if (StringUtils.isNotBlank(intro)) {
             bean.setIntro(intro);
         }
         String tekst = node.getStringValue("tekst");
-        if (!isEmpty(tekst)) {
+        if (StringUtils.isNotBlank(tekst)) {
             bean.setOmschrijving(tekst);
         }
         return bean;
@@ -123,7 +124,7 @@ class BeanFactory {
         bean.setAanvangstijd(toDate(event.getLongValue("begindatum")));
         bean.setEindtijd(toDate(event.getLongValue("einddatum")));
         String omschrijving = event.getStringValue("omschrijving");
-        if (!isEmpty(omschrijving)) {
+        if (StringUtils.isNotBlank(omschrijving)) {
             bean.setOmschrijving(omschrijving);
         }
         String parentNumber = nl.leocms.evenementen.Evenement.findParentNumber(event);
@@ -166,11 +167,11 @@ class BeanFactory {
         bean.setId(node.getStringValue("number"));
         bean.setTitel(node.getStringValue("titel"));
         String omschrijving = node.getStringValue("omschrijving");
-        if (!isEmpty(omschrijving)) {
+        if (StringUtils.isNotBlank(omschrijving)) {
             bean.setKorteOmschrijving(omschrijving);
         }
         String tekst = node.getStringValue("tekst");
-        if (!isEmpty(tekst)) {
+        if (StringUtils.isNotBlank(tekst)) {
             bean.setVolledigeOmschrijving(tekst);
         }
         
@@ -195,7 +196,7 @@ class BeanFactory {
         if (medewerkerList != null && !medewerkerList.isEmpty()) {
             Node medewerkerNode= medewerkerList.getNode(0);
              String email = medewerkerNode.getStringValue("medewerkers.email");
-             if (!isEmpty(email)) {
+             if (StringUtils.isNotBlank(email)) {
                  bean.setContactPersoon("email");
              }
         }
@@ -300,10 +301,6 @@ class BeanFactory {
         return (Kosten[]) list.toArray(new Kosten[list.size()]);
     }
     
-    private boolean isEmpty(String str) {
-        return str == null || str.trim().length() == 0;
-    }
-
     private Date toDate(long cadDatum) {
         Date date = new Date();
         date.setTime(cadDatum * 1000L);
