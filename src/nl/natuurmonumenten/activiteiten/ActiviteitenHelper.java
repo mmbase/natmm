@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import nl.leocms.evenementen.Evenement;
 import nl.leocms.evenementen.forms.SubscribeAction;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.mmbase.bridge.Cloud;
 import org.mmbase.bridge.Node;
@@ -45,7 +46,7 @@ public class ActiviteitenHelper {
         if (!isEmpty(eventTypeIds)) {
             removeEventsWithoutEventType(cloud, eventTypeIds, parentEvents);
         }
-        if (!isEmpty(natuurgebiedenId)) {
+        if (StringUtils.isNotBlank(natuurgebiedenId)) {
             removeEventsWithoutNatuurgebied(cloud, natuurgebiedenId, parentEvents);
         }
         return parentEvents;
@@ -240,7 +241,7 @@ public class ActiviteitenHelper {
         for (Iterator iter = parentEvents.iterator(); iter.hasNext();) {
             String parentNumber = (String) iter.next();
             String constraint = createEventTypeConstraint(eventTypeIds);
-            if (!isEmpty(constraint)) {
+            if (StringUtils.isNotBlank(constraint)) {
                 NodeList list = cloud.getList(parentNumber, "evenement,related,evenement_type", "evenement.number", constraint, null, null, null, true);
                 if (list.isEmpty()) {
                     iter.remove();
@@ -251,7 +252,7 @@ public class ActiviteitenHelper {
 
     private static String createProvincieConstraint(String provincieId) {
         String provincieConstraint = null;
-        if (!isEmpty(provincieId)) {
+        if (StringUtils.isNotBlank(provincieId)) {
             provincieConstraint = " AND lokatie like '%," + provincieId + ",%' ";
         }
         return provincieConstraint;
@@ -354,20 +355,30 @@ public class ActiviteitenHelper {
        return sEventConstraint;
     }
 
-    private static boolean isEmpty(String str) {
-        return str == null || str.trim().length() == 0;
-    }
-
     private static boolean isEmpty(String[] str) {
         if (str == null || str.length == 0) {
             return true;
         }
         for (int i = 0; i < str.length; i++) {
-            if (!isEmpty(str[i])) {
+            if (StringUtils.isNotBlank(str[i])) {
                 return false;
             }
         }
         return true;
     }
+
+   public static String getMediaTypeText(Cloud cloud, String mediaTypeId) {
+      if (StringUtils.isBlank(mediaTypeId)) 
+         return "Geen bron ingevuld.";
+      
+      if (cloud.hasNode(mediaTypeId)) {
+         Node mediaType = cloud.getNode(mediaTypeId);
+         //If the node is of the correct 'media' type, return its value of column 'naam'
+         if (mediaType.getNodeManager().getName().equalsIgnoreCase("media")) {
+            return mediaType.getStringValue("naam");
+         }
+      }
+      return "Geen correcte bron gevonden.";
+   }
    
 }
