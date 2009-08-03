@@ -5,9 +5,9 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/xmlbs.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/axis.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/cloudprovider-1.1.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/commons-beanutils.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/commons-collections-3.1.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/commons-digester.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/commons-digester-1.6.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-lang-2.4.jar">
       <attributes>
          <attribute name="javadoc_location" value="http://commons.apache.org/lang/apidocs/"/>
