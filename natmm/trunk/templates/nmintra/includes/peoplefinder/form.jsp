@@ -59,7 +59,7 @@ if(!action.equals("print")) {
             <td colspan="2" class="bold">
               <select tabindex="6" name="location" style="width:195px;">
                 <option value="default" <%  if(programId.equals("default")) { %>SELECTED<% } 
-                    %>>alle lokaties
+                    %>>alle locaties
                 <mm:list path="locations" orderby="locations.naam" directions="UP"
                   ><mm:field name="locations.number" jspvar="locations_number" vartype="String" write="false"
                   ><mm:field name="locations.naam" jspvar="locations_name" vartype="String" write="false"

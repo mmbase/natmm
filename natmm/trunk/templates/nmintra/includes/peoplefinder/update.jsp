@@ -11,7 +11,7 @@
     <tr><td>Mobiel:&nbsp;</td>                      <td><input type="text" name="cellularphone" value="<mm:field name="cellularphone" />" style="width:400px;"></td></tr>
     <tr><td>Fax:&nbsp;</td>                         <td><input type="text" name="fax" value="<mm:field name="fax" />" style="width:400px;"></td></tr>
     <tr><td>Email (**):&nbsp;</td>                  <td><input type="text" name="email" value="<mm:field name="email" />" style="width:400px;"></td></tr>
-    <tr><td>Lokatie, regio/afdeling en functie:&nbsp;</td><td><textarea name="omschrijving_eng" style="width:400px;height:50px;"><%= omschrijving_engId %></textarea></td></tr>
+    <tr><td>Locatie, regio/afdeling en functie:&nbsp;</td><td><textarea name="omschrijving_eng" style="width:400px;height:50px;"><%= omschrijving_engId %></textarea></td></tr>
     <tr><td>Functie (visitekaartje):&nbsp;</td>     <td><input type="text" name="job" value="<mm:field name="job" />" style="width:400px;"></td></tr>
     <tr><td><%= specialDays %>:&nbsp;</td>          <td><textarea name="omschrijving_fra" rows="2" style="width:400px;"><mm:field name="omschrijving_fra" /></textarea></td></tr>
     <tr><td>Werkzaamheden: &nbsp;</td>              <td><textarea name="omschrijving_de" rows="4" style="width:400px;"><mm:field name="omschrijving_de" jspvar="omschrijving_de" vartype="String" write="false"><%= HtmlCleaner.cleanHtml(omschrijving_de) %></mm:field></textarea></td></tr>

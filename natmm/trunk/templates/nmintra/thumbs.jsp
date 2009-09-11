@@ -134,7 +134,7 @@ if(employeeFound) {
             isFirst = false;
         }
         if(!programId.equals("default")) {
-           %><mm:node number="<%= programId %>"><li><%if(!isFirst) { %> en<% }%> de lokatie <mm:field name="naam" /></li></mm:node><%
+           %><mm:node number="<%= programId %>"><li><%if(!isFirst) { %> en<% }%> de locatie <mm:field name="naam" /></li></mm:node><%
         }
         if(!otherGroupsId.equals("default")) {
            %><mm:node number="<%= otherGroupsId %>"><li><%if(!isFirst) { %> en<% }%> de groep <mm:field name="title" /></li></mm:node><%
@@ -167,7 +167,7 @@ if(employeeFound) {
     ></select>&nbsp;<br><div align="right"><span class="light">en</span></div></td></tr>
     <tr><td><select name="program" style="width:195px;">
         <option value="default" <%  if(programId.equals("default")) { %>SELECTED<% }
-            %>>alle lokaties
+            %>>alle locaties
    <mm:list path="locations" orderby="locations.naam" directions="UP"
             ><mm:field name="locations.number" jspvar="locations_number" vartype="String" write="false"
             ><mm:field name="locations.naam" jspvar="locations_name" vartype="String" write="false"
