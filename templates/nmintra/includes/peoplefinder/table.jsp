@@ -80,7 +80,7 @@
                </mm:isnotempty
            ></mm:field
            ><mm:related path="readmore,locations" fields="locations.naam" distinct="true">
-               <tr><td style="padding-bottom:3px;">Lokatie:&nbsp;</td><td style="padding-bottom:3px;vertical-align:bottom;"><mm:field name="locations.naam" /></td></tr>
+               <tr><td style="padding-bottom:3px;">Locatie:&nbsp;</td><td style="padding-bottom:3px;vertical-align:bottom;"><mm:field name="locations.naam" /></td></tr>
            </mm:related
            >
            <%-- 
