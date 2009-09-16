@@ -4,7 +4,7 @@
 net.sf.mmapps.modules.lucenesearch.LuceneManager lm  = mod.getLuceneManager();
 net.sf.mmapps.modules.lucenesearch.SearchConfig cf = lm.getConfig();
 if(cf==null) {
-   log.error("Cound not read the lucenedatadefinition.xml, is it present in WEB-INF\\config ?");
+   log.error("Could not read the lucenedatadefinition.xml, is it present in WEB-INF\\config ?");
 }
 
 // *** all pages that belong to the selected rubriek: hsetAllowedNodes ***
