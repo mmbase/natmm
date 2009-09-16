@@ -47,7 +47,7 @@ import com.cfdev.mail.verify.EmailVerifier;
 
 public class SubscribeForm extends ActionForm {
 
-   private static final Logger log = Logging.getLoggerInstance(EvenementForm.class);
+   private static final Logger log = Logging.getLoggerInstance(SubscribeForm.class);
    public static String initPhone = "0..-....";
    public static String cashPaymentType = "Contant";
 
