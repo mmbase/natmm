@@ -49,13 +49,16 @@ public class SubscribeInitAction extends Action {
       // promptforconfirmation: after book from website
       // canceled: after cancel action
 
-      SubscribeForm subscribeForm = (SubscribeForm) form;
-      subscribeForm.setNode(request.getParameter("number"));
-      subscribeForm.setParent(subscribeForm.findParent());
-      subscribeForm.setPageNumber(request.getParameter("p"));
-      subscribeForm.setPaymentType(subscribeForm.getDefaultPaymentType());
-      subscribeForm.resetNumbers();
+      prepareForm((SubscribeForm)form, request.getParameter("number"), request.getParameter("p") );
 
       return mapping.findForward("success");
+   }
+
+   public static void prepareForm(SubscribeForm subscribeForm, String nodeNumber, String pageNumber) {
+      subscribeForm.setNode(nodeNumber);
+      subscribeForm.setParent(subscribeForm.findParent());
+      subscribeForm.setPageNumber(pageNumber);
+      subscribeForm.setPaymentType(subscribeForm.getDefaultPaymentType());
+      subscribeForm.resetNumbers();
    }
 }

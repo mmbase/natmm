@@ -11,6 +11,8 @@ import net.sf.mmapps.modules.cloudprovider.CloudProviderFactory;
 import nl.leocms.applications.NatMMConfig;
 import nl.leocms.evenementen.Evenement;
 import nl.leocms.evenementen.forms.SubscribeAction;
+import nl.leocms.evenementen.forms.SubscribeForm;
+import nl.leocms.evenementen.forms.SubscribeInitAction;
 
 import org.apache.log4j.Logger;
 import org.mmbase.bridge.Cloud;
@@ -38,7 +40,7 @@ public class ActiviteitenService implements IActiviteitenService {
      * nl.natuurmonumenten.activiteiten.ActiviteitenServiceInterf#getVersion()
      */
     public String getVersion() {
-        return "2.2";
+        return "2.3";
     }
 
     /*
@@ -250,6 +252,11 @@ public class ActiviteitenService implements IActiviteitenService {
         subscriptionNode.setStringValue("source", ActiviteitenHelper.getMediaTypeText(cloud, subscription.getMediaTypeId()));
         subscriptionNode.setStringValue("description", subscription.getBijzonderheden());
         subscriptionNode.setStringValue("ticket_office_source", "website");
+        
+        SubscribeForm subscribeForm = new SubscribeForm();
+        SubscribeInitAction.prepareForm(subscribeForm, null, "agenda");
+        subscriptionNode.setStringValue("betaalwijze", subscribeForm.getPaymentType());
+        
         subscriptionNode.commit();
         eventNode.createRelation(subscriptionNode, cloud.getRelationManager("posrel")).commit();
         // *** update inschrijvingen,related,inschrijvings_status
