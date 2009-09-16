@@ -20,8 +20,6 @@
  */
 package nl.leocms.util;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 
 import org.mmbase.bridge.Cloud;
@@ -435,7 +433,7 @@ public class RubriekHelper {
       
       } else {
            
-         TreeMap subObjects = (TreeMap) getSubObjects(objectNodeNumber);
+         TreeMap subObjects = getSubObjects(objectNodeNumber);
          while(subObjects.size()>0 && paginaNodeNumber.equals("-1")) {
             Integer nextKey = (Integer) subObjects.firstKey();
             String nextObject =  (String) subObjects.get(nextKey);
@@ -445,7 +443,7 @@ public class RubriekHelper {
             if(nType.equals("pagina")){
                paginaNodeNumber = nextObject;
             } else { 
-               subObjects = (TreeMap) getSubObjects(nextObject);
+               subObjects = getSubObjects(nextObject);
             }
          }
          
