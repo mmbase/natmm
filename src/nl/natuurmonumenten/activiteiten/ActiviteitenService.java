@@ -14,6 +14,7 @@ import nl.leocms.evenementen.forms.SubscribeAction;
 import nl.leocms.evenementen.forms.SubscribeForm;
 import nl.leocms.evenementen.forms.SubscribeInitAction;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.mmbase.bridge.Cloud;
 import org.mmbase.bridge.Node;
@@ -246,6 +247,7 @@ public class ActiviteitenService implements IActiviteitenService {
         if (eventNode == null) {
             throw new IllegalArgumentException("Evenement id bestaat niet: " + subscription.getEvenementId());
         }
+        logger.info("Subscribe event started for event:" + eventNode.getNumber());
         NodeManager manager = cloud.getNodeManager("inschrijvingen");
         Node subscriptionNode = manager.createNode();
         subscriptionNode.setLongValue("datum_inschrijving", (new Date()).getTime() / 1000);
@@ -297,8 +299,7 @@ public class ActiviteitenService implements IActiviteitenService {
         
         // if a participant added extra information during the subscription,
         // this information should be mailed to the backoffice employees
-        if ( (subscriptionNode.getStringValue("description") != null)
-             && (!"".equals(subscriptionNode.getStringValue("description"))) ) {
+        if (StringUtils.isNotBlank(subscriptionNode.getStringValue("description"))) {
             boolean sent = SubscribeAction.sendDescriptionToBackOffice(cloud, eventNode, parent, subscriptionNode, participant);
             if (sent) logger.info("BackofficeEmail is sent for participant:" + participant.getNumber() + ", with subscription:" + subscriptionNode.getNumber());
         }
