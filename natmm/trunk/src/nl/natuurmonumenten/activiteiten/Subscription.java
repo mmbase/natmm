@@ -19,6 +19,8 @@ public class Subscription implements Serializable {
     private String lidnummer;
     private String bijzonderheden;
     private String mediaTypeId;
+    private String geslacht;
+    
     public String getEvenementId() {
         return evenementId;
     }
@@ -115,4 +117,10 @@ public class Subscription implements Serializable {
     public void setMediaTypeId(String mediaTypeId) {
         this.mediaTypeId = mediaTypeId;
     }
+   public void setGeslacht(String geslacht) {
+      this.geslacht = geslacht;
+   }
+   public String getGeslacht() {
+      return geslacht;
+   }
 }
