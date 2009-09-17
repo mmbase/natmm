@@ -158,6 +158,7 @@ public class ActiviteitenHelper {
         thisParticipant.setStringValue("land", subscription.getLand());
         thisParticipant.setStringValue("postcode", subscription.getPostcode());
         thisParticipant.setStringValue("lidnummer", subscription.getLidnummer());
+        thisParticipant.setStringValue("gender", determineGender(subscription));
         thisParticipant.commit();
 
         Relation thisRel = thisSubscription.createRelation(thisParticipant,cloud.getRelationManager("posrel"));
@@ -212,6 +213,24 @@ public class ActiviteitenHelper {
 
         return thisParticipant;
      }
+
+   private static String determineGender(Subscription subscription) {
+      String gender = subscription.getGeslacht();
+      if (StringUtils.isBlank(gender)) {
+         return "";
+      }
+
+      if (gender.equalsIgnoreCase("man") || gender.equalsIgnoreCase("men") || gender.equalsIgnoreCase("male")) {
+         return "male";
+      }
+
+      if (gender.equalsIgnoreCase("vrouw") || gender.equalsIgnoreCase("female") || gender.equalsIgnoreCase("woman")
+            || gender.equalsIgnoreCase("women")) {
+         return "female";
+      }
+
+      return "";
+   }
 
 
     private static void removeEventsNotOnInternet(Cloud cloud, HashSet parentEvents) {
