@@ -74,11 +74,6 @@
                <mm:field name="readmore.readmore"><mm:isnotempty><tr><td style="padding-bottom:3px;">Functie:&nbsp;</td>
                    <td style="padding-bottom:3px;vertical-align:bottom;"><mm:write /></td></tr></mm:isnotempty></mm:field>
            </mm:related
-           ><mm:field name="job"
-               ><mm:isnotempty>
-                   <tr><td style="padding-bottom:3px;">Functie (visitekaartje):&nbsp;</td><td style="padding-bottom:3px;vertical-align:bottom;"><mm:write /></td></tr>
-               </mm:isnotempty
-           ></mm:field
            ><mm:related path="readmore,locations" fields="locations.naam" distinct="true">
                <tr><td style="padding-bottom:3px;">Locatie:&nbsp;</td><td style="padding-bottom:3px;vertical-align:bottom;"><mm:field name="locations.naam" /></td></tr>
            </mm:related

@@ -23,7 +23,6 @@ String omschrijvingId = request.getParameter("omschrijving"); if(omschrijvingId=
 String omschrijving_engId = request.getParameter("omschrijving_eng"); if(omschrijving_engId==null) { omschrijving_engId=""; }
 String omschrijving_deId = request.getParameter("omschrijving_de"); if(omschrijving_deId==null) { omschrijving_deId=""; }
 String omschrijving_fraId= request.getParameter("omschrijving_fra"); if(omschrijving_fraId==null) { omschrijving_fraId=""; }
-String jobId = request.getParameter("job"); if(jobId==null) { jobId=""; }
 
 String specialDays = "Vaste vrije dag(en)";
 if(iRubriekLayout==NMIntraConfig.SUBSITE1_LAYOUT) {

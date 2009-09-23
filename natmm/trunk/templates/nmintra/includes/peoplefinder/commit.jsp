@@ -31,7 +31,6 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
         ><mm:setfield name="cellularphone"><%= cellularphoneId %></mm:setfield
         ><mm:setfield name="fax"><%= faxId %></mm:setfield
         ><mm:setfield name="email"><%= emailId %></mm:setfield
-        ><mm:setfield name="job"><%= jobId %></mm:setfield
         ><mm:setfield name="omschrijving_eng"><%= omschrijving_engId %></mm:setfield
         ><mm:setfield name="omschrijving_de"><%= omschrijving_deId %></mm:setfield
         ><mm:setfield name="omschrijving_fra"><%= omschrijving_fraId %></mm:setfield
@@ -97,7 +96,6 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
             cellularphoneId = e.getStringValue("cellularphone");
             faxId = e.getStringValue("fax");
             emailId = e.getStringValue("email");
-            jobId = e.getStringValue("job");
             omschrijving_engId = e.getStringValue("omschrijving_eng"); // locatie, regio/afdeling en functie
             omschrijving_deId = e.getStringValue("omschrijving_de");   // werkzaamheden
             omschrijving_fraId = e.getStringValue("omschrijving_fra"); // vaste vrije/werk dag(en)
