@@ -63,7 +63,6 @@ public class CSVReader implements Runnable {
     }
     
     private Integer getDate(String thisDate, int defaultYear) {
-        int thisDay = 1;
         int thisMonth = 0;
         int thisYear = defaultYear;
         int pPos = thisDate.indexOf("+");
@@ -399,7 +398,6 @@ public class CSVReader implements Runnable {
             if(nextLine.indexOf("-----|")==-1) log.info("expecting -----| ... on second line of " + orgFile);
 
             Node thisNode = null;
-            Node relatedNode = null;
             String [] labels = { "DPIB015_SL", "OE_HOGER_N", "OE_KORT", "OE_VOL_NM" };
             String thisType = "afdelingen";
             nextLine = dataFileReader.readLine();
@@ -407,7 +405,7 @@ public class CSVReader implements Runnable {
                 nextLine += "|";
                 thisTree.clear();
                 int v = 0;
-                while(nextLine!=null&&v<labels.length) {
+                while(v<labels.length) {
                     int cPos = nextLine.indexOf("|");
                     String value = "";
                     if(cPos>-1) {
@@ -431,7 +429,7 @@ public class CSVReader implements Runnable {
                 thisNode.setValue("naam",thisTree.get("OE_VOL_NM"));
                 thisNode.commit();
                 thisTree.put(thisType,thisTree.get("OE_HOGER_N"));
-                Node destination = relatedNodes(cloud, thisTree, thisNode, thisType, "externid", "readmore", "", "",false);
+//                Node destination = relatedNodes(cloud, thisTree, thisNode, thisType, "externid", "readmore", "", "",false);
                 nextLine = dataFileReader.readLine();
             }
             dataFileReader.close();
@@ -440,7 +438,7 @@ public class CSVReader implements Runnable {
             log.info(thisTree);
             log.info(logMessage);
        }
-       logMessage += "\n<br>" + su.getDateTimeString() + su.jvmSize() + " - Organisational structure is read from: " + orgFile;
+       logMessage += "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize() + " - Organisational structure is read from: " + orgFile;
        return logMessage;
     }
 
@@ -601,7 +599,7 @@ public class CSVReader implements Runnable {
           entries++;
       }
       dataFileReader.close();
-      logMessage += "\n<br>" + su.getDateTimeString() + su.jvmSize() 
+      logMessage += "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize() 
          + " - Number of NM employees loaded from: " + dataFile + " is " + persons + " (number of entries is " + entries + ")"
          + "\n<br>Number of email addresses parsed: " + emails.size()
          + "\n<br>Number of persons for which no email address could be found: " + noemails;
@@ -642,7 +640,6 @@ public class CSVReader implements Runnable {
          "FUNC_EXT", "KOSTEN", "K_OF_S_OMSCHRIJVING" };
       int persons=0;
       int entries=0;
-      int noemails=0;
       nextLine = dataFileReader.readLine();
       while(nextLine!=null) {
 			 thisPerson.clear();
@@ -711,7 +708,7 @@ public class CSVReader implements Runnable {
           entries++;
       }
       dataFileReader.close();
-      logMessage += "\n<br>" + su.getDateTimeString() + su.jvmSize()
+      logMessage += "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize()
           + " - Number of NM vrijwilligers loaded from: " + dataFile + " is " + persons + " (number of entries is " + entries + ")";
     } catch(Exception e) {
       log.info(e);
@@ -904,7 +901,7 @@ public class CSVReader implements Runnable {
            }
            dataFileReader.close();
            application.setAttribute("zipCodeMap",zipCodeMap);
-           logMessage += "\n<br>" + su.getDateTimeString() + su.jvmSize()
+           logMessage += "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize()
            + " - Number of zipcodes loaded from: " + dataFile + " unzipped from " 
            + zipFile + " (lm=" + lastModifiedDate(zipFile) + ") is " + zipcodes + " (number of errors " + errors + ")";
          }
@@ -1010,7 +1007,7 @@ public class CSVReader implements Runnable {
            application.setAttribute("houseExtTable",houseExtTable);
            application.setAttribute("lastNameTable",lastNameTable);
            application.setAttribute("invLastNameTable",invLastNameTable);
-           logMessage += "\n<br>" + su.getDateTimeString() + su.jvmSize() 
+           logMessage += "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize() 
               + " - Number of persons loaded from: " + dataFile + " unzipped from "
               + zipFile + " (lm=" + lastModifiedDate(zipFile) + ") is " + persons + " (number of errors " + errors + ")";
          }
@@ -1046,8 +1043,7 @@ public class CSVReader implements Runnable {
         // user.put("password","");
         // Cloud cloud = ContextProvider.getDefaultCloudContext().getCloud("mmbase","name/password",user);
 
-        MMBaseContext mc = new MMBaseContext();
-        ServletContext application = mc.getServletContext();
+        ServletContext application = MMBaseContext.getServletContext();
         String requestUrl = (String) application.getAttribute("request_url");
         if(requestUrl==null) { requestUrl = "www.natuurmonumenten.nl"; }
 
@@ -1085,7 +1081,7 @@ public class CSVReader implements Runnable {
               int nodesMarked = 0;
               int nodesDeleted = 0;
               int numberOfEmptyDept = 0;
-              String logMessage =  "\n<br>" + su.getDateTimeString() + su.jvmSize() + " - Started import for " +  requestUrl;
+              String logMessage =  "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize() + " - Started import for " +  requestUrl;
               
               if(importType==FULL_IMPORT) {
               
@@ -1105,7 +1101,7 @@ public class CSVReader implements Runnable {
                 nodesMarked += markNodesAndRelations(cloud,"afdelingen",departmentRelations,departmentFields);
                 
                 TreeMap emails = getEmails(emailFile);
-                logMessage += "\n<br>" + su.getDateTimeString() + su.jvmSize() + " - Emails are imported from: " + emailFile;
+                logMessage += "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize() + " - Emails are imported from: " + emailFile;
                 logMessage += updateOrg(cloud,orgFile);
                 logMessage += updatePersons(cloud, emails, dataFile);
                
@@ -1116,7 +1112,7 @@ public class CSVReader implements Runnable {
                 nodesDeleted += deleteNodesAndRelations(cloud,"afdelingen",departmentRelations,departmentFields);
               
                 numberOfEmptyDept = updateDepartments(cloud);
-                logMessage +=  "\n<br>" + su.getDateTimeString() + su.jvmSize()
+                logMessage +=  "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize()
                    + " - Number of nodes and relations marked as inactive before update: " + nodesMarked
                    + "\n<br>Number of inactive nodes deleted: " + nodesDeleted
                    + "\n<br>Number of departments without employees: " + numberOfEmptyDept;
@@ -1137,7 +1133,7 @@ public class CSVReader implements Runnable {
                }
             }
 
-            logMessage += "\n<br>" + su.getDateTimeString() + su.jvmSize() + " - Finished import";
+            logMessage += "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize() + " - Finished import";
 
             Node emailNode = cloud.getNodeManager("email").createNode();
             emailNode.setValue("to", toEmailAddress);
@@ -1165,7 +1161,7 @@ public class CSVReader implements Runnable {
     private Thread getKicker(){
        Thread  kicker = Thread.currentThread();
        if(kicker.getName().indexOf("CSVReaderThread")==-1) {
-            kicker.setName("CSVReaderThread / " + su.getDateTimeString());
+            kicker.setName("CSVReaderThread / " + ServerUtil.getDateTimeString());
             kicker.setPriority(Thread.MIN_PRIORITY+1); // does this help ??
        }
        return kicker;

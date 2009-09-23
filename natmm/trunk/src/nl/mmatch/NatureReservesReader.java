@@ -2,15 +2,10 @@ package nl.mmatch;
 
 import java.util.*;
 import java.io.*;
-import java.text.*;
-import java.util.zip.*;
-import javax.servlet.*;
 import org.mmbase.bridge.*;
-import org.mmbase.module.core.*;
 import org.mmbase.util.logging.*;
 import com.finalist.mmbase.util.CloudFactory;
 
-import nl.leocms.evenementen.Evenement;
 import nl.leocms.applications.NatMMConfig;
 import nl.leocms.util.ApplicationHelper;
 
@@ -81,13 +76,10 @@ public class NatureReservesReader implements Runnable {
         String toEmailAddress = NatMMConfig.getToEmailAddress();
         String fromEmailAddress = NatMMConfig.getFromEmailAddress(); 
         String root = NatMMConfig.getRootDir();
-        String incoming = NatMMConfig.getIncomingDir();
-        String temp = NatMMConfig.getTempDir();
         
         String natureReservesFile = root + "Natuurgebieden.csv";
             
         try {
-            
             log.info("Started import of: " + natureReservesFile);
             String logMessage =  "\n<br>Started import at " + new Date();
             
