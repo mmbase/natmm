@@ -13,7 +13,6 @@ import net.sf.mmapps.modules.cloudprovider.CloudProvider;
 import net.sf.mmapps.modules.cloudprovider.CloudProviderFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -50,7 +49,6 @@ public class LeoCMSCloudProvider implements CloudProvider {
     }
     
     private void readConfiguration(){
-        String cloudProviderClassName = null;
         try {
             properties = new Properties();
             properties.load(getClass().getResourceAsStream(CONFIGURATION_RESOURCE_NAME));
