@@ -255,14 +255,6 @@ if(!printPage) {
    %>
    <td>
       <%@include file="includes/education/searchform.jsp" %>
-      <table cellpadding="0" cellspacing="0" width="100%";>
-      <tr>
-         <td style="text-align:right;padding-left:19px;padding-right:9px;">
-            <span class="pageheader"><span style="color:#FFFFFF;">Fun</span></div>
-         </td>
-      </tr>
-      </table>
-      <%@include file="includes/whiteline.jsp" %>
       <div class="linklist" id="linklist">
       <table cellpadding="0" cellspacing="0">
       <mm:list nodes="<%= paginaID %>" path="pagina,posrel,linklijst">
