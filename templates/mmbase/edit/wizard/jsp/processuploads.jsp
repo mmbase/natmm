@@ -53,10 +53,7 @@ if (! ewconfig.subObjects.empty()) {
 }
 
     String did = request.getParameter("did");
-    int maxsize = ewconfig.maxupload;
-    try {
-        maxsize = Integer.parseInt(request.getParameter("maxsize"));
-    } catch (Exception e) {}
+    int maxsize = 4 * 1024 *1024; //Forced by NMCMS-673 for Intranet. 
 
     // Initialization
     DiskFileUpload fu = new DiskFileUpload();
