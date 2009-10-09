@@ -40,12 +40,13 @@ import nl.leocms.util.tools.HtmlCleaner;
  */
 public class RubriekHelper {
    
-   private static Logger log = Logging.getLoggerInstance(RubriekHelper.class);
+   private static final Logger log = Logging.getLoggerInstance(RubriekHelper.class.getName());
 
    // defined in the default data rubriek.xml
    public static final String LEEUWARDEN_NL_RUBRIEK_ALIAS = "rubriek.leocms.nl";
 
-   Cloud cloud;
+   private Cloud cloud;
+   
    /**
     * @param cloud
     */
@@ -337,28 +338,38 @@ public class RubriekHelper {
     * @return NodeList nodeList
     */
    public NodeList getTreeNodes(String rubriekNodeNumber) {
-      NodeList nodeList = cloud.getList(rubriekNodeNumber, 
-          "rubriek1,parent,rubriek", "rubriek.number,rubriek.isvisible",null,"parent.pos","UP","DESTINATION",true);
+      // Ignore the searchable status
+      return getTreeNodes(rubriekNodeNumber, false);
+   }
+
+   public NodeList getTreeNodes(String rubriekNodeNumber, boolean onlySearchableItems) {
+      String constraints = null;
+      // Add items that have searchable state on OR all if searchable state does not care.
+      if (onlySearchableItems) {
+         constraints =  "[rubriek.issearchable] <> '0'";
+      }
+      NodeList nodeList = cloud.getList(rubriekNodeNumber, "rubriek1,parent,rubriek", "rubriek.number,rubriek.isvisible,rubriek.issearchable", constraints, "parent.pos", "UP", "DESTINATION", true);
       // determine the sublists
-      NodeList [] subList = new NodeList[nodeList.size()];
-      int i =0;
+      NodeList[] subList = new NodeList[nodeList.size()];
+      int i = 0;
       int size = nodeList.size();
-      while(i < size) {
-          Node node = nodeList.getNode(i);
-          boolean bIsVisible = !node.getStringValue("rubriek.isvisible").equals("0");
-          if(bIsVisible) {
-            subList[i] = getTreeNodes(node.getStringValue("rubriek.number"));
-          }
-          i++;
+      while (i < size) {
+         Node node = nodeList.getNode(i);
+         boolean bIsVisible = !node.getStringValue("rubriek.isvisible").equals("0");
+         if (bIsVisible) {
+               subList[i] = getTreeNodes(node.getStringValue("rubriek.number"));
+         }
+         i++;
       }
       // merge the sublists in the nodelist
-      i=0; int j=0;
-      while(i < size) {
-         if(subList[i]!=null) {
-            nodeList.addAll(j+1,subList[i]);
-            j=j+subList[i].size();
+      i = 0;
+      int j = 0;
+      while (i < size) {
+         if (subList[i] != null) {
+            nodeList.addAll(j + 1, subList[i]);
+            j = j + subList[i].size();
          }
-         i++;       
+         i++;
          j++;
       }
       return nodeList;
