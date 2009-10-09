@@ -33,7 +33,6 @@ import com.finalist.mmbase.util.CloudFactory;
  */
 public class PublishUtil {
    private static Logger log = Logging.getLoggerInstance(PublishUtil.class.getName());
-   private static boolean publish = false;
 
    /**
     * add a node to the publish queue

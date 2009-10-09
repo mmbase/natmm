@@ -3,13 +3,9 @@ package nl.leocms.util;
 import java.util.*;
 
 import org.mmbase.bridge.*;
-import org.mmbase.util.logging.Logger;
-import org.mmbase.util.logging.Logging;
 
 public class DateUtil {
   
-  private static final Logger log = Logging.getLoggerInstance(DateUtil.class);
-
   public String getObjectNumber(Cloud cloud, Date date) {
     // returns the object number of the node that was the first to be created on day date
     int today_days = (int)(date.getTime() / (60 * 60 * 24)) / 1000;

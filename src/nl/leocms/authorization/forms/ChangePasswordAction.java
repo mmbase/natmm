@@ -20,8 +20,6 @@
  */
 package nl.leocms.authorization.forms;
 
-import nl.leocms.authorization.AuthorizationHelper;
-
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;

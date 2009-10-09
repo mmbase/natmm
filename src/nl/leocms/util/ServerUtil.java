@@ -24,7 +24,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import javax.servlet.*;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 

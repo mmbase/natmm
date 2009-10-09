@@ -66,7 +66,6 @@ public class UserInitAction extends Action {
     */
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
       log.debug("UserInitAction - doPerform()");
-      String action = request.getParameter("action");
       String id = request.getParameter("id");
       UserForm userForm = (UserForm) form;
       if (id != null) {

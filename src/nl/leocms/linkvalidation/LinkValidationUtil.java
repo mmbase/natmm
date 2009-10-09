@@ -20,9 +20,6 @@
  */
 package nl.leocms.linkvalidation;
 
-import org.mmbase.util.logging.Logging;
-import org.mmbase.util.logging.Logger;
-
 import org.mmbase.bridge.Cloud;
 import org.mmbase.bridge.Node;
 
@@ -35,9 +32,6 @@ import nl.leocms.versioning.PublishManager;
  * 
  */
 public class LinkValidationUtil {
-
-   /** Logger instance. */
-   private static Logger log = Logging.getLoggerInstance(LinkValidationUtil.class.getName());
 
    /**
     * Removes the link item

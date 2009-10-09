@@ -26,7 +26,6 @@ import org.mmbase.bridge.Node;
 import org.mmbase.bridge.NodeIterator;
 import org.mmbase.bridge.NodeList;
 import com.finalist.mmbase.util.CloudFactory;
-import org.mmbase.util.logging.*;
 import nl.leocms.evenementen.*;
 
 /**
@@ -37,7 +36,6 @@ import nl.leocms.evenementen.*;
  * @version $Revision: 1.9 $
  */
 public class ContentEvenement extends ContentElementBuilder {
-   private static final Logger log = Logging.getLoggerInstance(ContentEvenement.class);
    /**
     * @see org.mmbase.module.core.MMObjectBuilder#preCommit(org.mmbase.module.core.MMObjectNode)
     */

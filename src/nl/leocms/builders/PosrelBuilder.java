@@ -21,14 +21,12 @@
 package nl.leocms.builders;
 
 import nl.leocms.util.PaginaHelper;
-import nl.leocms.util.PublishUtil;
 import nl.leocms.applications.NatMMConfig;
 
 import org.mmbase.module.core.MMObjectNode;
 import org.mmbase.bridge.Cloud;
 import org.mmbase.bridge.Node;
 import org.mmbase.bridge.NodeList;
-import org.mmbase.bridge.Relation;
 import org.mmbase.module.corebuilders.InsRel;
 import org.mmbase.util.logging.Logger;
 import org.mmbase.util.logging.Logging;
@@ -40,8 +38,8 @@ import com.finalist.mmbase.util.CloudFactory;
  */
 public class PosrelBuilder extends InsRel {
 
-   private static final String FORMULIERVELD = "formulierveld";
-   private static final String FORMULIERVELD_ANTWOORD = "formulierveldantwoord";
+//   private static final String FORMULIERVELD = "formulierveld";
+//   private static final String FORMULIERVELD_ANTWOORD = "formulierveldantwoord";
    private static Logger log = Logging.getLoggerInstance(PosrelBuilder.class.getName());
 
    public boolean commit(MMObjectNode objectNode) {
@@ -85,13 +83,13 @@ public class PosrelBuilder extends InsRel {
       super.removeNode(objectNode);
    }
 
-   private boolean isFormulierRelated(MMObjectNode objectNode) {
+/*   private boolean isFormulierRelated(MMObjectNode objectNode) {
       Cloud cloud = CloudFactory.getCloud();
       String destionationNumber = objectNode.getStringValue("dnumber");
       Node destinationNode = cloud.getNode(destionationNumber);
       String destinatioNodeNodeManagerName = destinationNode.getNodeManager().getName();
       return ((destinationNode.getNodeManager().getName().equals(FORMULIERVELD)) || (destinationNode.getNodeManager().getName().equals(FORMULIERVELD_ANTWOORD)));
-   }
+   }*/
 
    private void sendMailToCustomers(Cloud cloud, String dossierNumber, String articleNumber) {
       NodeList customersList = cloud.getList(dossierNumber,"dossier,posrel,deelnemers",

@@ -22,7 +22,6 @@ package nl.leocms.pagina;
 
 import java.util.*;
 
-import nl.leocms.util.PublishUtil;
 import nl.leocms.util.PaginaHelper;
 import nl.leocms.content.ContentUtil;
 

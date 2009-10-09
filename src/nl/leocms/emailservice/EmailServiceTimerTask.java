@@ -61,8 +61,7 @@ public class EmailServiceTimerTask extends TimerTask {
    PaginaHelper paginaHelper;
    private String webserviceURL;
    private String webmasterEmail;
-   private String webmasterName;
-    private final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+   private final static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
 
     /**
@@ -72,7 +71,7 @@ public class EmailServiceTimerTask extends TimerTask {
     public EmailServiceTimerTask(String webserviceURL) {
        this.webserviceURL = webserviceURL;
        this.webmasterEmail = PropertiesUtil.getProperty("mail.sender.email");
-       this.webmasterName = PropertiesUtil.getProperty("mail.sender.name");
+       PropertiesUtil.getProperty("mail.sender.name");
     }
 
     /**
@@ -124,8 +123,6 @@ public class EmailServiceTimerTask extends TimerTask {
                         // the email from the webservice starts with text: or html: indicating the type of mail to send.
                         while (usersIt.hasNext()) {
                            String email = (String) usersIt.next();
-                           String fullName = (String) ret.get(email);
-
                            List articleList = (ArrayList) usersWithArticles.get(email);
                            if (articleList == null) {
                               articleList = new ArrayList(artikels.size());

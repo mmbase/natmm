@@ -3,7 +3,6 @@ package nl.leocms.util.tools.documents;
 import java.io.*;
 import java.util.*;
 import org.mmbase.bridge.*;
-import java.io.PrintWriter;
 import org.mmbase.util.logging.*;
 import com.finalist.mmbase.util.CloudFactory;
 import nl.leocms.applications.NMIntraConfig;

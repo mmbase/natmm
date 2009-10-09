@@ -23,14 +23,12 @@ package nl.leocms.authorization.forms;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionError;
 import org.mmbase.bridge.NodeList;
-import org.mmbase.security.Rank;
 import org.mmbase.util.logging.Logging;
 import org.mmbase.util.logging.Logger;
 
