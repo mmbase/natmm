@@ -100,7 +100,7 @@
             } else { 
               %>De volgende zoekresultaten zijn gevonden in:<br/><% 
             }
-            NodeList rubriekenList = (NodeList) rh.getTreeNodes(subsiteID);
+            NodeList rubriekenList = (NodeList) rh.getTreeNodes(subsiteID, true);
             
             // *** show anchors to rubrieken
             boolean bFirst = true;
