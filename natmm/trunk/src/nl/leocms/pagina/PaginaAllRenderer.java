@@ -28,7 +28,6 @@ import nl.leocms.authorization.UserRole;
 import nl.leocms.authorization.Roles;
 import nl.leocms.authorization.AuthorizationHelper;
 import nl.leocms.util.PaginaHelper;
-import nl.leocms.util.ApplicationHelper;
 
 import org.mmbase.bridge.*;
 

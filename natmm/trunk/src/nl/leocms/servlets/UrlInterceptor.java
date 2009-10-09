@@ -50,8 +50,6 @@ import org.mmbase.module.core.MMBaseContext;
  * @version $Id: UrlInterceptor.java,v 1.1 2006-03-05 21:43:59 henk Exp $
  */
 public class UrlInterceptor  implements Filter  {
-   private FilterConfig config = null;
-
    private static Logger log;
 
 
@@ -63,8 +61,6 @@ public class UrlInterceptor  implements Filter  {
     * in the web.xml
     */
    public void init(FilterConfig config) throws ServletException {
-      //initialize MMBase here.
-      this.config = config;
       if (!MMBaseContext.isInitialized()) {
          ServletContext servletContext = config.getServletContext();
          MMBaseContext.init(servletContext);
@@ -79,7 +75,6 @@ public class UrlInterceptor  implements Filter  {
     * Destroy method
     */
    public void destroy() {
-      config = null;
    }
 
 

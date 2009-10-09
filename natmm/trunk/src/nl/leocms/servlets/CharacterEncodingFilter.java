@@ -57,7 +57,7 @@ public class CharacterEncodingFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
     FilterChain chain) throws IOException, ServletException {
         if (request instanceof HttpServletRequest) {
-            HttpServletRequest httpreq = (HttpServletRequest) request;
+//            HttpServletRequest httpreq = (HttpServletRequest) request;
             try {
                 //System.out.println("encoding="+request.getCharacterEncoding());
                 request.setCharacterEncoding("UTF-8");

@@ -26,12 +26,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.mmbase.bridge.Cloud;
-// import org.mmbase.bridge.CloudManager;
-import org.mmbase.bridge.Node;
-
-import com.finalist.mmbase.util.CloudFactory;
-
 import nl.leocms.authorization.UserRole;
 
 /**

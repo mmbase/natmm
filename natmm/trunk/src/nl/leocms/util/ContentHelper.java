@@ -25,8 +25,6 @@ import java.util.*;
 import nl.leocms.authorization.AuthorizationHelper;
 import nl.leocms.authorization.UserRole;
 import nl.leocms.authorization.Roles;
-import nl.leocms.applications.*;
-import org.mmbase.bridge.*;
 import org.mmbase.util.logging.Logger;
 import org.mmbase.util.logging.Logging;
 

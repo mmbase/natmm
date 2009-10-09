@@ -27,7 +27,6 @@ import java.util.*;
 import nl.leocms.versioning.PublishManager;
 import nl.leocms.servlets.UrlConverter;
 
-import nl.leocms.servlets.UrlConverter;
 import nl.leocms.servlets.UrlCache;
 import nl.leocms.applications.*;
 import nl.leocms.util.tools.HtmlCleaner;
@@ -644,7 +643,6 @@ public class PaginaHelper {
      * @return
      */
    public Node getObjectTemplate(String paginaNumber, String position) {
-      Node paginaNode = cloud.getNode(paginaNumber);
       NodeList contentrels =
          cloud.getList(
             paginaNumber,
@@ -701,7 +699,6 @@ public class PaginaHelper {
      */
    public String getHoofdpagina(String rubriekNumber) {
      /* assert rubriekNumber != null; */
-      Node rubriekNode = cloud.getNode(rubriekNumber);
       NodeList list = cloud.getList(rubriekNumber,
             "rubriek,posrel,pagina",
             "pagina.number",
@@ -748,7 +745,6 @@ public class PaginaHelper {
      * @return
      */
    public boolean hasContentrel(String paginaNumber, String position) {
-      Node paginaNode = cloud.getNode(paginaNumber);
       NodeList contentrels =
          cloud.getList(
             paginaNumber,
@@ -763,7 +759,6 @@ public class PaginaHelper {
    }
 
    public String getContentrel(String paginaNumber, String position) {
-      Node paginaNode = cloud.getNode(paginaNumber);
       NodeList contentrels =
          cloud.getList(
             paginaNumber,
@@ -789,7 +784,6 @@ public class PaginaHelper {
    public String getContentElementNumber(
       String paginaNumber,
       String position) {
-      Node paginaNode = cloud.getNode(paginaNumber);
       NodeList contentrels =
          cloud.getList(
             paginaNumber,
@@ -901,7 +895,6 @@ public class PaginaHelper {
             + pageNumber
             + " at position "
             + linklistPosition);
-      Node pageNode = cloud.getNode(pageNumber);
       NodeList linkLijstList =
          cloud.getList(
             pageNumber,
@@ -1091,7 +1084,6 @@ public class PaginaHelper {
                      ret.append('/');
                      ret.append(contentPage.getStringValue("urlfragment"));
                      ret.append(UrlConverter.PAGE_EXTENSION);
-                     URL url = new URL(ret.toString());
                      ret.append('?');
                      ret.append("objectnumber=");
                      ret.append(remoteContentList.getNode(0).getStringValue("number"));

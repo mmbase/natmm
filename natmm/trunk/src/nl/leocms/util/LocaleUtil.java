@@ -24,16 +24,12 @@ import java.text.DateFormatSymbols;
 import java.util.Locale;
 
 import org.mmbase.bridge.*;
-import org.mmbase.util.logging.Logging;
-import org.mmbase.util.logging.Logger;
 
 /**
  * @author Jeoffrey Bakker
  * @version $Revision: 1.3 $, $Date: 2006-08-11 09:24:16 $
  */
 public class LocaleUtil {
-
-   private static final Logger log = Logging.getLoggerInstance(LocaleUtil.class);
 
    public static DateFormatSymbols getDateFormatSymbols(Locale locale) {
       DateFormatSymbols dateFormatSymbols = null;

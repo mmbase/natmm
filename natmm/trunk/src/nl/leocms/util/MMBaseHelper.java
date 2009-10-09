@@ -61,9 +61,6 @@ public class MMBaseHelper {
     * @return
     */
    public int getFirstRelationNumber(String source, String destination, String relType) {
-
-
-      Node sourceNode = cloud.getNode(source);
       Node destinationNode = cloud.getNode(destination);
       RelationManager relTypeRelMan = cloud.getRelationManager(relType);
       RelationList rels = relTypeRelMan.getRelations(destinationNode);

@@ -6,7 +6,6 @@ import org.mmbase.bridge.Node;
 import org.mmbase.bridge.NodeIterator;
 import com.finalist.mmbase.util.CloudFactory;
 import org.mmbase.util.logging.*;
-import nl.leocms.evenementen.Evenement;
 
 public class ContentInschrijvingen extends HtmlBuilder {
 

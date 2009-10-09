@@ -25,7 +25,6 @@ import org.mmbase.bridge.Cloud;
 import org.mmbase.bridge.Node;
 import org.mmbase.bridge.NodeIterator;
 import com.finalist.mmbase.util.CloudFactory;
-import org.mmbase.util.logging.*;
 import nl.leocms.util.ApplicationHelper;
 
 /**
