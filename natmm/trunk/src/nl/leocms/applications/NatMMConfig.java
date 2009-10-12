@@ -247,7 +247,7 @@ public class NatMMConfig {
       try {
          InitialContext context = new InitialContext();
          Context env = (Context) context.lookup("java:comp/env");
-         boolean isProductionApplication = "true".equals((String) env.lookup("natmmconfig.is.production")) ? true : false;
+         boolean isProductionApplication = "true".equals(env.lookup("natmmconfig.is.production")) ? true : false;
          return isProductionApplication;
       }
       catch (NamingException ne) {
@@ -273,7 +273,7 @@ public class NatMMConfig {
       try {
          InitialContext context = new InitialContext();
          Context env = (Context) context.lookup("java:comp/env");
-         boolean isProductionApplication = "true".equals((String) env.lookup("natmmconfig.is.ipfilter.enabled")) ? true : false;
+         boolean isProductionApplication = "true".equals(env.lookup("natmmconfig.is.ipfilter.enabled")) ? true : false;
          return isProductionApplication;
       }
       catch (NamingException ne) {
