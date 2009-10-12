@@ -72,10 +72,9 @@ public class ListUtil {
   }
   
   public NodeList getRelated(String objects, String source, String role, String destination, String field, String field2, String language) {
-     LocaleUtil lu = new LocaleUtil();
-     String fields = destination + ".number," + destination + "." + lu.getLangFieldName(field,language);
+     String fields = destination + ".number," + destination + "." + LocaleUtil.getLangFieldName(field,language);
      if (!field2.equals("")) {
-        fields += "," + destination + "." + lu.getLangFieldName(field2,language);
+        fields += "," + destination + "." + LocaleUtil.getLangFieldName(field2,language);
      }
      log.debug("getRelated objects=" + objects + ", path=" + source + "," + role + "," + destination + ", fields=" + fields + ", destination=" + destination + "." + field);
      NodeList nlRelated = cloud.getList(objects,
@@ -105,7 +104,7 @@ public class ListUtil {
   
   public String setSelected(String object, NodeList objectList, String field) {
      if("".equals(object)&&objectList.size()==1) { 
-       object = (String) objectList.getNode(0).getStringValue(field);
+       object = objectList.getNode(0).getStringValue(field);
      }
      return object;
   }

@@ -31,7 +31,6 @@ import org.apache.commons.lang.StringUtils;
 import nl.leocms.util.RubriekHelper;
 import nl.leocms.util.PaginaHelper;
 import com.finalist.mmbase.util.CloudFactory;
-import nl.leocms.util.tools.HtmlCleaner;
 
 import javax.servlet.ServletContext;
 import org.mmbase.module.core.MMBaseContext;
@@ -42,7 +41,7 @@ import nl.leocms.applications.*;
  * Utility class that contains the logic that converts a URL into
  * a technical URL.
  * Furthermore, it contains the logic (ignoreURL-method) that determines whether a URL
- * is illegible for conversion in the first place.
+ * is eligible for conversion in the first place.
  *
  * @author Finalist IT Group / peter
  * @version $Id: UrlConverter.java,v 1.11 2007-07-09 13:39:42 ieozden Exp $
@@ -67,8 +66,7 @@ public final class UrlConverter {
    private static Logger log = Logging.getLoggerInstance(UrlConverter.class.getName());
 
    public static UrlCache getCache() {
-      MMBaseContext mc = new MMBaseContext();
-      ServletContext application = mc.getServletContext();
+      ServletContext application = MMBaseContext.getServletContext();
       UrlCache cache = (UrlCache)application.getAttribute(URL_CACHE);
       if (cache==null) {
         cache = new UrlCache();
@@ -211,14 +209,14 @@ public final class UrlConverter {
       if(page == null) {
          log.debug("No matching page found, interception stopped");
          return null;
+      }
+      
+      log.debug("matching page : " + page.getIntValue("number"));
+      int pPos = rubriekenPad.indexOf(rh.getUrlPathToRootString(rubriek,"").toString());
+      if(pPos>0) {
+         rubriekenPad = rubriekenPad.substring(0,pPos);
       } else {
-         log.debug("matching page : " + page.getIntValue("number"));
-         int pPos = rubriekenPad.indexOf(rh.getUrlPathToRootString(rubriek,"").toString());
-         if(pPos>0) {
-            rubriekenPad = rubriekenPad.substring(0,pPos);
-         } else {
-            rubriekenPad += "/";
-         }
+         rubriekenPad += "/";
       }
       log.debug("rubriekenPad = " + rubriekenPad);
 
