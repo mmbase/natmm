@@ -4,16 +4,26 @@
     <!ENTITY logdir  "@log.dir@" >
 ]>
 
-<log4j:configuration>
+<log4j:configuration debug="false" xmlns:log4j="http://jakarta.apache.org/log4j/">
 
-    <appender name="logfile" class="org.apache.log4j.FileAppender" >
-        <param name="File"   value="&logdir;mmbase.log" />
-        <param name="Append" value="true" />
-        <layout class="org.apache.log4j.PatternLayout">
-             <param name="ConversionPattern" value="%d %-5p %c{4}  - %m%n" />
-        </layout>
-    </appender>
+   <appender name="logfile" class="org.apache.log4j.FileAppender">
+      <param name="File" value="&logdir;mmbase.log" />
+      <param name="Append" value="true" />
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern" value="%d %-5p %c{4}  - %m%n" />
+      </layout>
+   </appender>
 
+   <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+      <param name="Target" value="System.out" />
+      <!--param name="Threshold" value="INFO"/-->
+
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern" value="@log.file@ %d %-5p %c{4} %M.%L %x - %m%n" />
+         <!-- <param name="ConversionPattern" value="%d{ABSOLUTE} %-5p - %m%n" /> -->
+      </layout>
+   </appender>
+   
   <!-- 
   Another example: The sqllog appender can be used for
   'MultiConnection' (see below), to achieve logging of every SQL
@@ -46,10 +56,6 @@
        <level class="&mmlevel;" value="@log.level@" />
     </logger>
 
-    <logger name="STDERR">
-       <level class="&mmlevel;" value="@log.level@" />   
-    </logger>
-
     <logger name="org.mmbase.PAGE.LOGTAG" >
         <level class="&mmlevel;" value="service" />
     </logger>
@@ -62,7 +68,7 @@
       <level class="&mmlevel;" value="info" />
    </logger>
    
-   <logger name="nl.natuurmonumenten.activiteiten.ActiviteitenHelper">
+   <logger name="nl.natuurmonumenten.activiteiten">
       <level class="&mmlevel;" value="info" />
    </logger>
    
@@ -74,9 +80,13 @@
    </logger>
 -->
 
+    <logger name="STDERR">
+       <level class="&mmlevel;" value="@log.level@" />   
+    </logger>
+
     <root>
         <level class="&mmlevel;" value="@log.level@" />
         <appender-ref ref="logfile" />
     </root>
-
+    
 </log4j:configuration>
