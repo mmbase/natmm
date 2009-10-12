@@ -198,6 +198,9 @@
 					 
 		<!-- delete mysql connector from the lib directory -->
 		<delete file="${build.dir}/mmbase-webapp/WEB-INF/lib/mysql-connector-java-5.0.5-bin.jar"/>
+		
+		<!-- Delete double log4j-1.2.8.jar -->
+		<delete file="${build.dir}/mmbase-webapp/WEB-INF/lib/log4j-1.2.8.jar"/>
 
 		<!-- Copy the webapp specific error-pages -->
 		<mkdir dir="${build.dir}/mmbase-webapp/404" />
@@ -292,6 +295,10 @@
 
 		<!-- delete mysql connector from the lib directory -->
 		<!--<delete file="${build.dir}/mmbase-webapp/WEB-INF/lib/mysql-connector-java-5.0.5-bin.jar"/>-->
+		
+      <!-- Delete double log4j-1.2.8.jar -->
+      <delete file="${build.dir}/mmbase-webapp/WEB-INF/lib/log4j-1.2.8.jar"/>
+
 		
 		<mkdir dir="${build.dir}/dist" />
 		
