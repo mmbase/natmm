@@ -89,9 +89,7 @@ public class HtmlBuilder extends MMObjectBuilder {
    }
 
    public void removeNode(MMObjectNode node) {
-		
-      MMBaseContext mc = new MMBaseContext();
-      ServletContext application = mc.getServletContext();
+      ServletContext application = MMBaseContext.getServletContext();
       HashMap hmUnusedItems = (HashMap) application.getAttribute("UnusedItems");
       if (hmUnusedItems!=null){
          Set set = hmUnusedItems.entrySet();
