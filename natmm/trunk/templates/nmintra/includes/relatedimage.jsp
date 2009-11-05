@@ -24,8 +24,6 @@
        Dimension d = (Dimension) image.getFunctionValue("dimension", null).get();
        int width = d.getWidth();
        int height = d.getHeight();
-       pageContext.setAttribute("width", width);
-       pageContext.setAttribute("height", height);
        
        if(posrel_pos == 1 ||posrel_pos == 3 || posrel_pos == 5 || posrel_pos == 7){
           right = true;
