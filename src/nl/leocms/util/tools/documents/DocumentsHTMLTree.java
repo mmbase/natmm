@@ -75,53 +75,49 @@ public class DocumentsHTMLTree extends HTMLTree {
       String icon = getCellRenderer().getIcon(node);
       String sFolderIconText = "";
       Node n = (Node) node;
-      
-      if (!"Formulieren".equals(n.getStringValue("filename"))) {
-      
-         if (icon != null) {
-            String imgName = "page.gif";
-            String docType = "";
-            if (icon.indexOf(":")!=-1){
-               imgName = icon.substring(0,icon.indexOf(":"));
-               docType = icon.substring(icon.indexOf(":")+1);
-            }
-            sFolderIconText = "<img src='"+buildImgUrl(imgName)+"' border='0' align='center' valign='middle' alt='" + docType + "'/>";
+      if (icon != null) {
+         String imgName = "page.gif";
+         String docType = "";
+         if (icon.indexOf(":")!=-1){
+            imgName = icon.substring(0,icon.indexOf(":"));
+            docType = icon.substring(icon.indexOf(":")+1);
+         }
+         sFolderIconText = "<img src='"+buildImgUrl(imgName)+"' border='0' align='center' valign='middle' alt='" + docType + "'/>";
+      } else {
+         sFolderIconText = "<img src='"+getImgBaseUrl() + "folder_closed.gif"+"' border='0' align='center' valign='middle' id='folder_img_" + nodeName + "'/>";
+      }
+      if (!model.isLeaf(node)) {
+         out.print("<a href='javascript:clickNode(\"" + nodeName + "\")'>");
+         out.print("<img src='" + myImg + "' border='0' align='center' valign='middle' id='img_" + nodeName + "'/>");
+         out.print(sFolderIconText);
+         out.print(n.getStringValue("filename"));
+         out.print("</a>");
+      } else {
+         out.print("<img src='" + myImg + "' border='0' align='center' valign='middle'/>&nbsp;");
+         out.print(sFolderIconText);
+      }
+      getCellRenderer().render(node, out);
+      out.println("</nobr><br/>");
+      if (!model.isLeaf(node)) {
+         String style = expandAll ? "block" : "none";
+         out.println("<div id='" + nodeName + "' style='display: " + style + "'>");
+			if(level==0) { // will be closed before <br/> (in the above statement)
+            preHtml += "<nobr>";
+         }
+         // Render childs .....
+         if (isLast) {
+            preHtml += "<img src='" + buildImgUrl("spacer.gif") + "' align='center' valign='middle' border='0'/>";
          } else {
-            sFolderIconText = "<img src='"+getImgBaseUrl() + "folder_closed.gif"+"' border='0' align='center' valign='middle' id='folder_img_" + nodeName + "'/>";
+            preHtml += "<img src='" + buildImgUrl("vertline.gif") + "' align='center' valign='middle' border='0'/>";
          }
-         if (!model.isLeaf(node)) {
-            out.print("<a href='javascript:clickNode(\"" + nodeName + "\")'>");
-            out.print("<img src='" + myImg + "' border='0' align='center' valign='middle' id='img_" + nodeName + "'/>");
-            out.print(sFolderIconText);
-            out.print(n.getStringValue("filename"));
-            out.print("</a>");
-         } else {
-            out.print("<img src='" + myImg + "' border='0' align='center' valign='middle'/>&nbsp;");
-            out.print(sFolderIconText);
+         int count = model.getChildCount(node);
+         for (int i = 0; i < count; i++) {
+            Object child = model.getChild(node, i);
+            out.print(preHtml);
+            String img = getImage(model.isLeaf(child), (i == count - 1));
+            renderNode(child, level + 1, out, base + "_" + i, preHtml, img, (i == count - 1));
          }
-         getCellRenderer().render(node, out);
-         out.println("</nobr><br/>");
-         if (!model.isLeaf(node)) {
-            String style = expandAll ? "block" : "none";
-            out.println("<div id='" + nodeName + "' style='display: " + style + "'>");
-   			if(level==0) { // will be closed before <br/> (in the above statement)
-               preHtml += "<nobr>";
-            }
-            // Render childs .....
-            if (isLast) {
-               preHtml += "<img src='" + buildImgUrl("spacer.gif") + "' align='center' valign='middle' border='0'/>";
-            } else {
-               preHtml += "<img src='" + buildImgUrl("vertline.gif") + "' align='center' valign='middle' border='0'/>";
-            }
-            int count = model.getChildCount(node);
-            for (int i = 0; i < count; i++) {
-               Object child = model.getChild(node, i);
-               out.print(preHtml);
-               String img = getImage(model.isLeaf(child), (i == count - 1));
-               renderNode(child, level + 1, out, base + "_" + i, preHtml, img, (i == count - 1));
-            }
-            out.println("</div>\n");
-         }
+         out.println("</div>\n");
       }
    }
 }
