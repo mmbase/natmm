@@ -25,7 +25,7 @@ function customize(editor, editorURL) {
      'cut', 'copy', 'paste', 'separator',
 //     'undo', 'redo', 'separator',
      'my-createlink', 'separator',
-     'htmlmode'
+     'htmlmode','inserttable'
 // hh removed: , 'separator', 'my-validatesave'
     ]
   ];
