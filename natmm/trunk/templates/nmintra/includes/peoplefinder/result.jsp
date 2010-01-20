@@ -136,7 +136,7 @@ if(!action.equals("print")) {
             <% } else { %>
             <mm:field name="medewerkers.number" jspvar="employees_number" vartype="String" write="false"
             ><mm:first>
-                <div class="smoelenboeklist" id="smoelenboeklist"><table cellpadding="0" cellspacing="0" align="left">
+                <table cellpadding="0" cellspacing="0" align="left">
                 <tr>
 					 	<td colspan="2" style="padding-bottom:10px;padding-left:19px;">
 					 		<span class="light"><span class="pageheader">resultaten</span><br>klik op een naam voor details</span>
@@ -156,7 +156,7 @@ if(!action.equals("print")) {
                             + "&employee=" +  employees_number 
                      %>" class="hover"><span class="light"><mm:field name="medewerkers.firstname" /> <mm:field name="medewerkers.suffix" /> <mm:field name="medewerkers.lastname" />
             <mm:last>
-                </table></div>
+                </table>     
             </mm:last
         ></mm:field
         >

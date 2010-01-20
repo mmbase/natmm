@@ -6,7 +6,7 @@ body {
     line-height: 130%;
     background-repeat: no-repeat;
     font-family: arial, sans-serif;
-    overflow: hidden;
+    overflow: auto;
 }
 p {
    padding: 0px;
