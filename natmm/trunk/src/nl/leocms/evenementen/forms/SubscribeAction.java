@@ -199,7 +199,7 @@ public class SubscribeAction extends Action {
          if(!confirmUrl.equals("reminder")){
             message += "Uw aanmelding is nu definitief. ";
          }
-         message += "Als u bent verhinderd meldt u dan af bij " + phoneNumbers + "." +
+         message += "Als u bent verhinderd meldt u dan af bij " + phoneNumbers + ". " +
          "Wilt u een activiteit van een bezoekerscentrum in het weekend annuleren? Belt u " +
          "dan met het betreffende bezoekerscentrum (gegevens vindt u op onze site " +
          "http://www.natuurmonumenten.nl/bezoekerscentra). " +
