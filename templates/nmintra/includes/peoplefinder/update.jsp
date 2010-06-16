@@ -65,7 +65,7 @@ function updateIt(el) {
     var omschrijving_fra = escape(document.whoiswhoupdate.elements["omschrijving_fra"].value);
     href += "&employee=<%= employeeId %>&firstname=" + firstname + "&initials=" + initials + "&suffix=" + suffix  + "&lastname=" + lastname 
          + "&companyphone=" + companyphone + "&cellularphone=" + cellularphone + "&fax=" + fax + "&email=" + email
-         + "&job=" + job + "&omschrijving_eng=" + omschrijving_eng + "&omschrijving_de=" + omschrijving_de + "&omschrijving_fra=" + omschrijving_fra
+         + "&omschrijving_eng=" + omschrijving_eng + "&omschrijving_de=" + omschrijving_de + "&omschrijving_fra=" + omschrijving_fra
          + "&omschrijving=" + omschrijving;
      <% 
     if(iRubriekLayout==NMIntraConfig.SUBSITE1_LAYOUT) {
