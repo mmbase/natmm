@@ -41,7 +41,7 @@ public class ActiviteitenService implements IActiviteitenService {
      * nl.natuurmonumenten.activiteiten.ActiviteitenServiceInterf#getVersion()
      */
     public String getVersion() {
-        return "2.3";
+        return "2.4";
     }
 
     /*
