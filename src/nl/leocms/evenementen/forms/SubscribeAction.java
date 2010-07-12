@@ -194,7 +194,7 @@ public class SubscribeAction extends Action {
       int iCurPart = thisEvent.getIntValue("cur_aantal_deelnemers");
       int iMinPart = thisEvent.getIntValue("min_aantal_deelnemers");
       if(iCurPart<iMinPart) {
-          message += "Er zijn nog niet genoeg aanmeldingen voor deze activiteit om uw aanmelding definitief te bevestigen. Hierdoor is de kans aanwezig dat de activiteit niet door kan gaan. Als de activiteit niet door kan gaan, nemen wij contact met u op.";
+          message += "Indien een activiteit door omstandigheden niet doorgaat, nemen wij contact met u op.";
       } else {
          if(!confirmUrl.equals("reminder")){
             message += "Uw aanmelding is nu definitief. ";
