@@ -573,7 +573,7 @@ public class HtmlCleaner {
        text = cleanParam(text,"class=");
        text = cleanParam(text,"style=");
        text = cleanParam(text,"vAlign=");
-       text = cleanParam(text,"width=");
+       //text = cleanParam(text,"width=");
        
        // this looks strange but is intended to remove the crap that can come from the html-area
        text = replace(text,"<P >","<P>");

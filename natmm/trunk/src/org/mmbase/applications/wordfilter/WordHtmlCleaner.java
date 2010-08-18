@@ -66,6 +66,10 @@ public class WordHtmlCleaner {
 
       prop.setProperty("_all", "_style table");
       prop.setProperty("_style", "strong h3 h2 h1 p a b i u ul ol #TEXT br");
+
+      prop.setProperty("object", "$id $classid $height $width $standby $type param embed");
+      prop.setProperty("embed", "$name $type $src $height $width $autostart $playcount $showcontrols $showdisplay $showstatus $wmode $allowFullScreen $flashvars");
+      prop.setProperty("param", "$name $value");
       
       prop.setProperty("h3", "_style");
       prop.setProperty("h2", "_style");
@@ -91,7 +95,7 @@ public class WordHtmlCleaner {
       prop.setProperty("_cell", "_all $colspan $rowspan");
       //entities
       prop.setProperty("&", "nbsp");
-
+      
       xmlbsDTD = new xmlbs.PropertiesDocumentStructure(prop);
       xmlbsDTD.setIgnoreCase(true);
    }
