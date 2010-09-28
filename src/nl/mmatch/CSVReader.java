@@ -1184,8 +1184,10 @@ public class CSVReader implements Runnable {
       log.info("run(): " + kicker);
       Cloud cloud = CloudFactory.getCloud();
       ApplicationHelper ap = new ApplicationHelper(cloud);
-      if(ap.isInstalled("NatMM") || ap.isInstalled("NMIntra")) {
+      if(ap.isInstalled("NMIntra")) { //Only run at Intranet environment
         readCSV(cloud, this.importType);
+      } else {
+         log.info("not running CSV Reader/import on this environment; only runs at Intranet.");
       }
     }
 }
