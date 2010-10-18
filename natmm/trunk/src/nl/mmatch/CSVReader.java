@@ -17,15 +17,15 @@ import nl.leocms.util.tools.*;
 public class CSVReader implements Runnable {
 
     int importType;
+    public static final int FULL_IMPORT = 1;
+    public static final int ONLY_MEMBERLOAD = 2;
+    public static final int ONLY_ZIPCODELOAD = 3;
 
     private static final Logger log = Logging.getLoggerInstance(CSVReader.class);
     private static final ServerUtil su = new ServerUtil();
     
     private static final String IGNORE_BEAUFORT = "inactive (en negeer Beaufort)";
     
-    public static int FULL_IMPORT = 1;
-    public static int ONLY_MEMBERLOAD = 2;
-    public static int ONLY_ZIPCODELOAD = 3;
     
     private BufferedReader getBufferedReader(String sFileName) throws FileNotFoundException, UnsupportedEncodingException {
       FileInputStream fin = new FileInputStream(sFileName);
@@ -109,7 +109,7 @@ public class CSVReader implements Runnable {
     
     private String getGender(String value) {
         String gender = "0";
-        if(value.toUpperCase().equals("M")) gender = "1";
+        if(value.equalsIgnoreCase("M")) gender = "1";
         return gender;
     }
     
@@ -206,7 +206,7 @@ public class CSVReader implements Runnable {
     }
     
     private int updateDepartments(Cloud cloud) {
-        // for the search we need a list with descendants for all deparments
+        // for the search we need a list with descendants for all departments
         log.info("updateDepartments");
         int numberOfEmptyDept = 0;
         TreeMap departments = new TreeMap();
@@ -1038,156 +1038,153 @@ public class CSVReader implements Runnable {
 
    public void readCSV(Cloud cloud, int importType) {
 
-        // HashMap user = new HashMap();
-        // user.put("username","admin");
-        // user.put("password","");
+      // HashMap user = new HashMap();
+      // user.put("username","admin");
+      // user.put("password","");
         // Cloud cloud = ContextProvider.getDefaultCloudContext().getCloud("mmbase","name/password",user);
 
-        ServletContext application = MMBaseContext.getServletContext();
-        String requestUrl = (String) application.getAttribute("request_url");
-        if(requestUrl==null) { requestUrl = "www.natuurmonumenten.nl"; }
+      ServletContext application = MMBaseContext.getServletContext();
+      String requestUrl = (String) application.getAttribute("request_url");
+      if (requestUrl == null) {
+         requestUrl = "www.natuurmonumenten.nl";
+      }
 
-        String logSubject = "Log import " +  requestUrl;
+      String logSubject = "Log import " + requestUrl;
 
-        ApplicationHelper ap = new ApplicationHelper(cloud);
-        String toEmailAddress = ap.getToEmailAddress();
-        String fromEmailAddress = ap.getFromEmailAddress();
-        String incoming = ap.getIncomingDir();
-        String temp = ap.getTempDir();
+      ApplicationHelper ap = new ApplicationHelper(cloud);
+      String toEmailAddress = ap.getToEmailAddress();
+      String fromEmailAddress = ap.getFromEmailAddress();
+      String incoming = ap.getIncomingDir();
+      String temp = ap.getTempDir();
 
-        String beauZip = incoming + "beaudata.zip"; // will be unzipped to temp
-        String dataFile = temp + "beauexport.csv";
-        String emailFile = temp + "mbexport.csv";
-        String orgFile = temp + "orgschemaexport.csv";
-        String nmvZip = incoming + "nmvdata.zip"; // will be unzipped to temp
-        String nmvFile = temp + "nmvexport.csv";
-        String membersZip = incoming + "lrscad.zip";
-        String zipCodeZip = incoming + "postcode.zip";
+      String beauZip = incoming + "beaudata.zip"; // will be unzipped to temp
+      String dataFile = temp + "beauexport.csv";
+      String emailFile = temp + "mbexport.csv";
+      String orgFile = temp + "orgschemaexport.csv";
+      String nmvZip = incoming + "nmvdata.zip"; // will be unzipped to temp
+      String nmvFile = temp + "nmvexport.csv";
+      String membersZip = incoming + "lrscad.zip";
+      String zipCodeZip = incoming + "postcode.zip";
 
-        String fileList = "";
-        if(importType==ONLY_MEMBERLOAD) {
-             fileList = membersZip;
-        } else if(importType==ONLY_ZIPCODELOAD) {
-             fileList = zipCodeZip;
-        } else {
-           fileList += membersZip+"\n"+zipCodeZip+"\n"+dataFile+"\n"+nmvFile+"\n"+emailFile+"\n"+orgFile;
-        }
+      String fileList = "";
+      if (importType == ONLY_MEMBERLOAD) {
+         fileList = membersZip;
+      } else if (importType == ONLY_ZIPCODELOAD) {
+         fileList = zipCodeZip;
+      } else {
+         fileList += membersZip + "\n" + zipCodeZip + "\n" + dataFile + "\n" + nmvFile + "\n" + emailFile + "\n" + orgFile;
+      }
 
-        try {
-              ZipUtil zu = new ZipUtil();
-              
-              log.info("Started import of: " + fileList);
-              
-              int nodesMarked = 0;
-              int nodesDeleted = 0;
-              int numberOfEmptyDept = 0;
-              String logMessage =  "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize() + " - Started import for " +  requestUrl;
-              
-              if(importType==FULL_IMPORT) {
-              
-              Vector files = new Vector();
-              logMessage += "\nUnzipping " + beauZip + " (lm=" + lastModifiedDate(beauZip) + ")";
-              files.addAll(zu.unZip(beauZip,temp));
-              if(files.size()!=0) {
-               
-                // start with marking all relations as inactive
-                String [] employeeRelations = {"readmore","afdelingen","readmore","locations"};
-                  //setting to value of [1] unless it is equal to [2] when we don't change
-                String [] employeeFields = {"importstatus","inactive",IGNORE_BEAUFORT};
-                String [] departmentRelations = {"posrel","afdelingen"};
-                // the importstatus field of afdelingen can be 'inactive', 'active' or a comma seperated list of descendants
-                String [] departmentFields = {"importstatus","inactive",""};
-                nodesMarked = markNodesAndRelations(cloud,"medewerkers",employeeRelations,employeeFields);
-                nodesMarked += markNodesAndRelations(cloud,"afdelingen",departmentRelations,departmentFields);
-                
-                TreeMap emails = getEmails(emailFile);
-                logMessage += "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize() + " - Emails are imported from: " + emailFile;
-                logMessage += updateOrg(cloud,orgFile);
-                logMessage += updatePersons(cloud, emails, dataFile);
-               
-                // finish with deleting all inactive relations; employees and departments are never deleted because they could be created manually
-                employeeFields[1] = "-1"; // prevent employees from being deleted
-                departmentFields[1] = "-1";  // prevent departments from being deleted
-                nodesDeleted = deleteNodesAndRelations(cloud,"medewerkers",employeeRelations,employeeFields);
-                nodesDeleted += deleteNodesAndRelations(cloud,"afdelingen",departmentRelations,departmentFields);
-              
-                numberOfEmptyDept = updateDepartments(cloud);
-                logMessage +=  "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize()
-                   + " - Number of nodes and relations marked as inactive before update: " + nodesMarked
-                   + "\n<br>Number of inactive nodes deleted: " + nodesDeleted
-                   + "\n<br>Number of departments without employees: " + numberOfEmptyDept;
-              }
+      try {
+         ZipUtil zu = new ZipUtil();
 
-              if(ap.isInstalled("NatMM")) {
-                 logMessage += "\nUnzipping " + nmvZip + " (lm=" + lastModifiedDate(nmvZip) + ")";
-                 files.addAll(zu.unZip(nmvZip,temp));
-                 logMessage += updateNMV(cloud, nmvFile);
-              }
-            }
-            if(ap.isInstalled("NatMM")) {
-               if( importType==FULL_IMPORT || importType==ONLY_MEMBERLOAD) {
-                  logMessage += loadNMMembers(application,membersZip,temp);
+         log.info("Started import of: " + fileList);
+
+         int nodesMarked = 0;
+         int nodesDeleted = 0;
+         int numberOfEmptyDept = 0;
+         String logMessage = "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize() + " - Started import for " + requestUrl;
+
+         if (importType == FULL_IMPORT) {
+
+            Vector files = new Vector();
+            if(ap.isInstalled("NMIntra")) { //Only run at Intranet environment
+               logMessage += "\nUnzipping " + beauZip + " (lm=" + lastModifiedDate(beauZip) + ")";
+               files.addAll(zu.unZip(beauZip, temp));
+               if (files.size() != 0) {
+                  // start with marking all relations as inactive
+                  String[] employeeRelations = { "readmore", "afdelingen", "readmore", "locations" };
+                  // setting to value of [1] unless it is equal to [2] when we don't change
+                  String[] employeeFields = { "importstatus", "inactive", IGNORE_BEAUFORT };
+                  String[] departmentRelations = { "posrel", "afdelingen" };
+                   // the importstatus field of afdelingen can be 'inactive', 'active' or a comma seperated list of descendants
+                  String[] departmentFields = { "importstatus", "inactive", "" };
+                  nodesMarked = markNodesAndRelations(cloud, "medewerkers", employeeRelations, employeeFields);
+                  nodesMarked += markNodesAndRelations(cloud, "afdelingen", departmentRelations, departmentFields);
+   
+                  TreeMap emails = getEmails(emailFile);
+                  logMessage += "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize() + " - Emails are imported from: " + emailFile;
+                  logMessage += updateOrg(cloud, orgFile);
+                  logMessage += updatePersons(cloud, emails, dataFile);
+   
+                   // finish with deleting all inactive relations; employees and departments are never deleted because they could be created manually
+                  employeeFields[1] = "-1"; // prevent employees from being deleted
+                  departmentFields[1] = "-1"; // prevent departments from being deleted
+                  nodesDeleted = deleteNodesAndRelations(cloud, "medewerkers", employeeRelations, employeeFields);
+                  nodesDeleted += deleteNodesAndRelations(cloud, "afdelingen", departmentRelations, departmentFields);
+   
+                  numberOfEmptyDept = updateDepartments(cloud);
+                  logMessage += "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize()
+                        + " - Number of nodes and relations marked as inactive before update: " + nodesMarked
+                        + "\n<br>Number of inactive nodes deleted: " + nodesDeleted
+                        + "\n<br>Number of departments without employees: " + numberOfEmptyDept;
                }
-               if(importType==FULL_IMPORT || importType==ONLY_ZIPCODELOAD) {
-                  logMessage += loadZipCodes(application,zipCodeZip,temp);
-               }
+            } else {
+               log.info("not running Beaufort import on this environment; only runs at Intranet.");
             }
 
-            logMessage += "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize() + " - Finished import";
+            if (ap.isInstalled("NatMM")) {
+               logMessage += "\nUnzipping " + nmvZip + " (lm=" + lastModifiedDate(nmvZip) + ")";
+               files.addAll(zu.unZip(nmvZip, temp));
+               logMessage += updateNMV(cloud, nmvFile);
+            }
+         }
+         if (ap.isInstalled("NatMM")) {
+            if (importType == FULL_IMPORT || importType == ONLY_MEMBERLOAD) {
+               logMessage += loadNMMembers(application, membersZip, temp);
+            }
+            if (importType == FULL_IMPORT || importType == ONLY_ZIPCODELOAD) {
+               logMessage += loadZipCodes(application, zipCodeZip, temp);
+            }
+         }
 
-            Node emailNode = cloud.getNodeManager("email").createNode();
-            emailNode.setValue("to", toEmailAddress);
-            emailNode.setValue("from", fromEmailAddress);
-            emailNode.setValue("subject", logSubject);
-            emailNode.setValue("replyto", fromEmailAddress);
-            emailNode.setValue("body","<multipart id=\"plaintext\" type=\"text/plain\" encoding=\"UTF-8\"></multipart>"
-                            + "<multipart id=\"htmltext\" alt=\"plaintext\" type=\"text/html\" encoding=\"UTF-8\">"
-                            + "<html>" + logMessage + "</html>"
-                            + "</multipart>");
-            emailNode.commit();
-            emailNode.getValue("mail(oneshot)");
+         logMessage += "\n<br>" + ServerUtil.getDateTimeString() + su.jvmSize() + " - Finished import";
 
-            log.info("Finished import");
+         Node emailNode = cloud.getNodeManager("email").createNode();
+         emailNode.setValue("to", toEmailAddress);
+         emailNode.setValue("from", fromEmailAddress);
+         emailNode.setValue("subject", logSubject);
+         emailNode.setValue("replyto", fromEmailAddress);
+         emailNode.setValue("body", "<multipart id=\"plaintext\" type=\"text/plain\" encoding=\"UTF-8\"></multipart>"
+                          + "<multipart id=\"htmltext\" alt=\"plaintext\" type=\"text/html\" encoding=\"UTF-8\">"
+                          + "<html>" + logMessage + "</html>"
+                          + "</multipart>");
+         emailNode.commit();
+         emailNode.getValue("mail(oneshot)");
 
-            // log.info(thisPerson);
-            // log.info(logMessage);
-            // log.info(emails);
+         log.info("Finished import");
 
-        } catch(Exception e) {
-            log.info(e);
-        }
-    }
+         // log.info(thisPerson);
+         // log.info(logMessage);
+         // log.info(emails);
 
-    private Thread getKicker(){
-       Thread  kicker = Thread.currentThread();
-       if(kicker.getName().indexOf("CSVReaderThread")==-1) {
-            kicker.setName("CSVReaderThread / " + ServerUtil.getDateTimeString());
-            kicker.setPriority(Thread.MIN_PRIORITY+1); // does this help ??
-       }
-       return kicker;
-    }
+      } catch (Exception e) {
+         log.info(e);
+      }
+   }
+
+   private Thread getKicker() {
+      Thread kicker = Thread.currentThread();
+      if (kicker.getName().indexOf("CSVReaderThread") == -1) {
+         kicker.setName("CSVReaderThread / " + ServerUtil.getDateTimeString());
+         kicker.setPriority(Thread.MIN_PRIORITY + 1); // does this help ??
+      }
+      return kicker;
+   }
 
     public CSVReader() {
       this.importType = FULL_IMPORT;
-      Thread kicker = getKicker();
-      log.info("CSVReader(): " + kicker);
     }
 
     public CSVReader(int importType) {
       this.importType = importType;
-      Thread kicker = getKicker();
-      log.info("CSVReader(" + importType + "): " + kicker);
     }
 
     public void run () {
       Thread kicker = getKicker();
-      log.info("run(): " + kicker);
+      log.info("run CSVReader(" + importType + "): " + kicker);
       Cloud cloud = CloudFactory.getCloud();
       ApplicationHelper ap = new ApplicationHelper(cloud);
-      if(ap.isInstalled("NMIntra")) { //Only run at Intranet environment
-        readCSV(cloud, this.importType);
-      } else {
-         log.info("not running CSV Reader/import on this environment; only runs at Intranet.");
-      }
+      readCSV(cloud, this.importType);
     }
 }
