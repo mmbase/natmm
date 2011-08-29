@@ -50,7 +50,7 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
     } else {
         if(!pzText.equals("")) messageBody += "<br><br><br><li>Wijzigingen die na bevestiging worden verstuurd aan de afdeling Personeelszaken:<br>" + pzText;
         if(!fzText.equals("")) messageBody += "<br><br><br><li>Wijzigingen die na bevestiging worden verstuurd aan de afdeling Facilitaire Zaken:<br>" + fzText;
-        if(!dcText.equals("")) messageBody += "<br><br><br><li>Wijzigingen die na bevestiging direct worden verwerkt in \"" + specialDays + "\" en/of \"En verder\":<br>" + dcText;
+        if(!dcText.equals("")) messageBody += "<br><br><br><li>Wijzigingen die na bevestiging direct worden verwerkt in \"" + specialDays + "\" en/of \"En verder\" en/of \"Werkzaamheden\":<br>" + dcText;
         String commitLink = HttpUtils.getRequestURL(request) + templateQueryString + "&pst=|action=commit|date=" + addTime;
         %><mm:createnode type="email" id="thismail"
             ><mm:setfield name="subject">Bevestigen wijziging gegevens op de Wie-is-wie.</mm:setfield
@@ -146,9 +146,12 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
                if(!omschrijvingId.equals(e.getStringValue("omschrijving"))) {
                   %><mm:setfield name="omschrijving"><%= omschrijvingId %></mm:setfield><% 
                } 
-               if(!omschrijvingId.equals(e.getStringValue("omschrijving_fra"))) {
+               if(!omschrijving_fraId.equals(e.getStringValue("omschrijving_fra"))) {
                   %><mm:setfield name="omschrijving_fra"><%= omschrijving_fraId %></mm:setfield><% 
-               } 
+               }
+               if(!omschrijving_deId.equals(e.getStringValue("omschrijving_de"))) {
+                  %><mm:setfield name="omschrijving_de"><%= omschrijving_deId %></mm:setfield><% 
+               }
             %></mm:node><%
             
             messageTitle = "Je wijzigingen zijn bevestigd";
