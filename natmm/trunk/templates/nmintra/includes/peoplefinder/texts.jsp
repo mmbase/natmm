@@ -20,9 +20,6 @@
    if(!omschrijving_engId.equals(e.getStringValue("omschrijving_eng"))) {
       pzText += "<br><br>Beschrijving locatie, regio/afdeling en functie moet worden gewijzigd in:<br>" + omschrijving_engId;
    }
-   if(!omschrijving_deId.equals(e.getStringValue("omschrijving_de"))) {
-      pzText += "<br><br>Beschrijving werkzaamheden moet worden gewijzigd in:<br>" + omschrijving_deId;
-   }
    
    // *** FZ ***
    if(!companyphoneId.equals(e.getStringValue("companyphone"))) {
@@ -44,5 +41,8 @@
    }
    if(!omschrijvingId.equals(e.getStringValue("omschrijving"))) {
      dcText += "<br><br>En verder moet worden gewijzigd in: " + omschrijvingId;
+   }
+   if(!omschrijving_deId.equals(e.getStringValue("omschrijving_de"))) {
+     dcText += "<br><br>Beschrijving werkzaamheden moet worden gewijzigd in:<br>" + omschrijving_deId;
    }
 %></mm:node>
