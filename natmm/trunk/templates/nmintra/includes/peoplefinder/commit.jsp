@@ -50,7 +50,7 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
     } else {
         if(!pzText.equals("")) messageBody += "<br><br><br><li>Wijzigingen die na bevestiging worden verstuurd aan de afdeling Personeelszaken:<br>" + pzText;
         if(!fzText.equals("")) messageBody += "<br><br><br><li>Wijzigingen die na bevestiging worden verstuurd aan de afdeling Facilitaire Zaken:<br>" + fzText;
-        if(!dcText.equals("")) messageBody += "<br><br><br><li>Wijzigingen die na bevestiging direct worden verwerkt in \"" + specialDays + "\" en/of \"En verder\" en/of \"Werkzaamheden\":<br>" + dcText;
+        if(!dcText.equals("")) messageBody += "<br><br><br><li>Wijzigingen die na bevestiging direct worden verwerkt zijn \"" + specialDays + "\" en/of \"En verder\" en/of \"Werkzaamheden\":<br>" + dcText;
         String commitLink = HttpUtils.getRequestURL(request) + templateQueryString + "&pst=|action=commit|date=" + addTime;
         %><mm:createnode type="email" id="thismail"
             ><mm:setfield name="subject">Bevestigen wijziging gegevens op de Wie-is-wie.</mm:setfield
@@ -158,7 +158,7 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
             messageBody = "Bedankt voor het doorgeven van je wijzigingen:<br><br><br>Je wijzigingen zijn:";
             if(!pzText.equals("")) messageBody += "<br><li>verstuurd aan de afdeling Personeelszaken (" + NMIntraConfig.getDefaultPZAddress() + ")";
             if(!fzText.equals("")) messageBody += "<br><li>verstuurd aan de afdeling Facilitaire Zaken (" + NMIntraConfig.getDefaultFZAddress() + ")";
-            if(!dcText.equals("")) messageBody += "<br><li>verwerkt in \"" + specialDays + "\" en/of \"En verder\"";
+            if(!dcText.equals("")) messageBody += "<br><li>verwerkt in \"" + specialDays + "\", \"Werkzaamheden\" en/of \"En verder\"";
             if(!pzText.equals("")||!fzText.equals("")) {
                     messageBody += "<br><br><br>Afhankelijk van de bezetting en hoeveelheid werk op deze afdelingen zullen je wijzigingen "
                     + "binnen <b>&eacute;&eacute;n tot vijf werkdagen</b> op het Intranet zichtbaar zijn."; 
