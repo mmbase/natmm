@@ -13,10 +13,10 @@
     <tr><td>Email (**):&nbsp;</td>                  <td><input type="text" name="email" value="<mm:field name="email" />" style="width:400px;"></td></tr>
     <tr><td>Locatie, regio/afdeling en functie:&nbsp;</td><td><textarea name="omschrijving_eng" style="width:400px;height:50px;"><%= omschrijving_engId %></textarea></td></tr>
     <tr><td><%= specialDays %>:&nbsp;</td>          <td><textarea name="omschrijving_fra" rows="2" style="width:400px;"><mm:field name="omschrijving_fra" /></textarea></td></tr>
-    <tr><td>Werkzaamheden: &nbsp;</td>              <td><textarea name="omschrijving_de" rows="4" style="width:400px;"><mm:field name="omschrijving_de" jspvar="omschrijving_de" vartype="String" write="false"><%= HtmlCleaner.cleanHtml(omschrijving_de) %></mm:field></textarea></td></tr>
+    <tr><td>Werkzaamheden: &nbsp;<br>(***)</td>              <td><textarea name="omschrijving_de" rows="4" style="width:400px;"><mm:field name="omschrijving_de" jspvar="omschrijving_de" vartype="String" write="false"><%= HtmlCleaner.cleanHtml(omschrijving_de) %></mm:field></textarea></td></tr>
     <% if(iRubriekLayout!=NMIntraConfig.SUBSITE1_LAYOUT) { 
       %>
-      <tr><td>En verder:&nbsp;</td>                <td><textarea name="omschrijving" rows="5" style="width:400px;"><mm:field name="omschrijving" /></textarea></td></tr>
+      <tr><td>En verder:&nbsp;<br>(***)</td>                <td><textarea name="omschrijving" rows="5" style="width:400px;"><mm:field name="omschrijving" /></textarea></td></tr>
       <%
     } else {
       %>
@@ -43,8 +43,9 @@
     <tr><td colspan="2"><div align="right"><input type="submit" name="Submit" value="Verstuur wijzigingen" style="text-align:center;font-weight:bold;">&nbsp;</div></td></tr>
     <tr><td colspan="2">
      <% String emailAddress = ap.getFromEmailAddress(); %>
-     <i>(*) een nieuwe foto kunt u versturen naar <a href="mailto:<%= emailAddress %>"><%= emailAddress %><a></i><br>
-     <i>(**) alleen een intern "...<%= emailAddress.substring(emailAddress.indexOf("@")) %>" emailadres is toegestaan.</i></td></tr>
+     <i>(*) een nieuwe foto kunt u versturen naar <a href="mailto:<%= emailAddress %>"><%= emailAddress %><a>.</i><br>
+     <i>(**) alleen een intern "...<%= emailAddress.substring(emailAddress.indexOf("@")) %>" emailadres is toegestaan.</i>
+     <i>(***) s.v.p. geen gekopieerde teksten inplakken.</i></td></tr>
     </table>
 </mm:node>
 </form>
