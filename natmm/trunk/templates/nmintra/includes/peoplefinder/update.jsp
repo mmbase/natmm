@@ -51,21 +51,18 @@
 <script type="text/javascript">
 function updateIt(el) {
     var href = document.whoiswhoupdate.action;
-    var firstname = escape(document.whoiswhoupdate.elements["firstname"].value);
-    var initials = escape(document.whoiswhoupdate.elements["initials"].value);
     var suffix = escape(document.whoiswhoupdate.elements["suffix"].value);
     var lastname = escape(document.whoiswhoupdate.elements["lastname"].value);
     var companyphone = escape(document.whoiswhoupdate.elements["companyphone"].value);
     var cellularphone = escape(document.whoiswhoupdate.elements["cellularphone"].value);
     var fax = escape(document.whoiswhoupdate.elements["fax"].value);
     var email = escape(document.whoiswhoupdate.elements["email"].value);
-    var omschrijving_eng = escape(document.whoiswhoupdate.elements["omschrijving_eng"].value);
     var omschrijving_de  = escape(document.whoiswhoupdate.elements["omschrijving_de"].value);
     var omschrijving = escape(document.whoiswhoupdate.elements["omschrijving"].value);
     var omschrijving_fra = escape(document.whoiswhoupdate.elements["omschrijving_fra"].value);
-    href += "&employee=<%= employeeId %>&firstname=" + firstname + "&initials=" + initials + "&suffix=" + suffix  + "&lastname=" + lastname 
+    href += "&employee=<%= employeeId %>&suffix=" + suffix  + "&lastname=" + lastname 
          + "&companyphone=" + companyphone + "&cellularphone=" + cellularphone + "&fax=" + fax + "&email=" + email
-         + "&omschrijving_eng=" + omschrijving_eng + "&omschrijving_de=" + omschrijving_de + "&omschrijving_fra=" + omschrijving_fra
+         + "&omschrijving_de=" + omschrijving_de + "&omschrijving_fra=" + omschrijving_fra
          + "&omschrijving=" + omschrijving;
      <% 
     if(iRubriekLayout==NMIntraConfig.SUBSITE1_LAYOUT) {
