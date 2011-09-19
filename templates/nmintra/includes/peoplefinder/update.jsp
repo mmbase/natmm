@@ -43,7 +43,7 @@
     <tr><td colspan="2">
      <% String emailAddress = ap.getFromEmailAddress(); %>
      <i>(*) een nieuwe foto kunt u versturen naar <a href="mailto:<%= emailAddress %>"><%= emailAddress %><a>.</i><br>
-     <i>(**) alleen een intern "...<%= emailAddress.substring(emailAddress.indexOf("@")) %>" emailadres is toegestaan.</i>
+     <i>(**) alleen een intern "...<%= emailAddress.substring(emailAddress.indexOf("@")) %>" emailadres is toegestaan.</i><br>
      <i>(***) s.v.p. geen gekopieerde teksten inplakken.</i></td></tr>
     </table>
 </mm:node>
