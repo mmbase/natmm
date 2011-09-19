@@ -48,8 +48,8 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
          messageHref = "javascript:history.go(-1);";
          messageLinktext = "naar het formulier";
     } else {
-        messageBody += "<br><br><br><li>Wijzigingen die na bevestiging direct worden verwerkt zijn \"" + specialDays + "\" en/of \"En verder\" en/of \"Werkzaamheden\"</li>";
-        messageBody += "<li>Overige wijzigingen worden na bevestiging verwerkt door P&O / Facilitaire Zaken</li>";
+        messageBody += "<br><li>Wijzigingen die na bevestiging direct worden verwerkt zijn \"" + specialDays + "\" en/of \"En verder\" en/of \"Werkzaamheden\"</li>";
+        messageBody += "<li>Overige wijzigingen worden na bevestiging verwerkt door P&amp;O / Facilitaire Zaken</li>";
         String commitLink = HttpUtils.getRequestURL(request) + templateQueryString + "&pst=|action=commit|date=" + addTime;
         %><mm:createnode type="email" id="thismail"
             ><mm:setfield name="subject">Bevestigen wijziging gegevens op de Wie-is-wie.</mm:setfield
@@ -151,7 +151,7 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
             %></mm:node><%
             
             messageTitle = "Je wijzigingen zijn bevestigd";
-            messageBody = "Bedankt voor het doorgeven van je wijzigingen.<br>De wijzigingen zullen zo snel mogelijk worden verwerkt door Facilitaire Zaken of P&O.";
+            messageBody = "Bedankt voor het doorgeven van je wijzigingen.<br>De wijzigingen zullen zo snel mogelijk worden verwerkt door Facilitaire Zaken of P&amp;O.";
             %><%@include file="../showmessage.jsp" 
     %></mm:list
     ><mm:notpresent referid="updatefound"><%
