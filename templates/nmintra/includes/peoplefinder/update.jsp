@@ -3,15 +3,14 @@
 <mm:node number="<%= employeeId %>">
     <table border="0" cellpadding="0" cellspacing="0">
     <tr><td colspan="2"><h4>Vul hier de correcte gegevens in (*)</h4></td></tr>
-    <tr><td>Voornaam:&nbsp;</td>                    <td><input type="text" name="firstname" value="<mm:field name="firstname" />" style="width:400px;"></td></tr>
-    <tr><td>Initialen:&nbsp;</td>                   <td><input type="text" name="initials" value="<mm:field name="initials" />" style="width:400px;"></td></tr>
+    <tr><td>Voornaam:&nbsp;</td>                    <td><mm:field name="firstname" /></td></tr>
+    <tr><td>Initialen:&nbsp;</td>                   <td><mm:field name="initials" /></td></tr>
     <tr><td>Tussenvoegsel:&nbsp;</td>               <td><input type="text" name="suffix" value="<mm:field name="suffix" />" style="width:400px;"></td></tr>
     <tr><td>Achternaam:&nbsp;</td>                  <td><input type="text" name="lastname" value="<mm:field name="lastname" />" style="width:400px;"></td></tr>
     <tr><td>Telefoon:&nbsp;</td>                    <td><input type="text" name="companyphone" value="<mm:field name="companyphone" />" style="width:400px;"></td></tr>
     <tr><td>Mobiel:&nbsp;</td>                      <td><input type="text" name="cellularphone" value="<mm:field name="cellularphone" />" style="width:400px;"></td></tr>
     <tr><td>Fax:&nbsp;</td>                         <td><input type="text" name="fax" value="<mm:field name="fax" />" style="width:400px;"></td></tr>
     <tr><td>Email (**):&nbsp;</td>                  <td><input type="text" name="email" value="<mm:field name="email" />" style="width:400px;"></td></tr>
-    <tr><td>Locatie, regio/afdeling en functie:&nbsp;</td><td><textarea name="omschrijving_eng" style="width:400px;height:50px;"><%= omschrijving_engId %></textarea></td></tr>
     <tr><td><%= specialDays %>:&nbsp;</td>          <td><textarea name="omschrijving_fra" rows="2" style="width:400px;"><mm:field name="omschrijving_fra" /></textarea></td></tr>
     <tr><td>Werkzaamheden: &nbsp;<br>(***)</td>              <td><textarea name="omschrijving_de" rows="4" style="width:400px;"><mm:field name="omschrijving_de" jspvar="omschrijving_de" vartype="String" write="false"><%= HtmlCleaner.cleanHtml(omschrijving_de) %></mm:field></textarea></td></tr>
     <% if(iRubriekLayout!=NMIntraConfig.SUBSITE1_LAYOUT) { 
