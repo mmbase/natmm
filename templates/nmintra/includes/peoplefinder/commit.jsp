@@ -14,9 +14,9 @@ String messageLinkParam = "";
 String emailHelpText = 
     "<br><br>N.B. Op sommige computers binnen Natuurmonumenten is het niet mogelijk om direct op een link in de email te klikken."
   + "<br>Als dit bij jou het geval is moet je de volgende handelingen uitvoeren:"
-  + "<br>1.open het programma Internet Explorer"
-  + "<br>2.kopieer de bovenstaande link uit deze email naar de adres balk van Internet Explorer"
-  + "<br>3.druk op de \"Enter\" toets";
+  + "<br>1. open het programma Internet Explorer"
+  + "<br>2. kopieer de bovenstaande link uit deze email naar de adres balk van Internet Explorer"
+  + "<br>3. druk op de \"Enter\" toets";
 
 if(date.equals("")) { // *** send an email to ask confirmation ***
     long addTime = (new Date()).getTime()/1000;
@@ -48,9 +48,8 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
          messageHref = "javascript:history.go(-1);";
          messageLinktext = "naar het formulier";
     } else {
-        if(!pzText.equals("")) messageBody += "<br><br><br><li>Wijzigingen die na bevestiging worden verstuurd aan de afdeling Personeelszaken:<br>" + pzText;
-        if(!fzText.equals("")) messageBody += "<br><br><br><li>Wijzigingen die na bevestiging worden verstuurd aan de afdeling Facilitaire Zaken:<br>" + fzText;
-        if(!dcText.equals("")) messageBody += "<br><br><br><li>Wijzigingen die na bevestiging direct worden verwerkt zijn \"" + specialDays + "\" en/of \"En verder\" en/of \"Werkzaamheden\":<br>" + dcText;
+        messageBody += "<br><br><br><li>Wijzigingen die na bevestiging direct worden verwerkt zijn \"" + specialDays + "\" en/of \"En verder\" en/of \"Werkzaamheden\"</li>";
+        messageBody += "<li>Overige wijzigingen worden na bevestiging verwerkt door P&O / Facilitaire Zaken</li>";
         String commitLink = HttpUtils.getRequestURL(request) + templateQueryString + "&pst=|action=commit|date=" + addTime;
         %><mm:createnode type="email" id="thismail"
             ><mm:setfield name="subject">Bevestigen wijziging gegevens op de Wie-is-wie.</mm:setfield
@@ -61,11 +60,9 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
                 <multipart id="plaintext" type="text/plain" encoding="UTF-8">
                 </multipart>
                 <multipart id="htmltext" alt="plaintext" type="text/html" encoding="UTF-8">
-                    <%= "<html>" + "<br><br>Klik op de onderstaande link om de wijzigingen te bevestigen. "
-                    + "Nadat je op de link geklikt hebt, duurt het maximaal een minuut voor u binnen Internet Explorer het bericht krijgt dat uw bevestiging is verwerkt.<br><br>"
+                    <%= "<html>" + "<br><br>Klik op de onderstaande link om de wijzigingen te bevestigen.<br><br>"
                     + "<a href=\"" + commitLink + "\">" + commitLink + "</a>"
                     + emailHelpText
-                    + messageBody
                     + "</html>" %>
                 </multipart>
             </mm:setfield
@@ -76,8 +73,7 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
         ><mm:remove referid="thismail" /><%
 
         messageBody = "De wijzigingen zijn ontvangen. Je ontvangt een mail in je mailbox, waarmee je de zojuist verstuurde " 
-            + "wijzigingen moet bevestigen.<br><br><br><b>Pas na bevestiging zullen de wijzigingen ter verwerking aan de afdelingen " 
-            + "Personeelszaken en Facilitaire Zaken worden verstuurd.</b>" + messageBody;
+            + "wijzigingen moet bevestigen.<br><br>" + messageBody;
     }
 
     messageTitle = "Bevestiging wijzigingen persoonsgegevens";
@@ -155,14 +151,7 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
             %></mm:node><%
             
             messageTitle = "Je wijzigingen zijn bevestigd";
-            messageBody = "Bedankt voor het doorgeven van je wijzigingen:<br><br><br>Je wijzigingen zijn:";
-            if(!pzText.equals("")) messageBody += "<br><li>verstuurd aan de afdeling Personeelszaken (" + NMIntraConfig.getDefaultPZAddress() + ")";
-            if(!fzText.equals("")) messageBody += "<br><li>verstuurd aan de afdeling Facilitaire Zaken (" + NMIntraConfig.getDefaultFZAddress() + ")";
-            if(!dcText.equals("")) messageBody += "<br><li>verwerkt in \"" + specialDays + "\", \"Werkzaamheden\" en/of \"En verder\"";
-            if(!pzText.equals("")||!fzText.equals("")) {
-                    messageBody += "<br><br><br>Afhankelijk van de bezetting en hoeveelheid werk op deze afdelingen zullen je wijzigingen "
-                    + "binnen <b>&eacute;&eacute;n tot vijf werkdagen</b> op het Intranet zichtbaar zijn."; 
-            }
+            messageBody = "Bedankt voor het doorgeven van je wijzigingen.<br>De wijzigingen zullen zo snel mogelijk worden verwerkt door Facilitaire Zaken of P&O.";
             %><%@include file="../showmessage.jsp" 
     %></mm:list
     ><mm:notpresent referid="updatefound"><%
