@@ -5,8 +5,8 @@
     <tr><td colspan="2"><h4>Vul hier de correcte gegevens in (*)</h4></td></tr>
     <tr><td>Voornaam:&nbsp;</td>                    <td><mm:field name="firstname" /></td></tr>
     <tr><td>Initialen:&nbsp;</td>                   <td><mm:field name="initials" /></td></tr>
-    <tr><td>Tussenvoegsel:&nbsp;</td>               <td><input type="text" name="suffix" value="<mm:field name="suffix" />" style="width:400px;"></td></tr>
-    <tr><td>Achternaam:&nbsp;</td>                  <td><input type="text" name="lastname" value="<mm:field name="lastname" />" style="width:400px;"></td></tr>
+    <tr><td>Tussenvoegsel:&nbsp;</td>               <td><mm:field name="suffix" /></td></tr>
+    <tr><td>Achternaam:&nbsp;</td>                  <td><mm:field name="lastname" /></td></tr>
     <tr><td>Telefoon:&nbsp;</td>                    <td><input type="text" name="companyphone" value="<mm:field name="companyphone" />" style="width:400px;"></td></tr>
     <tr><td>Mobiel:&nbsp;</td>                      <td><input type="text" name="cellularphone" value="<mm:field name="cellularphone" />" style="width:400px;"></td></tr>
     <tr><td>Fax:&nbsp;</td>                         <td><input type="text" name="fax" value="<mm:field name="fax" />" style="width:400px;"></td></tr>
@@ -51,8 +51,6 @@
 <script type="text/javascript">
 function updateIt(el) {
     var href = document.whoiswhoupdate.action;
-    var suffix = escape(document.whoiswhoupdate.elements["suffix"].value);
-    var lastname = escape(document.whoiswhoupdate.elements["lastname"].value);
     var companyphone = escape(document.whoiswhoupdate.elements["companyphone"].value);
     var cellularphone = escape(document.whoiswhoupdate.elements["cellularphone"].value);
     var fax = escape(document.whoiswhoupdate.elements["fax"].value);
@@ -60,8 +58,7 @@ function updateIt(el) {
     var omschrijving_de  = escape(document.whoiswhoupdate.elements["omschrijving_de"].value);
     var omschrijving = escape(document.whoiswhoupdate.elements["omschrijving"].value);
     var omschrijving_fra = escape(document.whoiswhoupdate.elements["omschrijving_fra"].value);
-    href += "&employee=<%= employeeId %>&suffix=" + suffix  + "&lastname=" + lastname 
-         + "&companyphone=" + companyphone + "&cellularphone=" + cellularphone + "&fax=" + fax + "&email=" + email
+    href += "&employee=<%= employeeId %>" + "&companyphone=" + companyphone + "&cellularphone=" + cellularphone + "&fax=" + fax + "&email=" + email
          + "&omschrijving_de=" + omschrijving_de + "&omschrijving_fra=" + omschrijving_fra
          + "&omschrijving=" + omschrijving;
      <% 
