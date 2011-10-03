@@ -1,7 +1,6 @@
 <%
 String date = getResponseVal("date",postingStr);
 String fzText = "";
-String pzText = "";
 String dcText = "";
 String thisPerson = "";
 
@@ -31,7 +30,6 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
         ><mm:setfield name="cellularphone"><%= cellularphoneId %></mm:setfield
         ><mm:setfield name="fax"><%= faxId %></mm:setfield
         ><mm:setfield name="email"><%= emailId %></mm:setfield
-        ><mm:setfield name="omschrijving_eng"><%= omschrijving_engId %></mm:setfield
         ><mm:setfield name="omschrijving_de"><%= omschrijving_deId %></mm:setfield
         ><mm:setfield name="omschrijving_fra"><%= omschrijving_fraId %></mm:setfield
         ><mm:setfield name="omschrijving"><%= omschrijvingId %></mm:setfield
@@ -42,7 +40,7 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
             + " en alsnog een geldig emailadres in te vullen.";
           messageHref = "javascript:history.go(-1);";
           messageLinktext = "naar het formulier";
-    } else if(pzText.equals("")&&fzText.equals("")&&dcText.equals("")) {
+    } else if(fzText.equals("")&&dcText.equals("")) {
          messageBody = "Er zijn geen wijzigingen in het formulier ingevuld. Gebruik de onderstaande link om terug te gaan naar het formulier"
             + " en de wijzigingen alsnog in te vullen.";
          messageHref = "javascript:history.go(-1);";
@@ -92,7 +90,6 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
             cellularphoneId = e.getStringValue("cellularphone");
             faxId = e.getStringValue("fax");
             emailId = e.getStringValue("email");
-            omschrijving_engId = e.getStringValue("omschrijving_eng"); // locatie, regio/afdeling en functie
             omschrijving_deId = e.getStringValue("omschrijving_de");   // werkzaamheden
             omschrijving_fraId = e.getStringValue("omschrijving_fra"); // vaste vrije/werk dag(en)
             omschrijvingId = e.getStringValue("omschrijving");         // en verder
@@ -100,25 +97,6 @@ if(date.equals("")) { // *** send an email to ask confirmation ***
         /></mm:node
         ><%@include file="texts.jsp" %><% 
 
-            if(!pzText.equals("")) { 
-                %><mm:createnode type="email" id="thismail" 
-                    ><mm:setfield name="subject"><%= "Beaufort wijzigingen voor " + thisPerson %></mm:setfield
-                    ><mm:setfield name="from"><%= ap.getFromEmailAddress() %></mm:setfield
-                    ><mm:setfield name="to"><%= NMIntraConfig.getDefaultPZAddress() %></mm:setfield
-                    ><mm:setfield name="replyto"><%= ap.getFromEmailAddress() %></mm:setfield
-                    ><mm:setfield name="body">
-                        <multipart id="plaintext" type="text/plain" encoding="UTF-8">
-                        </multipart>
-                        <multipart id="htmltext" alt="plaintext" type="text/html" encoding="UTF-8">
-                            <%= "Beaufort wijzigingen voor " + thisPerson + "<br><br>" + pzText %>
-                        </multipart>
-                    </mm:setfield
-                ></mm:createnode
-                ><mm:node referid="thismail"
-                    ><mm:field name="mail(oneshot)" 
-                /></mm:node
-                ><mm:remove referid="thismail" /><%
-            }
             if(!fzText.equals("")) { 
                 %><mm:createnode type="email" id="thismail" 
                     ><mm:setfield name="subject"><%= "Telefoonboek wijzigingen voor " + thisPerson %></mm:setfield
