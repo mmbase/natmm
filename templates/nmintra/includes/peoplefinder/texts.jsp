@@ -17,4 +17,15 @@
    if(!emailId.equals(e.getStringValue("email"))) {
       fzText += "<br><br>Email '" + e.getStringValue("email") + "' moet worden gewijzigd in: " + emailId + " (wordt afgestemd met automatisering en/of betrokken medewerker)";
    }
+   
+   // *** fields that can be changed by employees themselves ***
+   if(!omschrijving_fraId.equals(e.getStringValue("omschrijving_fra"))) {
+     dcText += "<br><br>" + specialDays + ": " + omschrijving_fraId;
+   }
+   if(!omschrijvingId.equals(e.getStringValue("omschrijving"))) {
+     dcText += "<br><br>En verder moet worden gewijzigd in: " + omschrijvingId;
+   }
+   if(!omschrijving_deId.equals(e.getStringValue("omschrijving_de"))) {
+     dcText += "<br><br>Beschrijving werkzaamheden moet worden gewijzigd in:<br>" + omschrijving_deId;
+   }
 %></mm:node>
