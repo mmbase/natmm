@@ -46,7 +46,6 @@
      <i>(**) alleen een intern "...<%= emailAddress.substring(emailAddress.indexOf("@")) %>" emailadres is toegestaan.</i><br>
      <i>(***) s.v.p. geen gekopieerde teksten inplakken.</i></td></tr>
     </table>
-</mm:node>
 </form>
 <script type="text/javascript">
 function updateIt(el) {
@@ -58,7 +57,8 @@ function updateIt(el) {
     var omschrijving_de  = escape(document.whoiswhoupdate.elements["omschrijving_de"].value);
     var omschrijving = escape(document.whoiswhoupdate.elements["omschrijving"].value);
     var omschrijving_fra = escape(document.whoiswhoupdate.elements["omschrijving_fra"].value);
-    href += "&employee=<%= employeeId %>" + "&companyphone=" + companyphone + "&cellularphone=" + cellularphone + "&fax=" + fax + "&email=" + email
+    href += "&employee=<%=employeeId%>&firstname=<mm:field name="firstname" />&initials=<mm:field name="initials" />&suffix=<mm:field name="suffix" />&lastname=<mm:field name="lastname" />" 
+         + "&companyphone=" + companyphone + "&cellularphone=" + cellularphone + "&fax=" + fax + "&email=" + email
          + "&omschrijving_de=" + omschrijving_de + "&omschrijving_fra=" + omschrijving_fra
          + "&omschrijving=" + omschrijving;
      <% 
@@ -77,3 +77,4 @@ function updateIt(el) {
     return false; 
 }
 </script>
+</mm:node>
