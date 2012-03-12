@@ -6,7 +6,7 @@
 	<properties>
 		<!-- Minutes how long the thread will sleep between index actions -->
 		<property name="interval">1440</property>
-		<property name="starthour">1</property>
+		<property name="starthour">2</property>
 		<!-- Do or do not index on startup -->
 		<property name="index-on-startup">false</property>
 		<!-- seconds to wait before first index run -->
