@@ -13,7 +13,7 @@ String [] months_lcase = { "januari","februari","maart","april","mei","juni","ju
 %><mm:content type="text/css" escaper="none"><mm:cloud jspvar="cloud" method="pagelogon" username="admin" password="<%= (String) com.finalist.mmbase.util.CloudFactory.getAdminUserCredentials().get("password") %>">     <c:set var="m_volg" value="0" />
 Volg_nummer;naam;sofinummer_(beaufort);email_(outlook);account_(netwerk);functie_op_visitekaartje_(fz);vaste_vrije/werk_dagen_(medewerker);geboortedatum;importstatus_(beaufort);foto<mm:listnodes type="medewerkers" orderby="titel" directions="UP"><c:set var="m_volg" value="${m_volg + 1}" /><mm:relatednodes type="images"><c:set 
 var="imageUri"><mm:image /></c:set></mm:relatednodes><mm:field name="gender" jspvar="fgender" write="false" vartype="String"/><c:choose><c:when test="${fgender eq '0'}"><c:set var="gender">Vrouw</c:set></c:when><c:when test="${fgender eq '1'}"><c:set var="gender">Man</c:set></c:when></c:choose>
-${m_volg};<mm:field name="titel" />;<mm:field name="externid" />;<mm:field name="email" />;"<mm:field name="account" />";"<mm:field name="job" />";"<mm:field name="omschrijving_fra" />";<mm:field name="dayofbirth" />;<mm:field name="importstatus" />;${imageUri}</mm:listnodes></mm:cloud></mm:content>
+${m_volg};<mm:field name="titel" />;<mm:field name="externid" />;<mm:field name="email" />;"<mm:field name="account" />";"<mm:field name="job" />";"<mm:field name="omschrijving_fra" />";<mm:field name="dayofbirth" />;<mm:field name="importstatus" />;${imageUri}<c:remove var="imageUri"/></mm:listnodes></mm:cloud></mm:content>
 
 <%--
 Volg_nummer
